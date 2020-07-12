@@ -13,71 +13,73 @@
 
 	<h1>ESTADÍSTICAS</h1>
 
-	<table class="table">
-		<thead>
-			<tr style="text-align:center">
-				<th>
-					@Html.DisplayNameFor( model => model.Estadisticas.Detalles[ 0 ].Nombre )
-				</th>
-				<th>
-					@Html.DisplayNameFor( model => model.Estadisticas.Detalles[ 0 ].Profit )
-				</th>
-				<th>
-					@Html.DisplayNameFor( model => model.Estadisticas.Detalles[ 0 ].Torneos )
-				</th>
-				<th>
-					@Html.DisplayNameFor( model => model.Estadisticas.Detalles[ 0 ].Rebuys )
-				</th>
-				<th>
-					@Html.DisplayNameFor( model => model.Estadisticas.Detalles[ 0 ].Podios )
-				</th>
-				<th>
-					@Html.DisplayNameFor( model => model.Estadisticas.Detalles[ 0 ].Victorias )
-				</th>
-				<th>
-					@Html.DisplayNameFor( model => model.Estadisticas.Detalles[ 0 ].Burbujas )
-				</th>
-				<th>
-					@Html.DisplayNameFor( model => model.Estadisticas.Detalles[ 0 ].Kos )
-				</th>
-			</tr>
-		</thead>
-		<tbody>
-			@foreach( var detalle in Model.Estadisticas.Detalles )
-			{
-				<tr>
-					<td>
-						@Html.DisplayFor( modelItem => detalle.Nombre )
-					</td>
-					<td style="text-align:right;margin-right:10em;color:@(detalle.ProfitNumber < 0 ? "red" : "black")">
-						@Html.DisplayFor( modelItem => detalle.Profit )
-					</td>
-					<td style="text-align:center">
-						@Html.DisplayFor( modelItem => detalle.Torneos )
-					</td>
-					<td style="text-align:center">
-						@Html.DisplayFor( modelItem => detalle.Rebuys )
-					</td>
-					<td style="text-align:center">
-						@Html.DisplayFor( modelItem => detalle.Podios )
-					</td>
-					<td style="text-align:center">
-						@Html.DisplayFor( modelItem => detalle.Victorias )
-					</td>
-					<td style="text-align:center">
-						@Html.DisplayFor( modelItem => detalle.Burbujas )
-					</td>
-					<td style="text-align:center">
-						@Html.DisplayFor( modelItem => detalle.Kos )
-					</td>
+	<div style="overflow:auto">
+		<table class="table">
+			<thead>
+				<tr style="text-align:center">
+					<th>
+						@Html.DisplayNameFor( model => model.Estadisticas.Detalles[ 0 ].Nombre )
+					</th>
+					<th>
+						@Html.DisplayNameFor( model => model.Estadisticas.Detalles[ 0 ].Profit )
+					</th>
+					<th>
+						@Html.DisplayNameFor( model => model.Estadisticas.Detalles[ 0 ].Torneos )
+					</th>
+					<th>
+						@Html.DisplayNameFor( model => model.Estadisticas.Detalles[ 0 ].Rebuys )
+					</th>
+					<th>
+						@Html.DisplayNameFor( model => model.Estadisticas.Detalles[ 0 ].Podios )
+					</th>
+					<th>
+						@Html.DisplayNameFor( model => model.Estadisticas.Detalles[ 0 ].Victorias )
+					</th>
+					<th>
+						@Html.DisplayNameFor( model => model.Estadisticas.Detalles[ 0 ].Burbujas )
+					</th>
+					<th>
+						@Html.DisplayNameFor( model => model.Estadisticas.Detalles[ 0 ].Kos )
+					</th>
 				</tr>
-			}
-		</tbody>
-	</table>
+			</thead>
+			<tbody>
+				@foreach( var detalle in Model.Estadisticas.Detalles )
+				{
+					<tr>
+						<td>
+							@Html.DisplayFor( modelItem => detalle.Nombre )
+						</td>
+						<td style="text-align:right;margin-right:10em;color:@(detalle.ProfitNumber < 0 ? "red" : "black")">
+							@Html.DisplayFor( modelItem => detalle.Profit )
+						</td>
+						<td style="text-align:center">
+							@Html.DisplayFor( modelItem => detalle.Torneos )
+						</td>
+						<td style="text-align:center">
+							@Html.DisplayFor( modelItem => detalle.Rebuys )
+						</td>
+						<td style="text-align:center">
+							@Html.DisplayFor( modelItem => detalle.Podios )
+						</td>
+						<td style="text-align:center">
+							@Html.DisplayFor( modelItem => detalle.Victorias )
+						</td>
+						<td style="text-align:center">
+							@Html.DisplayFor( modelItem => detalle.Burbujas )
+						</td>
+						<td style="text-align:center">
+							@Html.DisplayFor( modelItem => detalle.Kos )
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
 
 	<hr style="margin-top:3em;margin-bottom:3em;border: 3px solid black" />
 
-	<div>
+	<div style="overflow:auto">
 		<h1>KNOCKOUTS</h1>
 		<table id="kos" class="table">
 			<thead>
@@ -116,7 +118,7 @@
 			<div class="card statCard">
 				<h3 class="card-title statTitle">@stat.Titulo</h3>
 				<img src="~/images/@stat.Imagen" style="max-height:220px;max-width:90%;width:auto;align-self:center" class="card-img-top">
-				<div  class="card-body" style="text-align:center;border-top:1px solid black">
+				<div class="card-body" style="text-align:center;border-top:1px solid black;overflow:auto">
 					<h6 style="vertical-align:text-top;height:35px"><i>@stat.Descripcion</i></h6>
 					@foreach(var p in stat.Participantes )
 					{
