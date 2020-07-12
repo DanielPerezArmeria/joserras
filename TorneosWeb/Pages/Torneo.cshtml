@@ -1,0 +1,106 @@
+﻿@page
+@model TorneosWeb.Pages.TorneoModel
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+	<meta name="viewport" content="width=device-width" />
+	<link rel="stylesheet" type="text/css" href="~/css/detalleTorneosStyle.css" />
+	<title>Torneo de @Html.DisplayFor(model => model.DetalleTorneo.Torneo.Fecha)</title>
+</head>
+<body>
+
+	<div id="contenedor">
+
+		<div>
+			<h1>RESULTADOS</h1>
+			<table id="ranking" class="table">
+				<thead>
+					<tr style="text-align:center">
+						<th>
+							@Html.DisplayNameFor( model => model.DetalleTorneo.Posiciones[ 0 ].Lugar )
+						</th>
+						<th>
+							@Html.DisplayNameFor( model => model.DetalleTorneo.Posiciones[ 0 ].Nombre )
+						</th>
+						<th>
+							@Html.DisplayNameFor( model => model.DetalleTorneo.Posiciones[ 0 ].Rebuys )
+						</th>
+						<th>
+							@Html.DisplayNameFor( model => model.DetalleTorneo.Posiciones[ 0 ].Knockouts )
+						</th>
+						<th>
+							@Html.DisplayNameFor( model => model.DetalleTorneo.Posiciones[ 0 ].Premio )
+						</th>
+						<th>
+							@Html.DisplayNameFor( model => model.DetalleTorneo.Posiciones[ 0 ].Profit )
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach( var posicion in Model.DetalleTorneo.Posiciones )
+					{
+					<tr>
+						<td style="text-align:center">
+							@Html.DisplayFor( modelItem => posicion.Lugar )
+						</td>
+						<td>
+							@Html.DisplayFor( modelItem => posicion.Nombre )
+						</td>
+						<td style="text-align:center">
+							@Html.DisplayFor( modelItem => posicion.Rebuys )
+						</td>
+						<td style="text-align:center">
+							@Html.DisplayFor( modelItem => posicion.Knockouts )
+						</td>
+						<td style="text-align:right;margin-right:10em;">
+							@Html.DisplayFor( modelItem => posicion.Premio )
+						</td>
+						<td class="profit" style="text-align:right;margin-right:10em;color:@(posicion.ProfitNumber < 0 ? "red" : "black")">
+							@Html.DisplayFor( modelItem => posicion.Profit )
+						</td>
+					</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+
+		<hr style="margin-top:3em;margin-bottom:3em;border: 3px solid black"/>
+
+		<div>
+			<h1>KNOCKOUTS</h1>
+			<table id="kos" class="table">
+				<thead>
+					<tr style="text-align:center">
+						<th></th>
+						@foreach( var jugador in Model.DetalleTorneo.Jugadores )
+						{
+							<th>
+								@jugador
+							</th>
+						}
+					</tr>
+				</thead>
+				<tbody>
+					@foreach( var jugador in Model.DetalleTorneo.Knockouts.Keys )
+					{
+						<tr>
+							<td style="font-weight:bold">@jugador</td>
+							@foreach( var elim in Model.DetalleTorneo.Jugadores )
+							{
+								<td style="text-align:center">
+									@( Model.DetalleTorneo.Knockouts[ jugador ].ContainsKey( elim ) ? Model.DetalleTorneo.Knockouts[ jugador ][ elim ].Eliminaciones.ToString() : "-" )
+								</td>
+							}
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+
+	</div>
+	
+</body>
+</html>

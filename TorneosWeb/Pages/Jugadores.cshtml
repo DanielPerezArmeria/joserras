@@ -1,0 +1,23 @@
+﻿@page
+@model TorneosWeb.Pages.JugadoresModel
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Jugadores</title>
+</head>
+<body>
+
+	<ul>
+	@foreach( var jugador in Model.jugadores )
+	{
+		<li>
+			<a asp-page="./Jugador" asp-route-id="@jugador.Id">@Html.DisplayFor( modelItem => jugador.Nombre )</a>
+		</li>
+	}
+	</ul>
+
+</body>
+</html>

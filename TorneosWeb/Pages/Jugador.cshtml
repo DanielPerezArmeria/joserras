@@ -1,0 +1,74 @@
+﻿@page
+@model TorneosWeb.Pages.JugadorModel
+
+<!DOCTYPE html>
+
+<html>
+	<link rel="stylesheet" type="text/css" href="~/css/site.css"/>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Jugador</title>
+</head>
+<body>
+	<div style="display:inline-flex; vertical-align:bottom">
+		<p><h1>@Model.DetalleJugador.Nombre</h1><h1 style="margin-left:35px;color:@(Model.DetalleJugador.ProfitNumber < 0 ? "red" : "black")">@Model.DetalleJugador.Profit</h1></p>
+	</div>
+
+	<p style="height:20px" />
+
+	<div style="display:inline-flex;flex-wrap:wrap">
+
+		<div class="gridWrapper">
+			<h3 style="grid-column: 1 / span 2">GENERAL</h3>
+
+			<div class="statLabel">@Html.DisplayNameFor( model => model.DetalleJugador.Torneos ):</div>
+			<div class="statValue">@Model.DetalleJugador.Torneos</div>
+
+			<div class="statLabel">@Html.DisplayNameFor( model => model.DetalleJugador.Victorias ):</div>
+			<div class="statValue">@Model.DetalleJugador.Victorias</div>
+
+			<div class="statLabel">@Html.DisplayNameFor( model => model.DetalleJugador.Podios ):</div>
+			<div class="statValue">@Model.DetalleJugador.Podios</div>
+
+			<div class="statLabel">@Html.DisplayNameFor( model => model.DetalleJugador.Kos ):</div>
+			<div class="statValue">@Model.DetalleJugador.Kos</div>
+
+			<div class="statLabel">@Html.DisplayNameFor( model => model.DetalleJugador.Rebuys ):</div>
+			<div class="statValue">@Model.DetalleJugador.Rebuys</div>
+
+			<div class="statLabel">@Html.DisplayNameFor( model => model.DetalleJugador.Burbujas ):</div>
+			<div class="statValue">@Model.DetalleJugador.Burbujas</div>
+		</div>
+
+		<p/>
+
+		<div class="gridWrapper">
+			<h3 style="grid-column: 1 / span 2">PREMIOS</h3>
+
+			<div class="statLabel">@Html.DisplayNameFor( model => model.DetalleJugador.Premios ):</div>
+			<div class="statValue">@Model.DetalleJugador.Premios</div>
+
+			<div class="statLabel">@Html.DisplayNameFor( model => model.DetalleJugador.Costos ):</div>
+			<div class="statValue">@Model.DetalleJugador.Costos</div>
+
+			<div class="statLabel" style="font-weight:bold">@Html.DisplayNameFor( model => model.DetalleJugador.Profit ):</div>
+			<div class="statValue" style="font-weight:bold;color:@(Model.DetalleJugador.ProfitNumber < 0 ? "red" : "black")">@Model.DetalleJugador.Profit</div>
+
+			<div class="statLabel" style="font-weight:bold">@Html.DisplayNameFor( model => model.DetalleJugador.ROI ):</div>
+			<div class="statValue" style="font-weight:bold;color:@(Model.DetalleJugador.ProfitNumber < 0 ? "red" : "black")">@Model.DetalleJugador.ROI</div>
+		</div>
+
+		<div class="gridWrapper">
+			<h3 style="grid-column: 1 / span 2">KO's</h3>
+
+			@foreach( var ko in Model.DetalleJugador.Knockouts )
+			{
+				<div class="statLabel">@ko.Eliminado:</div>
+				<div class="statValue">@ko.Eliminaciones</div>
+			}
+		</div>
+
+	</div>
+
+</body>
+</html>
