@@ -233,7 +233,7 @@ namespace TorneosWeb.service.impl
 				joserramon.Participantes.Add( new StatProps( estadisticas.Detalles[ 0 ].Nombre, estadisticas.Detalles[ 0 ].Profit,
 					estadisticas.Detalles[ 0 ].ProfitNumber > 0 ? true : false ) );
 
-				Stat pichon = new Stat( "El Pichón", "Más pérdidas", "pichon_t.png" );
+				Stat pichon = new Stat( "El Pichón", "Mayores pérdidas", "pichon_t.png" );
 				int mayor = estadisticas.Detalles.Last().ProfitNumber;
 				pichon.Participantes.AddRange( from d in estadisticas.Detalles where d.ProfitNumber == mayor select new StatProps( d.Nombre, d.Profit, d.ProfitNumber > 0 ? true : false ) );
 

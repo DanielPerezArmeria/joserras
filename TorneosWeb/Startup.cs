@@ -30,8 +30,8 @@ namespace TorneosWeb
 		{
 			services.Configure<CookiePolicyOptions>( options =>
 			 {
-							// This lambda determines whether user consent for non-essential cookies is needed for a given request.
-							options.CheckConsentNeeded = context => true;
+				 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+				 options.CheckConsentNeeded = context => true;
 				 options.MinimumSameSitePolicy = SameSiteMode.None;
 			 } );
 
@@ -55,6 +55,8 @@ namespace TorneosWeb
 			container.RegisterSingleton<MapperProvider>();
 			container.RegisterSingleton( () => GetMapper( container ) );
 
+			container.RegisterSingleton<ICacheService, CacheService>();
+			container.RegisterSingleton<IWriteService, WriteService>();
 			container.RegisterSingleton<IReadService, ReadServiceImpl>();
 			container.RegisterDecorator<IReadService, TransactionWrapperReadService>( Lifestyle.Singleton );
 

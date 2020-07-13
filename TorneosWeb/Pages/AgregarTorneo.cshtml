@@ -1,0 +1,27 @@
+﻿@page
+@model TorneosWeb.Pages.AgregarTorneoModel
+
+<!DOCTYPE html>
+
+<html>
+<head>
+	<meta name="viewport" content="width=device-width" />
+	<title>AgregarTorneo</title>
+</head>
+<body>
+
+	<form enctype="multipart/form-data" method="post">
+		<dl>
+			<dt>
+				<label asp-for="FileUpload.FormFiles"></label>
+			</dt>
+			<dd>
+				<input asp-for="FileUpload.FormFiles" type="file" multiple />
+				<span asp-validation-for="FileUpload.FormFiles"></span>
+			</dd>
+		</dl>
+		<input type="submit" value="Upload" />
+	</form>
+
+</body>
+</html>

@@ -189,4 +189,7 @@ group by j.nombre
 on detalles.nombre = kk.nombre
 order by profit desc</value>
   </data>
+  <data name="InsertTorneo" xml:space="preserve">
+    <value>insert into torneos (fecha, precio_buyin, precio_rebuy, entradas, rebuys, bolsa) output INSERTED.ID values ('{0}', {1}, {2}, {3}, {4}, {5} )</value>
+  </data>
 </root>

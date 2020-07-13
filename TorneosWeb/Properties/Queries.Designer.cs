@@ -148,5 +148,14 @@ namespace TorneosWeb.Properties {
                 return ResourceManager.GetString("GetStats", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to insert into torneos (fecha, precio_buyin, precio_rebuy, entradas, rebuys, bolsa) output INSERTED.ID values (&apos;{0}&apos;, {1}, {2}, {3}, {4}, {5} ).
+        /// </summary>
+        internal static string InsertTorneo {
+            get {
+                return ResourceManager.GetString("InsertTorneo", resourceCulture);
+            }
+        }
     }
 }
