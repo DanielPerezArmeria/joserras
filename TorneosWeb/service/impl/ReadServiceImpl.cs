@@ -241,7 +241,7 @@ namespace TorneosWeb.service.impl
 				DetalleJugador dj = estadisticas.Detalles.OrderByDescending( p => p.ROINumber ).First();
 				brailovsky.Participantes.Add( new StatProps( dj.Nombre, dj.ROI, dj.ROINumber > 0 ? true : false ) );
 
-				Stat victorias = new Stat( "Medalla de Oro", "Más 1ros lugares", "goldmedal_t.png" );
+				Stat victorias = new Stat( "Medalla de Oro", "Más 1ros lugares", "medalla_t.png" );
 				IEnumerable<DetalleJugador> dets = estadisticas.Detalles.OrderByDescending( p => p.Victorias );
 				mayor = dets.First().Victorias;
 				victorias.Participantes.AddRange( from d in dets where d.Victorias == mayor select new StatProps( d.Nombre, d.Victorias.ToString() ) );
