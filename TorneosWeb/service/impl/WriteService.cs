@@ -1,13 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.IO;
 using System.Linq;
-using System.Text;
 using TorneosWeb.domain.dto;
 using TorneosWeb.domain.models;
 using TorneosWeb.exception;
@@ -19,22 +16,24 @@ namespace TorneosWeb.service.impl
 		private IReadService readService;
 		private ICacheService cacheService;
 		private ILogger<WriteService> log;
+		private ITournamentReader tourneyReader;
 
 		private string connString;
 
-		public WriteService(IReadService service, ICacheService cacheService, IConfiguration config, ILogger<WriteService> logger)
+		public WriteService(IReadService service, ICacheService cacheService, IConfiguration config, ITournamentReader tourneyReader, ILogger<WriteService> logger)
 		{
 			readService = service;
 			this.cacheService = cacheService;
 			log = logger;
 			connString = config.GetConnectionString( Properties.Resources.joserrasDb );
+			this.tourneyReader = tourneyReader;
 		}
 
 		public void uploadTournament(List<IFormFile> files)
 		{
-			TorneoDTO torneo = GetDTO<TorneoDTO>( "torneo", files );
-			List<DetalleTorneoDTO> detalles = GetDTO<List<DetalleTorneoDTO>>( "detalle", files );
-			List<EliminacionesDTO> kos = GetDTO<List<EliminacionesDTO>>( "knockouts", files );
+			TorneoDTO torneo = tourneyReader.GetItems<TorneoDTO>( files.Find( t => t.FileName.Contains( "torneo" ) ) ).First();
+			List<DetalleTorneoDTO> detalles = tourneyReader.GetItems<DetalleTorneoDTO>( files.Find( t => t.FileName.Contains( "detalle" ) ) ).ToList();
+			List<EliminacionesDTO> kos = tourneyReader.GetItems<EliminacionesDTO>( files.Find( t => t.FileName.Contains( "knockouts" ) ) ).ToList();
 
 			SqlTransaction transaction = null;
 			try
@@ -83,7 +82,15 @@ namespace TorneosWeb.service.impl
 			foreach(EliminacionesDTO dto in kos )
 			{
 				string q = string.Format( query, torneoId, dto.Jugador, dto.Eliminado, dto.Eliminaciones );
-				new SqlCommand( q, conn, tx ).ExecuteNonQuery();
+				try
+				{
+					new SqlCommand( q, conn, tx ).ExecuteNonQuery();
+				}
+				catch( Exception e )
+				{
+					log.LogError( e, e.Message );
+					throw;
+				}
 			}
 		}
 
@@ -94,9 +101,17 @@ namespace TorneosWeb.service.impl
 
 			foreach( DetalleTorneoDTO dto in detalles )
 			{
-				string q = string.Format( query,
-					torneoId, dto.Jugador, dto.Rebuys, dto.Posicion, dto.Podio.ToString(), dto.Premio, dto.Burbuja.ToString() );
-				new SqlCommand( q, conn, tx ).ExecuteNonQuery();
+				string q = string.Format( query, torneoId, dto.Jugador, dto.Rebuys, dto.Posicion,
+					dto.Premio > 0 ? true.ToString() : false.ToString(), dto.Premio, dto.Burbuja.ToString() );
+				try
+				{
+					new SqlCommand( q, conn, tx ).ExecuteNonQuery();
+				}
+				catch( Exception e )
+				{
+					log.LogError( e, e.Message );
+					throw;
+				}
 			}
 		}
 
@@ -121,31 +136,17 @@ namespace TorneosWeb.service.impl
 			{
 				if(jugadores.Find(d=>d.Nombre == dto.Jugador) == null )
 				{
-					new SqlCommand( string.Format( query, dto.Jugador ), conn, tx ).ExecuteNonQuery();
+					try
+					{
+						new SqlCommand( string.Format( query, dto.Jugador ), conn, tx ).ExecuteNonQuery();
+					}
+					catch( Exception e )
+					{
+						log.LogError( e, e.Message );
+						throw;
+					}
 				}
 			}
-		}
-
-		private T GetDTO<T>(string fileName, List<IFormFile> files)
-		{
-			IFormFile file = files.Find( t => t.FileName.Contains( fileName ) );
-			if(file == null )
-			{
-				return default(T);
-			}
-			string dtoString = ReadWholeFile( file );
-			return JsonConvert.DeserializeObject<T>( dtoString );
-		}
-
-		private string ReadWholeFile(IFormFile file)
-		{
-			StringBuilder result = new StringBuilder();
-			using( var reader = new StreamReader( file.OpenReadStream() ) )
-			{
-				while( reader.Peek() >= 0 )
-					result.AppendLine( reader.ReadLine() );
-			}
-			return result.ToString();
 		}
 
 	}

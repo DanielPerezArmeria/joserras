@@ -21,11 +21,11 @@ namespace TorneosWeb.service.impl
 
 		public List<Jugador> GetAllJugadores()
 		{
-			if( !cacheService.ContainsKey( "GetAllJugadores" ) )
+			if( cacheService.GetAllJugadores.Count == 0 )
 			{
 				try
 				{
-					cacheService.Add( "GetAllJugadores", wrapped.GetAllJugadores() );
+					cacheService.GetAllJugadores.AddRange( wrapped.GetAllJugadores() );
 				}
 				catch( Exception e )
 				{
@@ -34,16 +34,19 @@ namespace TorneosWeb.service.impl
 				}
 			}
 
-			return cacheService[ "GetAllJugadores" ] as List<Jugador>;
+			return cacheService.GetAllJugadores;
 		}
 
 		public SortedList<string, Dictionary<string, Knockouts>> GetAllKnockouts()
 		{
-			if( !cacheService.ContainsKey( "GetAllKnockouts" ) )
+			if( cacheService.GetAllKnockouts.Count == 0 )
 			{
 				try
 				{
-					cacheService.Add( "GetAllKnockouts", wrapped.GetAllKnockouts() );
+					foreach( KeyValuePair<string, Dictionary<string, Knockouts>> item in wrapped.GetAllKnockouts() )
+					{
+						cacheService.GetAllKnockouts.Add( item.Key, item.Value );
+					}
 				}
 				catch( Exception e )
 				{
@@ -52,16 +55,16 @@ namespace TorneosWeb.service.impl
 				}
 			}
 
-			return cacheService[ "GetAllKnockouts" ] as SortedList<string, Dictionary<string, Knockouts>>;
+			return cacheService.GetAllKnockouts;
 		}
 
 		public List<Torneo> GetAllTorneos()
 		{
-			if( !cacheService.ContainsKey( "GetAllTorneos" ) )
+			if( cacheService.GetAllTorneos.Count == 0 )
 			{
 				try
 				{
-					cacheService.Add( "GetAllTorneos", wrapped.GetAllTorneos() );
+					cacheService.GetAllTorneos.AddRange( wrapped.GetAllTorneos() );
 				}
 				catch( Exception e )
 				{
@@ -70,16 +73,16 @@ namespace TorneosWeb.service.impl
 				}
 			}
 
-			return cacheService[ "GetAllTorneos" ] as List<Torneo>;
+			return cacheService.GetAllTorneos;
 		}
 
 		public DetalleTorneo GetDetalleTorneo(Guid id)
 		{
-			if( !cacheService.ContainsKey( "GetDetalleTorneo" ) )
+			if( !cacheService.GetDetalleTorneo.ContainsKey(id) )
 			{
 				try
 				{
-					cacheService.Add( "GetDetalleTorneo", wrapped.GetDetalleTorneo( id ) );
+					cacheService.GetDetalleTorneo.Add( id, wrapped.GetDetalleTorneo( id ) );
 				}
 				catch( Exception e )
 				{
@@ -88,16 +91,16 @@ namespace TorneosWeb.service.impl
 				}
 			}
 
-			return cacheService[ "GetDetalleTorneo" ] as DetalleTorneo;
+			return cacheService.GetDetalleTorneo[id];
 		}
 
 		public DetalleJugador GetDetalleJugador(Guid id)
 		{
-			if( !cacheService.ContainsKey( "GetDetalleJugadorById" ) )
+			if( !cacheService.GetDetalleJugadorById.ContainsKey( id ) )
 			{
 				try
 				{
-					cacheService.Add( "GetDetalleJugadorById", wrapped.GetDetalleJugador( id ) );
+					cacheService.GetDetalleJugadorById.Add( id, wrapped.GetDetalleJugador( id ) );
 				}
 				catch( Exception e )
 				{
@@ -106,7 +109,7 @@ namespace TorneosWeb.service.impl
 				}
 			}
 
-			return cacheService[ "GetDetalleJugadorById" ] as DetalleJugador;
+			return cacheService.GetDetalleJugadorById[ id ];
 		}
 
 		public DetalleJugador GetDetalleJugador(string nombre)
@@ -114,13 +117,13 @@ namespace TorneosWeb.service.impl
 			throw new NotImplementedException();
 		}
 
-		public SortedList<string, Dictionary<string, Knockouts>> GetKnockouts(Guid torneoId)
+		public SortedList<string, Dictionary<string, Knockouts>> GetKnockoutsByTournamentId(Guid torneoId)
 		{
-			if( !cacheService.ContainsKey( "GetKnockouts" ) )
+			if( !cacheService.GetKnockoutsByTournament.ContainsKey( torneoId ) )
 			{
 				try
 				{
-					cacheService.Add( "GetKnockouts", wrapped.GetKnockouts( torneoId ) );
+					cacheService.GetKnockoutsByTournament.Add( torneoId, wrapped.GetKnockoutsByTournamentId( torneoId ) );
 				}
 				catch( Exception e )
 				{
@@ -129,16 +132,16 @@ namespace TorneosWeb.service.impl
 				}
 			}
 
-			return cacheService[ "GetKnockouts" ] as SortedList<string, Dictionary<string, Knockouts>>;
+			return cacheService.GetKnockoutsByTournament[ torneoId ];
 		}
 
 		public List<Knockouts> GetKnockoutsByPlayer(Guid playerId)
 		{
-			if( !cacheService.ContainsKey( "GetKnockoutsByPlayer" ) )
+			if( !cacheService.GetKnockoutsByPlayer.ContainsKey( playerId ) )
 			{
 				try
 				{
-					cacheService.Add( "GetKnockoutsByPlayer", wrapped.GetKnockoutsByPlayer( playerId ) );
+					cacheService.GetKnockoutsByPlayer.Add( playerId, wrapped.GetKnockoutsByPlayer( playerId ) );
 				}
 				catch( Exception e )
 				{
@@ -147,16 +150,16 @@ namespace TorneosWeb.service.impl
 				}
 			}
 
-			return cacheService[ "GetKnockoutsByPlayer" ] as List<Knockouts>;
+			return cacheService.GetKnockoutsByPlayer[ playerId ];
 		}
 
 		public List<DetalleJugador> GetDetalleJugador()
 		{
-			if( !cacheService.ContainsKey( "GetDetalleJugador" ) )
+			if( cacheService.GetDetalleJugador.Count == 0 )
 			{
 				try
 				{
-					cacheService.Add( "GetDetalleJugador", wrapped.GetDetalleJugador() );
+					cacheService.GetDetalleJugador.AddRange( wrapped.GetDetalleJugador() );
 				}
 				catch( Exception e )
 				{
@@ -165,16 +168,16 @@ namespace TorneosWeb.service.impl
 				}
 			}
 
-			return cacheService[ "GetDetalleJugador" ] as List<DetalleJugador>;
+			return cacheService.GetDetalleJugador;
 		}
 
 		public Estadisticas GetStats()
 		{
-			if( !cacheService.ContainsKey( "GetStats" ) )
+			if( cacheService.GetStats == null )
 			{
 				try
 				{
-					cacheService.Add( "GetStats", wrapped.GetStats() );
+					cacheService.GetStats = wrapped.GetStats();
 				}
 				catch( Exception e )
 				{
@@ -183,7 +186,7 @@ namespace TorneosWeb.service.impl
 				}
 			}
 
-			return cacheService[ "GetStats" ] as Estadisticas;
+			return cacheService.GetStats;
 		}
 	}
 

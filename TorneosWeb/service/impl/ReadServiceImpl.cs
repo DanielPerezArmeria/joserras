@@ -116,7 +116,7 @@ namespace TorneosWeb.service.impl
 				} );
 			}
 
-			detalleTorneo.Knockouts = GetKnockouts( torneoId );
+			detalleTorneo.Knockouts = GetKnockoutsByTournamentId( torneoId );
 
 			foreach( Posicion position in detalleTorneo.Posiciones )
 			{
@@ -157,7 +157,7 @@ namespace TorneosWeb.service.impl
 			throw new NotImplementedException();
 		}
 
-		public SortedList<string, Dictionary<string, Knockouts>> GetKnockouts(Guid torneoId)
+		public SortedList<string, Dictionary<string, Knockouts>> GetKnockoutsByTournamentId(Guid torneoId)
 		{
 			SortedList<string, Dictionary<string, Knockouts>> knockouts = new SortedList<string, Dictionary<string,Knockouts>>();
 			string query = string.Format( "select j.nombre, elim.nombre as eliminado, sum(e.eliminaciones) as eliminaciones from eliminaciones e, jugadores j, jugadores elim"
@@ -229,7 +229,7 @@ namespace TorneosWeb.service.impl
 
 				estadisticas.Stats = new List<Stat>();
 
-				Stat joserramon = new Stat( "Joserra Mayor", "Más Profit", "joseramon_t.png" );
+				Stat joserramon = new Stat( "Joserramón", "Más Profit", "joseramon_t.png" );
 				joserramon.Participantes.Add( new StatProps( estadisticas.Detalles[ 0 ].Nombre, estadisticas.Detalles[ 0 ].Profit,
 					estadisticas.Detalles[ 0 ].ProfitNumber > 0 ? true : false ) );
 
@@ -237,7 +237,7 @@ namespace TorneosWeb.service.impl
 				int mayor = estadisticas.Detalles.Last().ProfitNumber;
 				pichon.Participantes.AddRange( from d in estadisticas.Detalles where d.ProfitNumber == mayor select new StatProps( d.Nombre, d.Profit, d.ProfitNumber > 0 ? true : false ) );
 
-				Stat brailovsky = new Stat( "El Brailovsky", "Mayor ROI", "brailovsky_t.png" );
+				Stat brailovsky = new Stat( "Brailovsky", "Mayor ROI", "brailovsky_t.png" );
 				DetalleJugador dj = estadisticas.Detalles.OrderByDescending( p => p.ROINumber ).First();
 				brailovsky.Participantes.Add( new StatProps( dj.Nombre, dj.ROI, dj.ROINumber > 0 ? true : false ) );
 
@@ -261,12 +261,12 @@ namespace TorneosWeb.service.impl
 				mayor = dets.First().Rebuys;
 				ribeyes.Participantes.AddRange( from d in dets where d.Rebuys == mayor select new StatProps( d.Nombre, d.Rebuys.ToString() ) );
 
-				Stat kos = new Stat( "Knockouts", "Más eliminaciones", "kos_t.png" );
+				Stat kos = new Stat( "Tyson", "Más eliminaciones", "tyson_t.png" );
 				dets = estadisticas.Detalles.OrderByDescending( p => p.Kos );
 				mayor = dets.First().Kos;
 				kos.Participantes.AddRange( from d in dets where d.Kos == mayor select new StatProps( d.Nombre, d.Kos.ToString() ) );
 
-				Stat bundy = new Stat( "Al Bundy", "Últimos lugares", "albundy_t.jpg" );
+				Stat bundy = new Stat( "Al Bundy", "Más últimos lugares", "albundy_t.jpg" );
 				string query = Properties.Queries.GetBundy;
 				Dictionary<string, int> bundies = new Dictionary<string, int>();
 				joserrasQuery.ExecuteQuery( conn, query, reader =>
@@ -306,8 +306,8 @@ namespace TorneosWeb.service.impl
 				sniper.Participantes.AddRange( from t in tuples where t.Item3 == mayor select new StatProps( t.Item1 + " a " + t.Item2, t.Item3.ToString() ) );
 
 				estadisticas.Stats.Add( joserramon );
-				estadisticas.Stats.Add( pichon );
 				estadisticas.Stats.Add( brailovsky );
+				estadisticas.Stats.Add( pichon );
 				estadisticas.Stats.Add( victorias );
 				estadisticas.Stats.Add( podios );
 				estadisticas.Stats.Add( coyote );

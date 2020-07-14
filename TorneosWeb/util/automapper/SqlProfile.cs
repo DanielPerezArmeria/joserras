@@ -25,7 +25,7 @@ namespace TorneosWeb.util.automapper
 				.ForMember( dest => dest.Rebuys, opt => opt.MapFrom( src => src.GetInt32( 2 ) ) )
 				.ForMember( dest => dest.Lugar, opt => opt.MapFrom( src => src.GetInt32( 3 ) ) )
 				.ForMember( dest => dest.Podio, opt => opt.MapFrom( src => src.GetBoolean( 4 ) ? "Podio" : "-" ) )
-				.ForMember( dest => dest.Premio, opt => opt.MapFrom( src => src.GetBoolean( 4 ) ? src.GetInt32( 5 ).ToString( "$###,###" ) : "-" ) )
+				.ForMember( dest => dest.Premio, opt => opt.MapFrom( src => src.GetInt32( 5 ) > 0 ? src.GetInt32( 5 ).ToString( "$###,###" ) : "-" ) )
 				.ForMember( dest => dest.Burbuja, opt => opt.MapFrom( src => src.GetBoolean( 6 ) ? "Burbuja" : "-" ) )
 				.ForMember( dest => dest.Nombre, opt => opt.MapFrom( src => src.GetString( 7 ) ) )
 				.ForMember( dest => dest.Knockouts, opt => opt.Ignore() )
