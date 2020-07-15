@@ -24,8 +24,6 @@ namespace TorneosWeb.service
 
 		SortedList<string, Dictionary<string, Knockouts>> GetAllKnockouts();
 
-		Estadisticas GetStats();
-
 	}
 
 }

@@ -59,7 +59,10 @@ namespace TorneosWeb
 			container.RegisterSingleton<IWriteService, WriteService>();
 			container.RegisterSingleton<IReadService, ReadServiceImpl>();
 			container.RegisterSingleton<ITournamentReader, CsvTournamentReader>();
+			container.RegisterSingleton<IStatsService, StatsServiceImpl>();
+
 			container.RegisterDecorator<IReadService, TransactionWrapperReadService>( Lifestyle.Singleton );
+			container.RegisterDecorator<IStatsService, TransactionWrapperStatsService>( Lifestyle.Singleton );
 
 			container.RegisterSingleton<JoserrasQuery>();
 		}

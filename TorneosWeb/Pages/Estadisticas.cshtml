@@ -48,8 +48,8 @@
 				{
 					<tr>
 						<td>
-							@Html.DisplayFor( modelItem => detalle.Nombre )
-						</td>
+							<a asp-page="./Jugador" asp-route-id="@detalle.Id">@Html.DisplayFor( modelItem => detalle.Nombre )</a>
+</td>
 						<td style="text-align:right;margin-right:10em;color:@(detalle.ProfitNumber < 0 ? "red" : "black")">
 							@Html.DisplayFor( modelItem => detalle.Profit )
 						</td>
@@ -119,7 +119,7 @@
 				<h3 class="card-title statTitle">@stat.Titulo</h3>
 				<img src="~/images/@stat.Imagen" style="max-height:220px;max-width:90%;width:auto;align-self:center" class="card-img-top">
 				<div class="card-body" style="text-align:center;border-top:1px solid black;overflow:auto">
-					<h6 style="vertical-align:text-top;height:35px"><i>@stat.Descripcion</i></h6>
+					<h6 style="vertical-align:text-top;margin-bottom:20px"><i>@stat.Descripcion</i></h6>
 					@foreach(var p in stat.Participantes )
 					{
 						<p class="card-text">
