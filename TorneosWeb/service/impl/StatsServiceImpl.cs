@@ -111,6 +111,19 @@ namespace TorneosWeb.service.impl
 				mayor = tuples.Aggregate( (pair1, pair2) => pair1.Item3 > pair2.Item3 ? pair1 : pair2 ).Item3;
 				sniper.Participantes.AddRange( from t in tuples where t.Item3 == mayor select new StatProps( t.Item1 + " a " + t.Item2, t.Item3.ToString() ) );
 
+				Stat piedra = new Stat( "Piedra de la Victoria", "Más podios negativos", "piedra_t.png" );
+				query = Properties.Queries.GetPodiosNegativos;
+				Dictionary<string, int> props = new Dictionary<string, int>();
+				joserrasQuery.ExecuteQuery( conn, query, reader =>
+				{
+					while( reader.Read() )
+					{
+						props[ reader.GetString( 0 ) ] = reader.GetInt32(1);
+					}
+				} );
+				mayor = props.Aggregate( (pair1, pair2) => pair1.Value > pair2.Value ? pair1 : pair2 ).Value;
+				piedra.Participantes.AddRange( from b in props where b.Value == mayor select new StatProps( b.Key, b.Value.ToString() ) );
+
 				estadisticas.Stats.Add( joserramon );
 				estadisticas.Stats.Add( brailovsky );
 				estadisticas.Stats.Add( pichon );
@@ -121,6 +134,7 @@ namespace TorneosWeb.service.impl
 				estadisticas.Stats.Add( ribeyes );
 				estadisticas.Stats.Add( kos );
 				estadisticas.Stats.Add( sniper );
+				estadisticas.Stats.Add( piedra );
 				estadisticas.Stats.Add( bundy );
 			}
 

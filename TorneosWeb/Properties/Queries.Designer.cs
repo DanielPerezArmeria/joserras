@@ -135,6 +135,23 @@ namespace TorneosWeb.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select res.nombre, count(res.nombre) as podios_neg
+        ///from
+        ///(select t.fecha, j.nombre, sum(d.premio) as premio, sum((t.precio_rebuy * d.rebuys) + t.precio_buyin ) as costos
+        ///from jugadores j, DetalleTorneos d, torneos t
+        ///where d.podio = 1 and j.id = d.jugador_id and t.id = d.torneo_id
+        ///group by t.fecha, j.nombre
+        ///) as res
+        ///where res.premio - res.costos &lt; 0
+        ///group by res.nombre order by podios_neg desc.
+        /// </summary>
+        internal static string GetPodiosNegativos {
+            get {
+                return ResourceManager.GetString("GetPodiosNegativos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select detalles.id, detalles.nombre, detalles.costo_total, detalles.premios, detalles.podios, detalles.victorias,
         ///	(detalles.premios - detalles.costo_total) as profit, detalles.burbujas, ISNULL(kk.ko, 0) as kos,
         ///	detalles.torneos, detalles.rebuys
