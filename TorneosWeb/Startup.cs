@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using SimpleInjector;
 using TorneosWeb.service;
 using TorneosWeb.service.impl;
@@ -17,10 +18,11 @@ namespace TorneosWeb
 	{
 		private Container container = new SimpleInjector.Container();
 
-		public Startup(IConfiguration configuration)
+		public Startup(IConfiguration configuration, ILogger<Startup> logger)
 		{
 			container.Options.ResolveUnregisteredConcreteTypes = false;
 			Configuration = configuration;
+			logger.LogDebug( "********  STARTING APP  ********" );
 		}
 
 		public IConfiguration Configuration { get; }
