@@ -67,7 +67,7 @@ namespace TorneosWeb.service.impl
 				mayor = dets.First().Rebuys;
 				ribeyes.Participantes.AddRange( from d in dets where d.Rebuys == mayor select new StatProps( d.Nombre, d.Rebuys.ToString() ) );
 
-				Stat kos = new Stat( "Tyson", "Más knockouts", "tyson_t.png" );
+				Stat kos = new Stat( "Tyson", "Más KO's", "tyson_t.png" );
 				dets = estadisticas.Detalles.OrderByDescending( p => p.Kos );
 				mayor = dets.First().Kos;
 				kos.Participantes.AddRange( from d in dets where d.Kos == mayor select new StatProps( d.Nombre, d.Kos.ToString() ) );
@@ -98,7 +98,7 @@ namespace TorneosWeb.service.impl
 				mayor = burbujas.Aggregate( (pair1, pair2) => pair1.Value > pair2.Value ? pair1 : pair2 ).Value;
 				bubbleBoy.Participantes.AddRange( from b in burbujas where b.Value == mayor select new StatProps( b.Key, b.Value.ToString() ) );
 
-				Stat sniper = new Stat( "Sniper", "Más eliminaciones a un jugador", "sniper_t.png" );
+				Stat sniper = new Stat( "Sniper", "Más KO's a un jugador", "sniper_t.png" );
 				query = Properties.Queries.GetAllKOs;
 				List<Tuple<string, string, int>> tuples = new List<Tuple<string, string, int>>();
 				joserrasQuery.ExecuteQuery( conn, query, reader =>

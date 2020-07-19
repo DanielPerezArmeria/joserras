@@ -21,10 +21,13 @@
 						@Html.DisplayNameFor( model => model.Estadisticas.Detalles[ 0 ].Nombre )
 					</th>
 					<th>
+						@Html.DisplayNameFor( model => model.Estadisticas.Detalles[ 0 ].Torneos )
+					</th>
+					<th>
 						@Html.DisplayNameFor( model => model.Estadisticas.Detalles[ 0 ].Profit )
 					</th>
 					<th>
-						@Html.DisplayNameFor( model => model.Estadisticas.Detalles[ 0 ].Torneos )
+						@Html.DisplayNameFor( model => model.Estadisticas.Detalles[ 0 ].ROI )
 					</th>
 					<th>
 						@Html.DisplayNameFor( model => model.Estadisticas.Detalles[ 0 ].Rebuys )
@@ -46,32 +49,35 @@
 			<tbody>
 				@foreach( var detalle in Model.Estadisticas.Detalles )
 				{
-					<tr>
-						<td>
-							<a asp-page="./Jugador" asp-route-id="@detalle.Id">@Html.DisplayFor( modelItem => detalle.Nombre )</a>
-</td>
-						<td style="text-align:right;margin-right:10em;color:@(detalle.ProfitNumber < 0 ? "red" : "black")">
-							@Html.DisplayFor( modelItem => detalle.Profit )
-						</td>
-						<td style="text-align:center">
-							@Html.DisplayFor( modelItem => detalle.Torneos )
-						</td>
-						<td style="text-align:center">
-							@Html.DisplayFor( modelItem => detalle.Rebuys )
-						</td>
-						<td style="text-align:center">
-							@Html.DisplayFor( modelItem => detalle.Podios )
-						</td>
-						<td style="text-align:center">
-							@Html.DisplayFor( modelItem => detalle.Victorias )
-						</td>
-						<td style="text-align:center">
-							@Html.DisplayFor( modelItem => detalle.Burbujas )
-						</td>
-						<td style="text-align:center">
-							@Html.DisplayFor( modelItem => detalle.Kos )
-						</td>
-					</tr>
+				<tr>
+					<td>
+						<a asp-page="./Jugador" asp-route-id="@detalle.Id">@Html.DisplayFor( modelItem => detalle.Nombre )</a>
+					</td>
+					<td style="text-align:center">
+						@Html.DisplayFor( modelItem => detalle.Torneos )
+					</td>
+					<td style="text-align:right;margin-right:10em;color:@(detalle.ProfitNumber < 0 ? "red" : "black")">
+						@Html.DisplayFor( modelItem => detalle.Profit )
+					</td>
+					<td style="text-align:right;margin-right:10em;color:@(detalle.ROINumber < 0 ? "red" : "black")">
+						@Html.DisplayFor( modelItem => detalle.ROI )
+					</td>
+					<td style="text-align:center">
+						@Html.DisplayFor( modelItem => detalle.Rebuys )
+					</td>
+					<td style="text-align:center">
+						@Html.DisplayFor( modelItem => detalle.Podios )
+					</td>
+					<td style="text-align:center">
+						@Html.DisplayFor( modelItem => detalle.Victorias )
+					</td>
+					<td style="text-align:center">
+						@Html.DisplayFor( modelItem => detalle.Burbujas )
+					</td>
+					<td style="text-align:center">
+						@Html.DisplayFor( modelItem => detalle.Kos )
+					</td>
+				</tr>
 				}
 			</tbody>
 		</table>
@@ -117,16 +123,18 @@
 		{
 			<div class="card statCard">
 				<h3 class="card-title statTitle">@stat.Titulo</h3>
-				<img src="~/images/@stat.Imagen" style="max-height:220px;max-width:90%;width:auto;align-self:center" class="card-img-top">
-				<div class="card-body" style="text-align:center;border-top:1px solid black;overflow:auto">
-					<h6 style="vertical-align:text-top;margin-bottom:20px"><i>@stat.Descripcion</i></h6>
-					@foreach(var p in stat.Participantes )
-					{
-						<p class="card-text">
-							<b>@p.Nombre: </b>
-							<span style="color:@(p.IsPositive ? "black" : "red")">@p.Valor</span>
-						</p>
-					}
+				<div style="background-color:white;text-align:center;width:100%">
+					<img src="~/images/@stat.Imagen" style="max-height:220px;max-width:90%;width:auto;align-self:center;margin-top:2px" class="card-img-top">
+				</div>
+				<div class="card-body" style="text-align:center;border-top:1px solid black;overflow:auto;background-color:white">
+				<h6 style="vertical-align:text-top;margin-bottom:20px"><i>@stat.Descripcion</i></h6>
+				@foreach(var p in stat.Participantes )
+				{
+					<p class="card-text" style="margin:2px">
+						<b>@p.Nombre: </b>
+						<span style="color:@(p.IsPositive ? "black" : "red")">@p.Valor</span>
+					</p>
+				}
 				</div>
 			</div>
 		}
