@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using TorneosWeb.domain.models;
 using TorneosWeb.exception;
@@ -8,70 +9,107 @@ namespace TorneosWeb.service.impl
 	public class TransactionWrapperReadService : IReadService
 	{
 		private IReadService wrapped;
+		private ICacheService cacheService;
+		private ILogger<TransactionWrapperReadService> log;
 
-		public TransactionWrapperReadService(IReadService readService)
+		public TransactionWrapperReadService(IReadService readService, ICacheService cacheService, ILogger<TransactionWrapperReadService> logger)
 		{
-			this.wrapped = readService;
+			wrapped = readService;
+			this.cacheService = cacheService;
+			log = logger;
 		}
 
 		public List<Jugador> GetAllJugadores()
 		{
-			try
+			if( cacheService.GetAllJugadores.Count == 0 )
 			{
-				return wrapped.GetAllJugadores();
+				try
+				{
+					cacheService.GetAllJugadores.AddRange( wrapped.GetAllJugadores() );
+				}
+				catch( Exception e )
+				{
+					log.LogWarning( e, e.Message );
+					throw new JoserrasException( e );
+				}
 			}
-			catch( Exception e )
-			{
-				throw new JoserrasException( e );
-			}
+
+			return cacheService.GetAllJugadores;
 		}
 
 		public SortedList<string, Dictionary<string, Knockouts>> GetAllKnockouts()
 		{
-			try
+			if( cacheService.GetAllKnockouts.Count == 0 )
 			{
-				return wrapped.GetAllKnockouts();
+				try
+				{
+					foreach( KeyValuePair<string, Dictionary<string, Knockouts>> item in wrapped.GetAllKnockouts() )
+					{
+						cacheService.GetAllKnockouts.Add( item.Key, item.Value );
+					}
+				}
+				catch( Exception e )
+				{
+					log.LogWarning( e, e.Message );
+					throw new JoserrasException( e );
+				}
 			}
-			catch( Exception e )
-			{
-				throw new JoserrasException( e );
-			}
+
+			return cacheService.GetAllKnockouts;
 		}
 
 		public List<Torneo> GetAllTorneos()
 		{
-			try
+			if( cacheService.GetAllTorneos.Count == 0 )
 			{
-				return wrapped.GetAllTorneos();
+				try
+				{
+					cacheService.GetAllTorneos.AddRange( wrapped.GetAllTorneos() );
+				}
+				catch( Exception e )
+				{
+					log.LogWarning( e, e.Message );
+					throw new JoserrasException( e );
+				}
 			}
-			catch( Exception e)
-			{
-				throw new JoserrasException(e);
-			}
+
+			return cacheService.GetAllTorneos;
 		}
 
 		public DetalleTorneo GetDetalleTorneo(Guid id)
 		{
-			try
+			if( !cacheService.GetDetalleTorneo.ContainsKey(id) )
 			{
-				return wrapped.GetDetalleTorneo( id );
+				try
+				{
+					cacheService.GetDetalleTorneo.Add( id, wrapped.GetDetalleTorneo( id ) );
+				}
+				catch( Exception e )
+				{
+					log.LogWarning( e, e.Message );
+					throw new JoserrasException( e );
+				}
 			}
-			catch( Exception e )
-			{
-				throw new JoserrasException( e );
-			}
+
+			return cacheService.GetDetalleTorneo[id];
 		}
 
 		public DetalleJugador GetDetalleJugador(Guid id)
 		{
-			try
+			if( !cacheService.GetDetalleJugadorById.ContainsKey( id ) )
 			{
-				return wrapped.GetDetalleJugador( id );
+				try
+				{
+					cacheService.GetDetalleJugadorById.Add( id, wrapped.GetDetalleJugador( id ) );
+				}
+				catch( Exception e )
+				{
+					log.LogWarning( e, e.Message );
+					throw new JoserrasException( e );
+				}
 			}
-			catch( Exception e )
-			{
-				throw new JoserrasException( e );
-			}
+
+			return cacheService.GetDetalleJugadorById[ id ];
 		}
 
 		public DetalleJugador GetDetalleJugador(string nombre)
@@ -79,53 +117,60 @@ namespace TorneosWeb.service.impl
 			throw new NotImplementedException();
 		}
 
-		public SortedList<string, Dictionary<string, Knockouts>> GetKnockouts(Guid torneoId)
+		public SortedList<string, Dictionary<string, Knockouts>> GetKnockoutsByTournamentId(Guid torneoId)
 		{
-			try
+			if( !cacheService.GetKnockoutsByTournament.ContainsKey( torneoId ) )
 			{
-				return wrapped.GetKnockouts( torneoId );
+				try
+				{
+					cacheService.GetKnockoutsByTournament.Add( torneoId, wrapped.GetKnockoutsByTournamentId( torneoId ) );
+				}
+				catch( Exception e )
+				{
+					log.LogWarning( e, e.Message );
+					throw new JoserrasException( e );
+				}
 			}
-			catch( Exception e )
-			{
-				throw new JoserrasException( e );
-			}
+
+			return cacheService.GetKnockoutsByTournament[ torneoId ];
 		}
 
 		public List<Knockouts> GetKnockoutsByPlayer(Guid playerId)
 		{
-			try
+			if( !cacheService.GetKnockoutsByPlayer.ContainsKey( playerId ) )
 			{
-				return wrapped.GetKnockoutsByPlayer( playerId );
+				try
+				{
+					cacheService.GetKnockoutsByPlayer.Add( playerId, wrapped.GetKnockoutsByPlayer( playerId ) );
+				}
+				catch( Exception e )
+				{
+					log.LogWarning( e, e.Message );
+					throw new JoserrasException( e );
+				}
 			}
-			catch(Exception e )
-			{
-				throw new JoserrasException( e );
-			}
+
+			return cacheService.GetKnockoutsByPlayer[ playerId ];
 		}
 
 		public List<DetalleJugador> GetDetalleJugador()
 		{
-			try
+			if( cacheService.GetDetalleJugador.Count == 0 )
 			{
-				return wrapped.GetDetalleJugador();
+				try
+				{
+					cacheService.GetDetalleJugador.AddRange( wrapped.GetDetalleJugador() );
+				}
+				catch( Exception e )
+				{
+					log.LogWarning( e, e.Message );
+					throw new JoserrasException( e );
+				}
 			}
-			catch( Exception e )
-			{
-				throw new JoserrasException( e );
-			}
+
+			return cacheService.GetDetalleJugador;
 		}
 
-		public Estadisticas GetStats()
-		{
-			try
-			{
-				return wrapped.GetStats();
-			}
-			catch( Exception e )
-			{
-				throw new JoserrasException( e );
-			}
-		}
 	}
 
 }

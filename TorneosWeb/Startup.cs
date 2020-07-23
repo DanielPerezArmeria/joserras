@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using SimpleInjector;
 using TorneosWeb.service;
 using TorneosWeb.service.impl;
@@ -17,10 +18,11 @@ namespace TorneosWeb
 	{
 		private Container container = new SimpleInjector.Container();
 
-		public Startup(IConfiguration configuration)
+		public Startup(IConfiguration configuration, ILogger<Startup> logger)
 		{
 			container.Options.ResolveUnregisteredConcreteTypes = false;
 			Configuration = configuration;
+			logger.LogDebug( "********  STARTING APP  ********" );
 		}
 
 		public IConfiguration Configuration { get; }
@@ -30,8 +32,8 @@ namespace TorneosWeb
 		{
 			services.Configure<CookiePolicyOptions>( options =>
 			 {
-							// This lambda determines whether user consent for non-essential cookies is needed for a given request.
-							options.CheckConsentNeeded = context => true;
+				 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+				 options.CheckConsentNeeded = context => true;
 				 options.MinimumSameSitePolicy = SameSiteMode.None;
 			 } );
 
@@ -55,8 +57,14 @@ namespace TorneosWeb
 			container.RegisterSingleton<MapperProvider>();
 			container.RegisterSingleton( () => GetMapper( container ) );
 
+			container.RegisterSingleton<ICacheService, CacheService>();
+			container.RegisterSingleton<IWriteService, WriteService>();
 			container.RegisterSingleton<IReadService, ReadServiceImpl>();
+			container.RegisterSingleton<ITournamentReader, CsvTournamentReader>();
+			container.RegisterSingleton<IStatsService, StatsServiceImpl>();
+
 			container.RegisterDecorator<IReadService, TransactionWrapperReadService>( Lifestyle.Singleton );
+			container.RegisterDecorator<IStatsService, TransactionWrapperStatsService>( Lifestyle.Singleton );
 
 			container.RegisterSingleton<JoserrasQuery>();
 		}

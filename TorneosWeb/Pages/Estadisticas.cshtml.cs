@@ -8,16 +8,16 @@ namespace TorneosWeb.Pages
 	{
 		public Estadisticas Estadisticas { get; set; }
 
-		private IReadService readService;
+		private IStatsService statsService;
 
-		public EstadisticasModel(IReadService service)
+		public EstadisticasModel(IStatsService service)
 		{
-			readService = service;
+			statsService = service;
 		}
 
 		public void OnGet()
 		{
-			Estadisticas = readService.GetStats();
+			Estadisticas = statsService.GetStats();
 		}
 
 	}

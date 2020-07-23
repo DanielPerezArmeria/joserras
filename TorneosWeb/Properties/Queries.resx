@@ -167,6 +167,17 @@ on detalles.nombre = kk.nombre</value>
 where j.id = '{0}' and e.jugador_id = j.id and e.eliminado_id = elim.id
 group by j.nombre, elim.nombre order by eliminaciones desc</value>
   </data>
+  <data name="GetPodiosNegativos" xml:space="preserve">
+    <value>select res.nombre, count(res.nombre) as podios_neg
+from
+(select t.fecha, j.nombre, sum(d.premio) as premio, sum((t.precio_rebuy * d.rebuys) + t.precio_buyin ) as costos
+from jugadores j, DetalleTorneos d, torneos t
+where d.podio = 1 and j.id = d.jugador_id and t.id = d.torneo_id
+group by t.fecha, j.nombre
+) as res
+where res.premio - res.costos &lt; 0
+group by res.nombre order by podios_neg desc</value>
+  </data>
   <data name="GetStats" xml:space="preserve">
     <value>select detalles.id, detalles.nombre, detalles.costo_total, detalles.premios, detalles.podios, detalles.victorias,
 	(detalles.premios - detalles.costo_total) as profit, detalles.burbujas, ISNULL(kk.ko, 0) as kos,
@@ -188,5 +199,8 @@ group by j.nombre
 ) as kk
 on detalles.nombre = kk.nombre
 order by profit desc</value>
+  </data>
+  <data name="InsertTorneo" xml:space="preserve">
+    <value>insert into torneos (fecha, precio_buyin, precio_rebuy, entradas, rebuys, bolsa) output INSERTED.ID values ('{0}', {1}, {2}, {3}, {4}, {5} )</value>
   </data>
 </root>

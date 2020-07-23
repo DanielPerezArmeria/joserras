@@ -169,7 +169,6 @@ table.paleBlueRows tfoot td {
 }
 
 .statTitle {
-	background-color: cornflowerblue;
 	color: white;
 	text-align:center;
 	padding:10px;
@@ -180,9 +179,10 @@ table.paleBlueRows tfoot td {
 	transition: 0.3s;
 	border-width: 3px;
 	border-color: black;
-	border-radius:10px 10px 0px 0px;
-	height:450px;
-	width:281px;
+	border-radius: 10px 10px 0px 0px;
+	height: 453px;
+	width: 285px;
+	background-color: cornflowerblue;
 }
 
 .statCard:hover {
