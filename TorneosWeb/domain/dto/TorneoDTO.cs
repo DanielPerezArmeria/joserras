@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CsvHelper.Configuration.Attributes;
+using System;
+using TorneosWeb.domain.models;
 
 namespace TorneosWeb.domain.dto
 {
@@ -11,6 +13,12 @@ namespace TorneosWeb.domain.dto
 		public int Entradas { get; set; }
 		public int Rebuys { get; set; }
 		public int Bolsa { get; set; }
+
+		[Default( 0 )]
+		public int PrecioBounty { get; set; }
+
+		[Default(TournamentType.NORMAL)]
+		public TournamentType Tipo { get; set; }
 	}
 
 }

@@ -51,7 +51,7 @@ namespace TorneosWeb.service.impl
 
 					if(kos != null && kos.Count > 0 )
 					{
-						insertarKos( torneo.Id, kos, connection, transaction );
+						insertarKos( torneo, kos, connection, transaction );
 					}
 
 					transaction.Commit();
@@ -74,14 +74,32 @@ namespace TorneosWeb.service.impl
 			}
 		}
 
-		private void insertarKos(Guid torneoId, List<EliminacionesDTO> kos, SqlConnection conn, SqlTransaction tx)
+		private void insertarKos(TorneoDTO torneo, List<EliminacionesDTO> kos, SqlConnection conn, SqlTransaction tx)
 		{
 			string query = "insert into eliminaciones (torneo_id, jugador_id, eliminado_id, eliminaciones) values('{0}', "
 				+ "(select id from jugadores where nombre = '{1}'), (select id from jugadores where nombre = '{2}'), {3})";
 
 			foreach(EliminacionesDTO dto in kos )
 			{
-				string q = string.Format( query, torneoId, dto.Jugador, dto.Eliminado, dto.Eliminaciones );
+				string q = string.Format( query, torneo.Id, dto.Jugador, dto.Eliminado, dto.Eliminaciones );
+				try
+				{
+					new SqlCommand( q, conn, tx ).ExecuteNonQuery();
+				}
+				catch( Exception e )
+				{
+					log.LogError( e, e.Message );
+					throw;
+				}
+			}
+
+			// Insertar kos y bounties
+			query = @"update DetalleTorneos set premio_bounties = {0}, kos = {1} where torneo_id = '{2}' and jugador_id = (select id from jugadores where nombre = '{3}')";
+			IEnumerable<Tuple<string, int>> tuples =
+				kos.GroupBy( k => k.Jugador ).Select( s => new Tuple<string, int>( s.First().Jugador, s.Sum( c => c.Eliminaciones ) ) );
+			foreach( Tuple<string, int> t in tuples )
+			{
+				string q = string.Format( query, t.Item2 * torneo.PrecioBounty, t.Item2, torneo.Id, t.Item1 );
 				try
 				{
 					new SqlCommand( q, conn, tx ).ExecuteNonQuery();
@@ -96,7 +114,7 @@ namespace TorneosWeb.service.impl
 
 		private void insertarDetallesTorneo(Guid torneoId, List<DetalleTorneoDTO> detalles, SqlConnection conn, SqlTransaction tx)
 		{
-			string query = "insert into DetalleTorneos values('{0}', (select id from jugadores where nombre='{1}'), "
+			string query = "insert into DetalleTorneos (torneo_id, jugador_id, rebuys, posicion, podio, premio, burbuja) values('{0}', (select id from jugadores where nombre='{1}'), "
 				+ "{2}, {3}, '{4}', {5}, '{6}')";
 
 			foreach( DetalleTorneoDTO dto in detalles )
@@ -119,8 +137,8 @@ namespace TorneosWeb.service.impl
 		{
 			int rebuys = detalles.Sum( d => d.Rebuys );
 			int bolsa = (torneo.PrecioBuyin * detalles.Count) + (torneo.PrecioRebuy * rebuys);
-			string query = string.Format( Properties.Queries.InsertTorneo,
-				torneo.Fecha.ToString( "yyyy-MM-dd" ), torneo.PrecioBuyin, torneo.PrecioRebuy, detalles.Count, rebuys, bolsa );
+			string query = string.Format( Properties.Queries.InsertTorneo, torneo.Fecha.ToString( "yyyy-MM-dd" ),
+				torneo.PrecioBuyin, torneo.PrecioRebuy, detalles.Count, rebuys, bolsa, torneo.Tipo.ToString(), torneo.PrecioBounty );
 
 			Guid torneoId = Guid.Parse(new SqlCommand( query, conn, tx ).ExecuteScalar().ToString());
 

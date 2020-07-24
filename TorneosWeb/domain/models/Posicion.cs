@@ -1,4 +1,7 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using TorneosWeb.util;
+using TorneosWeb.util.automapper;
 
 namespace TorneosWeb.domain.models
 {
@@ -7,14 +10,30 @@ namespace TorneosWeb.domain.models
 		public Guid JugadorId { get; set; }
 		public string Nombre { get; set; }
 		public int Lugar { get; set; }
-		public string Premio { get; set; }
+
+		public int PremioNumber { get; set; }
+
+		[NoMap]
+		[Display(Name = "$ Premio")]
+		public string Premio { get { return PremioNumber > 0 ? PremioNumber.ToString( Constants.CURRENCY_FORMAT ) : "-"; } }
+
 		public string Podio { get; set; }
 		public int Rebuys { get; set; }
 		public string Burbuja { get; set; }
+
 		public int Knockouts { get; set; }
-		public string Profit { get; set; }
+
+		[NoMap]
+		public string Profit { get { return ProfitNumber.ToString( Constants.CURRENCY_FORMAT ); } }
+
+		[NoMap]
 		public int ProfitNumber { get; set; }
 
+		public int PremioBountiesNumber { get; set; }
+
+		[NoMap]
+		[Display(Name = "$ Bounties")]
+		public string PremioBounties { get { return PremioBountiesNumber > 0 ? PremioBountiesNumber.ToString( Constants.CURRENCY_FORMAT ) : "-"; } }
 	}
 
 }

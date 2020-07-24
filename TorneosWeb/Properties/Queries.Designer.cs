@@ -114,8 +114,8 @@ namespace TorneosWeb.Properties {
         ///	detalles.torneos, detalles.rebuys
         ///from
         ///(select j.id, j.nombre, sum(t.precio_buyin + (d.rebuys * t.precio_rebuy)) as costo_total, count(t.id) as torneos,
-        ///	sum(d.premio) as premios, count(case when d.posicion = 1 then 1 end) as victorias, sum(d.rebuys) as rebuys,
-        ///	count(case when d.podio = 1 th [rest of string was truncated]&quot;;.
+        ///	sum(d.premio + d.premio_bounties) as premios, count(case when d.posicion = 1 then 1 end) as victorias, sum(d.rebuys) as rebuys,
+        ///	count(case [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string GetDetalleJugador {
             get {
@@ -157,8 +157,8 @@ namespace TorneosWeb.Properties {
         ///	detalles.torneos, detalles.rebuys
         ///from
         ///(select j.id, j.nombre, sum(t.precio_buyin + (d.rebuys * t.precio_rebuy)) as costo_total, count(t.id) as torneos,
-        ///	sum(d.premio) as premios, count(case when d.posicion = 1 then 1 end) as victorias, sum(d.rebuys) as rebuys,
-        ///	count(case when d.podio = 1 th [rest of string was truncated]&quot;;.
+        ///	sum(d.premio + d.premio_bounties) as premios, count(case when d.posicion = 1 then 1 end) as victorias, sum(d.rebuys) as rebuys,
+        ///	count(case [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string GetStats {
             get {
@@ -167,7 +167,8 @@ namespace TorneosWeb.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to insert into torneos (fecha, precio_buyin, precio_rebuy, entradas, rebuys, bolsa) output INSERTED.ID values (&apos;{0}&apos;, {1}, {2}, {3}, {4}, {5} ).
+        ///   Looks up a localized string similar to insert into torneos (fecha, precio_buyin, precio_rebuy, entradas, rebuys, bolsa, tipo, premio_x_bounty) output INSERTED.ID
+        ///values (&apos;{0}&apos;, {1}, {2}, {3}, {4}, {5}, &apos;{6}&apos;, {7} ).
         /// </summary>
         internal static string InsertTorneo {
             get {

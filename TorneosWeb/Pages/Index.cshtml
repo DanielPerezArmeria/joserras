@@ -18,6 +18,9 @@
 					@Html.DisplayNameFor( model => model.Torneos[ 0 ].Fecha )
 				</th>
 				<th>
+					@Html.DisplayNameFor( model => model.Torneos[ 0 ].Tipo )
+				</th>
+				<th>
 					@Html.DisplayNameFor( model => model.Torneos[ 0 ].Ganador )
 				</th>
 				<th>
@@ -47,6 +50,9 @@
 				</td>
 				<td>
 					@Html.DisplayFor( modelItem => torneo.Fecha )
+				</td>
+				<td>
+					@Html.DisplayFor( modelItem => torneo.Tipo )
 				</td>
 				<td>
 					<a asp-page="./Jugador" asp-route-id="@torneo.GanadorId">@Html.DisplayFor( modelItem => torneo.Ganador )</a>
