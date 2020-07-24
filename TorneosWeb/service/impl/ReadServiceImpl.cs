@@ -116,17 +116,6 @@ namespace TorneosWeb.service.impl
 
 			detalleTorneo.Knockouts = GetKnockoutsByTournamentId( torneoId );
 
-			//foreach( Posicion position in detalleTorneo.Posiciones )
-			//{
-			//	if( detalleTorneo.Knockouts.ContainsKey( position.Nombre ) )
-			//	{
-			//		foreach(Knockouts ko in detalleTorneo.Knockouts[ position.Nombre ].Values )
-			//		{
-			//			position.Knockouts += ko.Eliminaciones;
-			//		}
-			//	}
-			//}
-
 			return detalleTorneo;
 		}
 
