@@ -7,7 +7,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SimpleInjector;
+using System.Linq;
+using System.Reflection;
 using TorneosWeb.service;
+using TorneosWeb.service.decorators;
 using TorneosWeb.service.impl;
 using TorneosWeb.util;
 using TorneosWeb.util.automapper;
@@ -57,16 +60,26 @@ namespace TorneosWeb
 			container.RegisterSingleton<MapperProvider>();
 			container.RegisterSingleton( () => GetMapper( container ) );
 
-			container.RegisterSingleton<ICacheService, CacheService>();
-			container.RegisterSingleton<IWriteService, WriteService>();
-			container.RegisterSingleton<IReadService, ReadServiceImpl>();
-			container.RegisterSingleton<ITournamentReader, CsvTournamentReader>();
-			container.RegisterSingleton<IStatsService, StatsServiceImpl>();
+			RegisterNamespace( "TorneosWeb.service.impl" );
 
 			container.RegisterDecorator<IReadService, TransactionWrapperReadService>( Lifestyle.Singleton );
 			container.RegisterDecorator<IStatsService, TransactionWrapperStatsService>( Lifestyle.Singleton );
 
 			container.RegisterSingleton<JoserrasQuery>();
+		}
+
+		private void RegisterNamespace(string nameSpace)
+		{
+			var registrations =
+				from type in Assembly.GetExecutingAssembly().GetExportedTypes()
+				where type.Namespace.StartsWith( nameSpace )
+				from service in type.GetInterfaces()
+				select new { service, implementation = type };
+
+			foreach( var reg in registrations )
+			{
+				container.Register( reg.service, reg.implementation, Lifestyle.Transient );
+			}
 		}
 
 		private IMapper GetMapper(Container container)

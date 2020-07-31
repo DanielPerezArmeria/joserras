@@ -3,7 +3,7 @@ using System;
 using TorneosWeb.domain.models;
 using TorneosWeb.exception;
 
-namespace TorneosWeb.service.impl
+namespace TorneosWeb.service.decorators
 {
 	public class TransactionWrapperStatsService : IStatsService
 	{

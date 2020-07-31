@@ -143,24 +143,17 @@ group by nombre</value>
   </data>
   <data name="GetDetalleJugador" xml:space="preserve">
     <value>select detalles.id, detalles.nombre, detalles.costo_total, detalles.premios, detalles.podios, detalles.victorias,
-	(detalles.premios - detalles.costo_total) as profit, detalles.burbujas, ISNULL(kk.ko, 0) as kos,
+	(detalles.premios - detalles.costo_total) as profit, detalles.burbujas, detalles.kos,
 	detalles.torneos, detalles.rebuys
 from
-(select j.id, j.nombre, sum(t.precio_buyin + (d.rebuys * t.precio_rebuy)) as costo_total, count(t.id) as torneos,
-	sum(d.premio) as premios, count(case when d.posicion = 1 then 1 end) as victorias, sum(d.rebuys) as rebuys,
+(select j.id, j.nombre, sum(t.precio_buyin + (d.rebuys * t.precio_rebuy)) as costo_total, count(t.id) as torneos, sum(d.kos) as kos,
+	sum(d.premio + d.premio_bounties) as premios, count(case when d.posicion = 1 then 1 end) as victorias, sum(d.rebuys) as rebuys,
 	count(case when d.podio = 1 then 1 end) as podios, count(case when d.burbuja = 1 then 1 end) as burbujas
 from torneos t, DetalleTorneos d, jugadores j
 where t.id = d.torneo_id
 	and d.jugador_id = j.id and j.id = '{0}'
 group by j.id, j.nombre
-) as detalles
-left outer join
-(select j.nombre, sum(e.eliminaciones) as ko
-from jugadores j, eliminaciones e
-where j.id = e.jugador_id
-group by j.nombre
-) as kk
-on detalles.nombre = kk.nombre</value>
+) as detalles</value>
   </data>
   <data name="GetKnockoutsByPlayer" xml:space="preserve">
     <value>select j.nombre, elim.nombre as eliminado, sum(e.eliminaciones) as eliminaciones from eliminaciones e, jugadores j, jugadores elim
@@ -184,7 +177,7 @@ group by res.nombre order by podios_neg desc</value>
 	detalles.torneos, detalles.rebuys
 from
 (select j.id, j.nombre, sum(t.precio_buyin + (d.rebuys * t.precio_rebuy)) as costo_total, count(t.id) as torneos,
-	sum(d.premio) as premios, count(case when d.posicion = 1 then 1 end) as victorias, sum(d.rebuys) as rebuys,
+	sum(d.premio + d.premio_bounties) as premios, count(case when d.posicion = 1 then 1 end) as victorias, sum(d.rebuys) as rebuys,
 	count(case when d.podio = 1 then 1 end) as podios, count(case when d.burbuja = 1 then 1 end) as burbujas
 from torneos t, DetalleTorneos d, jugadores j
 where t.id = d.torneo_id
@@ -201,6 +194,7 @@ on detalles.nombre = kk.nombre
 order by profit desc</value>
   </data>
   <data name="InsertTorneo" xml:space="preserve">
-    <value>insert into torneos (fecha, precio_buyin, precio_rebuy, entradas, rebuys, bolsa) output INSERTED.ID values ('{0}', {1}, {2}, {3}, {4}, {5} )</value>
+    <value>insert into torneos (fecha, precio_buyin, precio_rebuy, entradas, rebuys, bolsa, tipo, premio_x_bounty) output INSERTED.ID
+values ('{0}', {1}, {2}, {3}, {4}, {5}, '{6}', {7} )</value>
   </data>
 </root>

@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using TorneosWeb.domain.models;
 using TorneosWeb.util;
-using System.Linq;
 
 namespace TorneosWeb.service.impl
 {
@@ -107,9 +106,8 @@ namespace TorneosWeb.service.impl
 							premio = int.Parse( posicion.Premio, System.Globalization.NumberStyles.Currency );
 						}
 						catch( FormatException ) { }
-						posicion.ProfitNumber = premio - (int.Parse( detalleTorneo.Torneo.Precio_Buyin, System.Globalization.NumberStyles.Currency )
-								+ (posicion.Rebuys * int.Parse( detalleTorneo.Torneo.Precio_Rebuy, System.Globalization.NumberStyles.Currency )));
-						posicion.Profit = (posicion.ProfitNumber).ToString("$###,###");
+						int costos = detalleTorneo.Torneo.PrecioBuyinNumber + (posicion.Rebuys * detalleTorneo.Torneo.PrecioRebuyNumber);
+						posicion.ProfitNumber = premio + posicion.PremioBountiesNumber - costos;
 						detalleTorneo.Posiciones.Add( posicion );
 						detalleTorneo.Jugadores.Add( posicion.Nombre );
 					}
@@ -117,17 +115,6 @@ namespace TorneosWeb.service.impl
 			}
 
 			detalleTorneo.Knockouts = GetKnockoutsByTournamentId( torneoId );
-
-			foreach( Posicion position in detalleTorneo.Posiciones )
-			{
-				if( detalleTorneo.Knockouts.ContainsKey( position.Nombre ) )
-				{
-					foreach(Knockouts ko in detalleTorneo.Knockouts[ position.Nombre ].Values )
-					{
-						position.Knockouts += ko.Eliminaciones;
-					}
-				}
-			}
 
 			return detalleTorneo;
 		}

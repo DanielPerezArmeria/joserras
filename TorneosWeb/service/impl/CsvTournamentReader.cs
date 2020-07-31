@@ -22,6 +22,7 @@ namespace TorneosWeb.service.impl
 			CsvConfiguration config = new CsvConfiguration( CultureInfo.CurrentCulture );
 			config.HeaderValidated = null;
 			config.MissingFieldFound = null;
+			//config.RegisterClassMap<TorneoMap>();
 			using( StreamReader streamReader = new StreamReader( file.OpenReadStream() ) )
 			{
 				CsvReader csv = new CsvReader( streamReader, config );
