@@ -3,11 +3,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
 using TorneosWeb.domain.dto;
 using TorneosWeb.domain.models;
 using TorneosWeb.exception;
+using TorneosWeb.util;
 
 namespace TorneosWeb.service.impl
 {
@@ -35,26 +35,23 @@ namespace TorneosWeb.service.impl
 			List<ResultadosDTO> resultados = tourneyReader.GetItems<ResultadosDTO>( files.Find( t => t.FileName.Contains( "resultados" ) ) ).ToList();
 			List<EliminacionesDTO> kos = tourneyReader.GetItems<EliminacionesDTO>( files.Find( t => t.FileName.Contains( "knockouts" ) ) ).ToList();
 
-			SqlTransaction transaction = null;
+			SqlUnitOfWork uow = null;
 			try
 			{
-				using( SqlConnection connection = new SqlConnection( connString ) )
+				using( uow = new SqlUnitOfWork( connString ) )
 				{
-					connection.Open();
-					transaction = connection.BeginTransaction();
+					insertarNuevosJugadores( resultados, uow );
 
-					insertarNuevosJugadores( resultados, connection, transaction );
+					torneo.Id = insertarTorneo( torneo, resultados, uow );
 
-					torneo.Id = insertarTorneo( torneo, resultados, connection, transaction );
-
-					insertarDetallesTorneo( torneo.Id, resultados, connection, transaction );
+					insertarResultados( torneo.Id, resultados, uow );
 
 					if(kos != null && kos.Count > 0 )
 					{
-						insertarKos( torneo, resultados, kos, connection, transaction );
+						insertarKos( torneo, resultados, kos, uow );
 					}
 
-					transaction.Commit();
+					uow.Commit();
 				}
 				cacheService.Clear();
 			}
@@ -63,18 +60,17 @@ namespace TorneosWeb.service.impl
 				log.LogError( e, e.Message );
 				try
 				{
-					transaction.Rollback();
+					uow.Rollback();
 				}
 				catch( Exception xe )
 				{
 					log.LogError( xe, xe.Message );
-					throw;
 				}
 				throw new JoserrasException( e );
 			}
 		}
 
-		private void insertarNuevosJugadores(List<ResultadosDTO> resultados, SqlConnection conn, SqlTransaction tx)
+		private void insertarNuevosJugadores(List<ResultadosDTO> resultados, SqlUnitOfWork uow)
 		{
 			List<Jugador> jugadores = readService.GetAllJugadores();
 			List<ResultadosDTO> newPlayers = new List<ResultadosDTO>();
@@ -85,7 +81,7 @@ namespace TorneosWeb.service.impl
 				{
 					try
 					{
-						new SqlCommand( string.Format( query, dto.Jugador ), conn, tx ).ExecuteNonQuery();
+						uow.ExecuteNonQuery( query, dto.Jugador );
 					}
 					catch( Exception e )
 					{
@@ -96,30 +92,29 @@ namespace TorneosWeb.service.impl
 			}
 		}
 
-		private Guid insertarTorneo(TorneoDTO torneo, List<ResultadosDTO> resultados, SqlConnection conn, SqlTransaction tx)
+		private Guid insertarTorneo(TorneoDTO torneo, List<ResultadosDTO> resultados, SqlUnitOfWork uow)
 		{
 			int rebuys = resultados.Sum( d => d.Rebuys );
 			int bolsa = (torneo.PrecioBuyin * resultados.Count) + (torneo.PrecioRebuy * rebuys);
-			string query = string.Format( Properties.Queries.InsertTorneo, torneo.Fecha.ToString( "yyyy-MM-dd" ),
-				torneo.PrecioBuyin, torneo.PrecioRebuy, resultados.Count, rebuys, bolsa, torneo.Tipo.ToString(), torneo.PrecioBounty );
 
-			Guid torneoId = Guid.Parse( new SqlCommand( query, conn, tx ).ExecuteScalar().ToString() );
+			Guid torneoId = Guid.Parse( uow.ExecuteScalar( Properties.Queries.InsertTorneo, torneo.Fecha.ToString( "yyyy-MM-dd" ),
+					torneo.PrecioBuyin, torneo.PrecioRebuy, resultados.Count, rebuys, bolsa, torneo.Tipo.ToString(), torneo.PrecioBounty )
+					.ToString() );
 
 			return torneoId;
 		}
 
-		private void insertarDetallesTorneo(Guid torneoId, List<ResultadosDTO> resultados, SqlConnection conn, SqlTransaction tx)
+		private void insertarResultados(Guid torneoId, List<ResultadosDTO> resultados, SqlUnitOfWork uow)
 		{
 			string query = "insert into resultados (torneo_id, jugador_id, rebuys, posicion, podio, premio, burbuja) values('{0}', (select id from jugadores where nombre='{1}'), "
 				+ "{2}, {3}, '{4}', {5}, '{6}')";
 
 			foreach( ResultadosDTO dto in resultados )
 			{
-				string q = string.Format( query, torneoId, dto.Jugador, dto.Rebuys, dto.Posicion,
-					dto.Premio > 0 ? true.ToString() : false.ToString(), dto.Premio, dto.Burbuja.ToString() );
 				try
 				{
-					new SqlCommand( q, conn, tx ).ExecuteNonQuery();
+					uow.ExecuteNonQuery( query, torneoId, dto.Jugador, dto.Rebuys, dto.Posicion,
+							dto.Premio > 0 ? true.ToString() : false.ToString(), dto.Premio, dto.Burbuja.ToString() );
 				}
 				catch( Exception e )
 				{
@@ -129,17 +124,16 @@ namespace TorneosWeb.service.impl
 			}
 		}
 
-		private void insertarKos(TorneoDTO torneo, List<ResultadosDTO> resultados, List<EliminacionesDTO> kos, SqlConnection conn, SqlTransaction tx)
+		private void insertarKos(TorneoDTO torneo, List<ResultadosDTO> resultados, List<EliminacionesDTO> kos, SqlUnitOfWork uow)
 		{
 			string query = "insert into eliminaciones (torneo_id, jugador_id, eliminado_id, eliminaciones) values('{0}', "
 				+ "(select id from jugadores where nombre = '{1}'), (select id from jugadores where nombre = '{2}'), {3})";
 
 			foreach(EliminacionesDTO dto in kos )
 			{
-				string q = string.Format( query, torneo.Id, dto.Jugador, dto.Eliminado, dto.Eliminaciones );
 				try
 				{
-					new SqlCommand( q, conn, tx ).ExecuteNonQuery();
+					uow.ExecuteNonQuery( query, torneo.Id, dto.Jugador, dto.Eliminado, dto.Eliminaciones );
 				}
 				catch( Exception e )
 				{
@@ -164,7 +158,7 @@ namespace TorneosWeb.service.impl
 				string q = string.Format( query, bountyPrice, t.Item2, torneo.Id, t.Item1 );
 				try
 				{
-					new SqlCommand( q, conn, tx ).ExecuteNonQuery();
+					uow.ExecuteNonQuery( query, bountyPrice, t.Item2, torneo.Id, t.Item1 );
 				}
 				catch( Exception e )
 				{

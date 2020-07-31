@@ -33,7 +33,7 @@ namespace TorneosWeb.Pages
 			}
 			catch( JoserrasException )
 			{
-
+				throw;
 			}
 
 			return RedirectToPage( "./Index" );
