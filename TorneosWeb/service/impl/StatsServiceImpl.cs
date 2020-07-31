@@ -30,7 +30,7 @@ namespace TorneosWeb.service.impl
 				conn.Open();
 
 				estadisticas.Knockouts = readService.GetAllKnockouts();
-				estadisticas.Detalles = readService.GetDetalleJugador();
+				estadisticas.Detalles = readService.GetAllDetalleJugador();
 				estadisticas.Jugadores = new SortedSet<string>( from e in estadisticas.Detalles orderby e.Nombre ascending select e.Nombre );
 
 				estadisticas.Stats = new List<Stat>();

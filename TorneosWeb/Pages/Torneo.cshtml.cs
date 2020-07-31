@@ -9,7 +9,7 @@ namespace TorneosWeb.Pages
 	{
 		private IReadService readService;
 
-		public DetalleTorneo DetalleTorneo { get; set; }
+		public Resultados Resultados { get; set; }
 
 		public TorneoModel(IReadService readService)
 		{
@@ -18,7 +18,7 @@ namespace TorneosWeb.Pages
 
 		public void OnGet(Guid id)
 		{
-			DetalleTorneo = readService.GetDetalleTorneo( id );
+			Resultados = readService.FindResultadosTorneo( id );
 		}
 
 	}

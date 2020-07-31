@@ -78,7 +78,7 @@ namespace TorneosWeb
 
 			foreach( var reg in registrations )
 			{
-				container.Register( reg.service, reg.implementation, Lifestyle.Transient );
+				container.Register( reg.service, reg.implementation, Lifestyle.Singleton );
 			}
 		}
 

@@ -76,9 +76,9 @@ namespace TorneosWeb.service.impl
 			return torneos;
 		}
 
-		public DetalleTorneo GetDetalleTorneo(Guid torneoId)
+		public Resultados FindResultadosTorneo(Guid torneoId)
 		{
-			DetalleTorneo detalleTorneo = new DetalleTorneo();
+			Resultados detalleTorneo = new Resultados();
 
 			using( SqlConnection conn = new SqlConnection( connString ) )
 			{
@@ -91,7 +91,7 @@ namespace TorneosWeb.service.impl
 				} );
 				detalleTorneo.Torneo = torneo;
 
-				query = string.Format("select dt.*, j.nombre from detalletorneos dt, jugadores j "
+				query = string.Format("select dt.*, j.nombre from resultados dt, jugadores j "
 						+ "where dt.torneo_id = '{0}' and dt.jugador_id = j.id order by dt.posicion", torneoId);
 				detalleTorneo.Posiciones = new List<Posicion>();
 				detalleTorneo.Jugadores = new SortedSet<string>();
@@ -119,7 +119,7 @@ namespace TorneosWeb.service.impl
 			return detalleTorneo;
 		}
 
-		public DetalleJugador GetDetalleJugador(Guid playerId)
+		public DetalleJugador FindDetalleJugador(Guid playerId)
 		{
 			DetalleJugador detalle = null;
 			using( SqlConnection conn = new SqlConnection( connString ) )
@@ -139,7 +139,7 @@ namespace TorneosWeb.service.impl
 			return detalle;
 		}
 
-		public DetalleJugador GetDetalleJugador(string nombre)
+		public DetalleJugador FindDetalleJugador(string nombre)
 		{
 			throw new NotImplementedException();
 		}
@@ -182,7 +182,7 @@ namespace TorneosWeb.service.impl
 			return kos;
 		}
 
-		public List<DetalleJugador> GetDetalleJugador()
+		public List<DetalleJugador> GetAllDetalleJugador()
 		{
 			List<DetalleJugador> detalles = new List<DetalleJugador>();
 			using( SqlConnection conn = new SqlConnection( connString ) )

@@ -76,13 +76,13 @@ namespace TorneosWeb.service.decorators
 			return cacheService.GetAllTorneos;
 		}
 
-		public DetalleTorneo GetDetalleTorneo(Guid id)
+		public Resultados FindResultadosTorneo(Guid id)
 		{
 			if( !cacheService.GetDetalleTorneo.ContainsKey(id) )
 			{
 				try
 				{
-					cacheService.GetDetalleTorneo.Add( id, wrapped.GetDetalleTorneo( id ) );
+					cacheService.GetDetalleTorneo.Add( id, wrapped.FindResultadosTorneo( id ) );
 				}
 				catch( Exception e )
 				{
@@ -94,13 +94,13 @@ namespace TorneosWeb.service.decorators
 			return cacheService.GetDetalleTorneo[id];
 		}
 
-		public DetalleJugador GetDetalleJugador(Guid id)
+		public DetalleJugador FindDetalleJugador(Guid id)
 		{
 			if( !cacheService.GetDetalleJugadorById.ContainsKey( id ) )
 			{
 				try
 				{
-					cacheService.GetDetalleJugadorById.Add( id, wrapped.GetDetalleJugador( id ) );
+					cacheService.GetDetalleJugadorById.Add( id, wrapped.FindDetalleJugador( id ) );
 				}
 				catch( Exception e )
 				{
@@ -112,7 +112,7 @@ namespace TorneosWeb.service.decorators
 			return cacheService.GetDetalleJugadorById[ id ];
 		}
 
-		public DetalleJugador GetDetalleJugador(string nombre)
+		public DetalleJugador FindDetalleJugador(string nombre)
 		{
 			throw new NotImplementedException();
 		}
@@ -153,13 +153,13 @@ namespace TorneosWeb.service.decorators
 			return cacheService.GetKnockoutsByPlayer[ playerId ];
 		}
 
-		public List<DetalleJugador> GetDetalleJugador()
+		public List<DetalleJugador> GetAllDetalleJugador()
 		{
 			if( cacheService.GetDetalleJugador.Count == 0 )
 			{
 				try
 				{
-					cacheService.GetDetalleJugador.AddRange( wrapped.GetDetalleJugador() );
+					cacheService.GetDetalleJugador.AddRange( wrapped.GetAllDetalleJugador() );
 				}
 				catch( Exception e )
 				{

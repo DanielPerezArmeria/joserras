@@ -14,7 +14,7 @@ namespace TorneosWeb.service
 
 		List<Torneo> GetAllTorneos { get; }
 
-		Dictionary<Guid, DetalleTorneo> GetDetalleTorneo { get; }
+		Dictionary<Guid, Resultados> GetDetalleTorneo { get; }
 
 		Dictionary<Guid, DetalleJugador> GetDetalleJugadorById { get; }
 

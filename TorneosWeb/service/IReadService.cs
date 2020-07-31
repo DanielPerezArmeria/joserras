@@ -10,13 +10,13 @@ namespace TorneosWeb.service
 
 		List<Jugador> GetAllJugadores();
 
-		DetalleTorneo GetDetalleTorneo(Guid id);
+		Resultados FindResultadosTorneo(Guid id);
 
-		DetalleJugador GetDetalleJugador(Guid id);
+		DetalleJugador FindDetalleJugador(Guid id);
 
-		DetalleJugador GetDetalleJugador(string nombre);
+		DetalleJugador FindDetalleJugador(string nombre);
 
-		List<DetalleJugador> GetDetalleJugador();
+		List<DetalleJugador> GetAllDetalleJugador();
 
 		SortedList<string, Dictionary<string,Knockouts>> GetKnockoutsByTournamentId(Guid torneoId);
 

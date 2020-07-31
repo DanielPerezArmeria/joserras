@@ -2,7 +2,7 @@
 
 namespace TorneosWeb.domain.models
 {
-	public class DetalleTorneo
+	public class Resultados
 	{
 		public List<Posicion> Posiciones { get; set; }
 		public Torneo Torneo { get; set; }

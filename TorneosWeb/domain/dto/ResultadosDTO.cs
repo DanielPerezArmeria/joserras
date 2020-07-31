@@ -3,7 +3,7 @@ using System;
 
 namespace TorneosWeb.domain.dto
 {
-	public class DetalleTorneoDTO
+	public class ResultadosDTO
 	{
 		public Guid TorneoId { get; set; }
 		public Guid JugadorId { get; set; }

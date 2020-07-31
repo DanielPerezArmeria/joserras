@@ -73,7 +73,7 @@ namespace TorneosWeb.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select t.*, j.nombre, j.id from torneos t, jugadores j, detalletorneos d where t.id = d.torneo_id and d.posicion = 1 and d.jugador_id = j.id order by Fecha desc.
+        ///   Looks up a localized string similar to select t.*, j.nombre, j.id from torneos t, jugadores j, resultados d where t.id = d.torneo_id and d.posicion = 1 and d.jugador_id = j.id order by Fecha desc.
         /// </summary>
         internal static string GetAllTorneos {
             get {
@@ -85,7 +85,7 @@ namespace TorneosWeb.Properties {
         ///   Looks up a localized string similar to select tt.nombre, count(tt.posicion) as ult_lugares
         ///from
         ///(select j.nombre, dt.posicion, t.entradas
-        ///from jugadores j, torneos t, DetalleTorneos dt
+        ///from jugadores j, torneos t, resultados dt
         ///where dt.torneo_id = t.id and dt.jugador_id = j.id and dt.posicion = t.entradas
         ///) as tt
         ///group by nombre.
@@ -98,7 +98,7 @@ namespace TorneosWeb.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to select j.nombre, count(dt.burbuja) as burbuja
-        ///from jugadores j, torneos t, DetalleTorneos dt
+        ///from jugadores j, torneos t, resultados dt
         ///where dt.torneo_id = t.id and dt.jugador_id = j.id and dt.burbuja = 1
         ///group by nombre.
         /// </summary>
@@ -138,7 +138,7 @@ namespace TorneosWeb.Properties {
         ///   Looks up a localized string similar to select res.nombre, count(res.nombre) as podios_neg
         ///from
         ///(select t.fecha, j.nombre, sum(d.premio) as premio, sum((t.precio_rebuy * d.rebuys) + t.precio_buyin ) as costos
-        ///from jugadores j, DetalleTorneos d, torneos t
+        ///from jugadores j, resultados d, torneos t
         ///where d.podio = 1 and j.id = d.jugador_id and t.id = d.torneo_id
         ///group by t.fecha, j.nombre
         ///) as res
