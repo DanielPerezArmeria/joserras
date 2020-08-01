@@ -17,16 +17,22 @@ namespace TorneosWeb.service.impl
 		private ICacheService cacheService;
 		private ILogger<WriteService> log;
 		private ITournamentReader tourneyReader;
+		private ILigaWriter ligaWriterImpl;
+		private ILigaWriter nullLigaWriter = new NullLigaWriter();
+
+		private ILigaWriter currentLigaWriter;
 
 		private string connString;
 
-		public WriteService(IReadService service, ICacheService cacheService, IConfiguration config, ITournamentReader tourneyReader, ILogger<WriteService> logger)
+		public WriteService(IReadService service, ICacheService cacheService, IConfiguration config, ITournamentReader tourneyReader,
+			ILigaWriter ligaWriter, ILogger<WriteService> logger)
 		{
 			readService = service;
 			this.cacheService = cacheService;
 			log = logger;
 			connString = config.GetConnectionString( Properties.Resources.joserrasDb );
 			this.tourneyReader = tourneyReader;
+			ligaWriterImpl = ligaWriter;
 		}
 
 		public void uploadTournament(List<IFormFile> files)
@@ -35,21 +41,25 @@ namespace TorneosWeb.service.impl
 			List<ResultadosDTO> resultados = tourneyReader.GetItems<ResultadosDTO>( files.Find( t => t.FileName.Contains( "resultados" ) ) ).ToList();
 			List<KnockoutsDTO> kos = tourneyReader.GetItems<KnockoutsDTO>( files.Find( t => t.FileName.Contains( "knockouts" ) ) ).ToList();
 
-			SqlUnitOfWork uow = null;
+			currentLigaWriter = string.IsNullOrEmpty( torneo.Liga ) ? nullLigaWriter : ligaWriterImpl;
+
+			TorneoUnitOfWork uow = null;
 			try
 			{
-				using( uow = new SqlUnitOfWork( connString ) )
+				using( uow = new TorneoUnitOfWork( connString ) )
 				{
-					insertarNuevosJugadores( resultados, uow );
+					InsertarNuevosJugadores( resultados, uow );
 
-					torneo.Id = insertarTorneo( torneo, resultados, uow );
+					torneo.Id = InsertarTorneo( torneo, resultados, uow );
 
-					insertarResultados( torneo.Id, resultados, uow );
+					InsertarResultados( torneo.Id, resultados, uow );
 
 					if(kos != null && kos.Count > 0 )
 					{
-						insertarKos( torneo, resultados, kos, uow );
+						InsertarKos( torneo, resultados, kos, uow );
 					}
+
+					currentLigaWriter.InsertarLiga( torneo, resultados, kos, uow );
 
 					uow.Commit();
 				}
@@ -70,7 +80,7 @@ namespace TorneosWeb.service.impl
 			}
 		}
 
-		private void insertarNuevosJugadores(List<ResultadosDTO> resultados, SqlUnitOfWork uow)
+		private void InsertarNuevosJugadores(List<ResultadosDTO> resultados, TorneoUnitOfWork uow)
 		{
 			List<Jugador> jugadores = readService.GetAllJugadores();
 			List<ResultadosDTO> newPlayers = new List<ResultadosDTO>();
@@ -92,7 +102,7 @@ namespace TorneosWeb.service.impl
 			}
 		}
 
-		private Guid insertarTorneo(TorneoDTO torneo, List<ResultadosDTO> resultados, SqlUnitOfWork uow)
+		private Guid InsertarTorneo(TorneoDTO torneo, List<ResultadosDTO> resultados, TorneoUnitOfWork uow)
 		{
 			int rebuys = resultados.Sum( d => d.Rebuys );
 			int bolsa = (torneo.PrecioBuyin * resultados.Count) + (torneo.PrecioRebuy * rebuys);
@@ -104,7 +114,7 @@ namespace TorneosWeb.service.impl
 			return torneoId;
 		}
 
-		private void insertarResultados(Guid torneoId, List<ResultadosDTO> resultados, SqlUnitOfWork uow)
+		private void InsertarResultados(Guid torneoId, List<ResultadosDTO> resultados, TorneoUnitOfWork uow)
 		{
 			string query = "insert into resultados (torneo_id, jugador_id, rebuys, posicion, podio, premio, burbuja) values('{0}', (select id from jugadores where nombre='{1}'), "
 				+ "{2}, {3}, '{4}', {5}, '{6}')";
@@ -124,7 +134,7 @@ namespace TorneosWeb.service.impl
 			}
 		}
 
-		private void insertarKos(TorneoDTO torneo, List<ResultadosDTO> resultados, List<KnockoutsDTO> kos, SqlUnitOfWork uow)
+		private void InsertarKos(TorneoDTO torneo, List<ResultadosDTO> resultados, List<KnockoutsDTO> kos, TorneoUnitOfWork uow)
 		{
 			string query = "insert into knockouts (torneo_id, jugador_id, eliminado_id, eliminaciones) values('{0}', "
 				+ "(select id from jugadores where nombre = '{1}'), (select id from jugadores where nombre = '{2}'), {3})";

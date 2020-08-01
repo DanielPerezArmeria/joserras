@@ -4,12 +4,15 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using TorneosWeb.domain.dto;
+using TorneosWeb.domain.models;
 
 namespace TorneosWeb.util.TournamentTypes
 {
-	public interface ITournamentType
+	public interface ITournamentTypeStrategy
 	{
-		Guid insertarTorneo(TorneoDTO torneo, List<ResultadosDTO> resultados, SqlConnection conn, SqlTransaction tx);
+		TournamentType GetTournamentType();
+
+		Guid InsertarTorneo(TorneoDTO torneo, List<ResultadosDTO> resultados, TorneoUnitOfWork uow);
 	}
 
 }

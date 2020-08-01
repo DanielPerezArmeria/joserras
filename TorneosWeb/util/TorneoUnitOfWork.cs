@@ -3,13 +3,13 @@ using System.Data.SqlClient;
 
 namespace TorneosWeb.util
 {
-	public class SqlUnitOfWork : IDisposable
+	public class TorneoUnitOfWork : IDisposable
 	{
 		private SqlTransaction Transaction { get; set; }
 		private SqlConnection Conn { get; set; }
 		private string ConnectionString { get; set; }
 
-		public SqlUnitOfWork(string connString)
+		public TorneoUnitOfWork(string connString)
 		{
 			ConnectionString = connString;
 
