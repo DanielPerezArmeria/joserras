@@ -33,6 +33,7 @@ namespace TorneosWeb.util.automapper
 				.ForMember( dest => dest.Nombre, opt => opt.MapFrom( src => src.GetFieldValue<string>( src.GetOrdinal( "nombre" ) ) ) )
 				.ForMember( dest => dest.PremioBountiesNumber, opt => opt.MapFrom( src => src.GetFieldValue<int>( src.GetOrdinal( "premio_bounties" ) ) ) )
 				.ForMember( dest => dest.Knockouts, opt => opt.MapFrom( src => src.GetFieldValue<int>( src.GetOrdinal( "kos" ) ) ) )
+				.ForMember( dest => dest.Puntualidad, opt => opt.MapFrom( src => src.GetFieldValue<bool>( src.GetOrdinal( "puntualidad" ) ) ) )
 				.IgnoreNoMap();
 
 			CreateMap<SqlDataReader, Knockouts>()

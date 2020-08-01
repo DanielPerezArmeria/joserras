@@ -21,6 +21,9 @@ namespace TorneosWeb.domain.dto
 
 		[Default( false )]
 		public bool Burbuja { get; set; }
+
+		[Default(false)]
+		public bool Puntualidad { get; set; }
 	}
 
 }
