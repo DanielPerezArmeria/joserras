@@ -33,7 +33,7 @@ namespace TorneosWeb.service.impl
 		{
 			TorneoDTO torneo = tourneyReader.GetItems<TorneoDTO>( files.Find( t => t.FileName.Contains( "torneo" ) ) ).First();
 			List<ResultadosDTO> resultados = tourneyReader.GetItems<ResultadosDTO>( files.Find( t => t.FileName.Contains( "resultados" ) ) ).ToList();
-			List<EliminacionesDTO> kos = tourneyReader.GetItems<EliminacionesDTO>( files.Find( t => t.FileName.Contains( "knockouts" ) ) ).ToList();
+			List<KnockoutsDTO> kos = tourneyReader.GetItems<KnockoutsDTO>( files.Find( t => t.FileName.Contains( "knockouts" ) ) ).ToList();
 
 			SqlUnitOfWork uow = null;
 			try
@@ -124,12 +124,12 @@ namespace TorneosWeb.service.impl
 			}
 		}
 
-		private void insertarKos(TorneoDTO torneo, List<ResultadosDTO> resultados, List<EliminacionesDTO> kos, SqlUnitOfWork uow)
+		private void insertarKos(TorneoDTO torneo, List<ResultadosDTO> resultados, List<KnockoutsDTO> kos, SqlUnitOfWork uow)
 		{
-			string query = "insert into eliminaciones (torneo_id, jugador_id, eliminado_id, eliminaciones) values('{0}', "
+			string query = "insert into knockouts (torneo_id, jugador_id, eliminado_id, eliminaciones) values('{0}', "
 				+ "(select id from jugadores where nombre = '{1}'), (select id from jugadores where nombre = '{2}'), {3})";
 
-			foreach(EliminacionesDTO dto in kos )
+			foreach(KnockoutsDTO dto in kos )
 			{
 				try
 				{

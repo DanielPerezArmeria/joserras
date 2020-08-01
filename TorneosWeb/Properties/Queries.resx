@@ -119,7 +119,7 @@
   </resheader>
   <data name="GetAllKOs" xml:space="preserve">
     <value>select j.nombre, elim.nombre as eliminado, sum(e.eliminaciones) as kos
-from eliminaciones e, jugadores j, jugadores elim
+from knockouts e, jugadores j, jugadores elim
 where e.jugador_id = j.id and e.eliminado_id = elim.id
 group by j.nombre, elim.nombre order by kos desc</value>
   </data>
@@ -156,7 +156,7 @@ group by j.id, j.nombre
 ) as detalles</value>
   </data>
   <data name="GetKnockoutsByPlayer" xml:space="preserve">
-    <value>select j.nombre, elim.nombre as eliminado, sum(e.eliminaciones) as eliminaciones from eliminaciones e, jugadores j, jugadores elim
+    <value>select j.nombre, elim.nombre as eliminado, sum(e.eliminaciones) as eliminaciones from knockouts e, jugadores j, jugadores elim
 where j.id = '{0}' and e.jugador_id = j.id and e.eliminado_id = elim.id
 group by j.nombre, elim.nombre order by eliminaciones desc</value>
   </data>
@@ -186,7 +186,7 @@ group by j.id, j.nombre
 ) as detalles
 left outer join
 (select j.nombre, sum(e.eliminaciones) as ko
-from jugadores j, eliminaciones e
+from jugadores j, knockouts e
 where j.id = e.jugador_id
 group by j.nombre
 ) as kk
