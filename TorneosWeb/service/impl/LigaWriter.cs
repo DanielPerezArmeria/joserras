@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using TorneosWeb.domain.dto;
 using TorneosWeb.domain.dto.ligas;
 using TorneosWeb.domain.models;
@@ -11,29 +14,34 @@ namespace TorneosWeb.service.impl
 	public class LigaWriter : ILigaWriter
 	{
 		private IReadService readService;
-		private JoserrasQuery joserrasQuery;
+		private ITorneoDataReader ligaDataReader;
 		private ILigaReader ligaReader;
+		private IConfiguration config;
 
-		public LigaWriter(IReadService readService, JoserrasQuery joserrasQuery, ILigaReader ligaReader)
+		public LigaWriter(IReadService readService, ITorneoDataReader dataReader, ILigaReader ligaReader, IConfiguration config)
 		{
 			this.readService = readService;
-			this.joserrasQuery = joserrasQuery;
+			ligaDataReader = dataReader;
 			this.ligaReader = ligaReader;
 		}
 
-		public void InsertarLiga(TorneoDTO torneo, List<ResultadosDTO> resultados, List<KnockoutsDTO> kos, TorneoUnitOfWork uow)
+		public void InsertarTorneoDeLiga(TorneoDTO torneo, List<ResultadosDTO> resultados, List<KnockoutsDTO> kos )
 		{
-			Liga liga = ligaReader.FindLigaByNombre( torneo.Liga );
-			if(liga == null )
-			{
-				LigaDTO ligaDto = new LigaDTO();
-				ligaDto.Nombre = torneo.Liga;
-				ligaDto.Nombre = torneo.LigaPuntaje;
-				ligaDto.Abierta = true;
-				ligaDto.Id = InsertarNuevaLiga( ligaDto, uow );
-			}
+			TorneoUnitOfWork uow = null;
 
-			InsertarTorneoDeLiga( liga, torneo, uow );
+			using( uow = new TorneoUnitOfWork( config.GetConnectionString( Properties.Resources.joserrasDb ) ) )
+			{
+				/*Liga liga = ligaReader.FindLigaByNombre( torneo.Liga );
+				if( liga == null )
+				{
+					LigaDTO ligaDto = new LigaDTO();
+					ligaDto.Nombre = torneo.Liga;
+					ligaDto.Abierta = true;
+					ligaDto.Id = InsertarNuevaLiga( ligaDto, uow );
+				}
+
+				InsertarTorneoDeLiga( liga, torneo, uow ); */
+			}
 		}
 
 		private Guid InsertarNuevaLiga(LigaDTO liga, TorneoUnitOfWork uow)
@@ -46,7 +54,7 @@ namespace TorneosWeb.service.impl
 		private void InsertarTorneoDeLiga(Liga liga, TorneoDTO torneo, TorneoUnitOfWork uow)
 		{
 			string query = "insert into torneos_liga values ('{0}', '{1}', {2})";
-			uow.ExecuteNonQuery( query, liga.Id, torneo.Id, torneo.LigaFee );
+			uow.ExecuteNonQuery( query, liga.Id, torneo.Id );
 		}
 
 		private void InsertarPuntaje(Liga liga, TorneoDTO torneo, List<ResultadosDTO> resultados, TorneoUnitOfWork uow)
@@ -55,6 +63,21 @@ namespace TorneosWeb.service.impl
 			foreach(string pRule in reglas )
 			{
 
+			}
+		}
+
+		public void InsertarTorneoDeLiga(TorneoDTO torneo, List<ResultadosDTO> resultados, List<KnockoutsDTO> kos, TorneoUnitOfWork uow)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void AgregarNuevaLiga(IFormFile file)
+		{
+			LigaDTO liga = ligaDataReader.GetItems<LigaDTO>( file ).First();
+			using( TorneoUnitOfWork uow = new TorneoUnitOfWork( config.GetConnectionString( Properties.Resources.joserrasDb ) ) )
+			{
+				string query = @"insert into ligas (nombre, abierta, puntaje) output values ('{0}', {1}, '{2}')";
+				uow.ExecuteNonQuery( query, liga.Nombre, 1, liga.Puntaje );
 			}
 		}
 

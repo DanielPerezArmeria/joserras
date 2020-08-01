@@ -49,4 +49,18 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="liga_fee" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="2df13d19-3983-49a5-932f-e6373ee0c798" ChangeDateTime="08/01/2020 19:35:26">
+    <Property Name="ElementName" Value="[dbo].[ligas].[fecha_creada]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ligas]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="fecha_inicio" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="3cd4e955-1870-49a6-82b4-6bf8129db228" ChangeDateTime="08/01/2020 19:35:33">
+    <Property Name="ElementName" Value="[dbo].[ligas].[fecha_cerrada]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ligas]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="fecha_cierre" />
+  </Operation>
 </Operations>

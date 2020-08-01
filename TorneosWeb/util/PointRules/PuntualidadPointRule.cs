@@ -6,23 +6,21 @@ using TorneosWeb.domain.models.ligas;
 
 namespace TorneosWeb.util.PointRules
 {
-	public class PosicionPointRule : PointRule
+	public class PuntualidadPointRule : PointRule
 	{
-		private int points;
-		private int posicion;
+		private int puntos;
 
-		public PosicionPointRule(params string[] Params)
+		public PuntualidadPointRule(params string[] Params)
 		{
-			posicion = int.Parse( Params[ 1 ] );
-			points = int.Parse( Params[ 2 ] );
+			puntos = int.Parse( Params[ 1 ] );
 		}
 
 		public override int GetPuntos(Guid jugadorId, Liga liga, TorneoDTO torneo, List<ResultadosDTO> resultados, List<KnockoutsDTO> kos)
 		{
 			ResultadosDTO res = resultados.Where( p => p.JugadorId == jugadorId ).First();
-			if(res.Posicion == posicion )
+			if( res.Puntualidad )
 			{
-				return points;
+				return puntos;
 			}
 
 			return 0;

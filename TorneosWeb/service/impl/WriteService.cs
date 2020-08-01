@@ -16,23 +16,18 @@ namespace TorneosWeb.service.impl
 		private IReadService readService;
 		private ICacheService cacheService;
 		private ILogger<WriteService> log;
-		private ITournamentReader tourneyReader;
-		private ILigaWriter ligaWriterImpl;
-		private ILigaWriter nullLigaWriter = new NullLigaWriter();
-
-		private ILigaWriter currentLigaWriter;
+		private ITorneoDataReader tourneyReader;
 
 		private string connString;
 
-		public WriteService(IReadService service, ICacheService cacheService, IConfiguration config, ITournamentReader tourneyReader,
-			ILigaWriter ligaWriter, ILogger<WriteService> logger)
+		public WriteService(IReadService service, ICacheService cacheService, IConfiguration config,
+			ITorneoDataReader tourneyReader, ILogger<WriteService> logger)
 		{
 			readService = service;
 			this.cacheService = cacheService;
 			log = logger;
 			connString = config.GetConnectionString( Properties.Resources.joserrasDb );
 			this.tourneyReader = tourneyReader;
-			ligaWriterImpl = ligaWriter;
 		}
 
 		public void uploadTournament(List<IFormFile> files)
@@ -40,8 +35,6 @@ namespace TorneosWeb.service.impl
 			TorneoDTO torneo = tourneyReader.GetItems<TorneoDTO>( files.Find( t => t.FileName.Contains( "torneo" ) ) ).First();
 			List<ResultadosDTO> resultados = tourneyReader.GetItems<ResultadosDTO>( files.Find( t => t.FileName.Contains( "resultados" ) ) ).ToList();
 			List<KnockoutsDTO> kos = tourneyReader.GetItems<KnockoutsDTO>( files.Find( t => t.FileName.Contains( "knockouts" ) ) ).ToList();
-
-			currentLigaWriter = string.IsNullOrEmpty( torneo.Liga ) ? nullLigaWriter : ligaWriterImpl;
 
 			TorneoUnitOfWork uow = null;
 			try
@@ -58,8 +51,6 @@ namespace TorneosWeb.service.impl
 					{
 						InsertarKos( torneo, resultados, kos, uow );
 					}
-
-					currentLigaWriter.InsertarLiga( torneo, resultados, kos, uow );
 
 					uow.Commit();
 				}
@@ -168,6 +159,7 @@ namespace TorneosWeb.service.impl
 				string q = string.Format( query, bountyPrice, t.Item2, torneo.Id, t.Item1 );
 				try
 				{
+					resultados.Where( r => r.Jugador == t.Item1 ).First().Kos = t.Item2;
 					uow.ExecuteNonQuery( query, bountyPrice, t.Item2, torneo.Id, t.Item1 );
 				}
 				catch( Exception e )

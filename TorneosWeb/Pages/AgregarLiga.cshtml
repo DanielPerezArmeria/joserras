@@ -1,0 +1,60 @@
+﻿@page
+@model TorneosWeb.Pages.AgregarLigaModel
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+	<meta name="viewport" content="width=device-width" />
+	<title>Liga</title>
+</head>
+
+<body>
+
+	<div>
+		@if( Model.Liga == null )
+		{
+			<form enctype="multipart/form-data" method="post">
+				<dl>
+					<dt>
+						<label asp-for="LigaUpload.FormFile"></label>
+					</dt>
+					<dd>
+						<input asp-for="LigaUpload.FormFile" type="file" />
+						<span asp-validation-for="LigaUpload.FormFile"></span>
+					</dd>
+				</dl>
+				<input type="submit" value="Upload" asp-page-handler="AgregarLiga" />
+			</form>
+		}
+		else
+		{
+			<input type="submit" value="Cerrar Liga" asp-page-handler="CerrarLiga" />
+		}
+	</div>
+
+	<hr style="margin-top:3em;margin-bottom:3em;border: 3px solid black" />
+
+	<div>
+		@if( Model.Liga != null )
+		{
+		<form method="post">
+			<input type="date" asp-for="Fecha" />
+			<span asp-validation-for="Fecha"></span>
+			<input type="number" asp-for="Fee" />
+			<span asp-validation-for="Fee"></span>
+			<input type="submit" value="Agregar Torneo" asp-page-handler="AgregarTorneo" />
+		</form>
+		}
+	</div>
+
+	<div>
+		<p>
+			@Model.Result
+		</p>
+	</div>
+
+</body>
+
+</html>

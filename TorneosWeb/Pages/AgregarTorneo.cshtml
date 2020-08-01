@@ -13,14 +13,14 @@
 	<form enctype="multipart/form-data" method="post">
 		<dl>
 			<dt>
-				<label asp-for="FileUpload.FormFiles"></label>
+				<label asp-for="TorneoUpload.FormFiles"></label>
 			</dt>
 			<dd>
-				<input asp-for="FileUpload.FormFiles" type="file" multiple />
-				<span asp-validation-for="FileUpload.FormFiles"></span>
+				<input asp-for="TorneoUpload.FormFiles" type="file" multiple />
+				<span asp-validation-for="TorneoUpload.FormFiles"></span>
 			</dd>
 		</dl>
-		<input type="submit" value="Upload" />
+		<input type="submit" value="Upload" asp-page-handler="Torneo"/>
 	</form>
 
 </body>

@@ -8,9 +8,9 @@ namespace TorneosWeb.domain.dto.ligas
 
 		public string Nombre { get; set; }
 
-		public DateTime FechaCreada { get; set; }
+		public DateTime FechaInicio { get; set; }
 
-		public DateTime FechaCerrada { get; set; }
+		public DateTime FechaCierre { get; set; }
 
 		public bool Abierta { get; set; }
 

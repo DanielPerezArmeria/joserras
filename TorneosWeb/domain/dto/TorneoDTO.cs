@@ -19,13 +19,6 @@ namespace TorneosWeb.domain.dto
 
 		[Default(TournamentType.NORMAL)]
 		public TournamentType Tipo { get; set; }
-
-		public string Liga { get; set; }
-		public int LigaFee { get; set; }
-		public string LigaPuntaje { get; set; }
-
-		[Default(false)]
-		public bool CerrarLiga { get; set; }
 	}
 
 }

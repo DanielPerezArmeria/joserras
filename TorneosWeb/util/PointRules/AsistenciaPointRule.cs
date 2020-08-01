@@ -9,9 +9,9 @@ namespace TorneosWeb.util.PointRules
 	{
 		private int points;
 
-		public AsistenciaPointRule(string Params)
+		public AsistenciaPointRule(params string[] Params)
 		{
-			points = int.Parse( Params );
+			points = int.Parse( Params[1] );
 		}
 
 		public override int GetPuntos(Guid jugadorId, Liga liga, TorneoDTO torneo, List<ResultadosDTO> resultados, List<KnockoutsDTO> kos)

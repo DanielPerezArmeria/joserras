@@ -1,4 +1,4 @@
-﻿CREATE TABLE [dbo].[DetalleTorneos] (
+﻿CREATE TABLE [dbo].[resultados] (
     [torneo_id]  UNIQUEIDENTIFIER NOT NULL,
     [jugador_id] UNIQUEIDENTIFIER NOT NULL,
     [rebuys]     INT              NOT NULL,
