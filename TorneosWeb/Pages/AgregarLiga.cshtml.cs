@@ -42,14 +42,13 @@ namespace TorneosWeb.Pages
 			if( !ModelState.IsValid )
 			{
 				Result = "Agrega un archivo";
-
 				return Page();
 			}
 
 			ligaWriter.AgregarNuevaLiga( LigaUpload.FormFile );
 
-			Result = "Liga agregada exitosamente!";
-			return Page();
+			Result = null;
+			return RedirectToPage( "./AgregarLiga" );
 		}
 
 		public IActionResult OnPostCerrarLiga()

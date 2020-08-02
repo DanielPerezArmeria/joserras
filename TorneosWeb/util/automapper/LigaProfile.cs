@@ -14,8 +14,8 @@ namespace TorneosWeb.util.automapper
 				.ForMember( dest => dest.Nombre, opt => opt.MapFrom( src => src.GetFieldValue<string>( src.GetOrdinal( "nombre" ) ) ) )
 				.ForMember( dest => dest.Puntaje, opt => opt.MapFrom( src => src.GetFieldValue<string>( src.GetOrdinal( "puntaje" ) ) ) )
 				.ForMember( dest => dest.Abierta, opt => opt.MapFrom( src => src.GetFieldValue<bool>( src.GetOrdinal( "abierta" ) ) ) )
-				.ForMember( dest => dest.FechaInicioDate, opt => opt.MapFrom( src => src.GetFieldValue<DateTime>( src.GetOrdinal( "fecha_incio" ) ) ) )
-				.ForMember( dest => dest.FechaCierreDate, opt => opt.MapFrom( src => src.GetFieldValue<DateTime>( src.GetOrdinal( "fecha_cierre" ) ) ) )
+				.ForMember( dest => dest.FechaInicioDate, opt => opt.MapFrom( src => ((DateTime)src[ "fecha_inicio" ]) ) )
+				.ForMember( dest => dest.FechaCierreDate, opt => opt.MapFrom( src => src[ "fecha_cierre" ] as DateTime? ) )
 				.IgnoreNoMap();
 		}
 	}

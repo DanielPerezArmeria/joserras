@@ -16,7 +16,7 @@ namespace TorneosWeb.domain.models.ligas
 
 		[NoMap]
 		public string FechaCierre { get; set; }
-		public DateTime FechaCierreDate { get; set; }
+		public DateTime? FechaCierreDate { get; set; }
 
 	}
 

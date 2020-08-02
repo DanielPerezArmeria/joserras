@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,19 +14,24 @@ namespace TorneosWeb.service.impl
 {
 	public class LigaWriter : ILigaWriter
 	{
+		private ILogger<LigaWriter> log;
+
 		private IReadService readService;
 		private ITorneoDataReader ligaDataReader;
 		private ILigaReader ligaReader;
 		private IConfiguration config;
 
-		public LigaWriter(IReadService readService, ITorneoDataReader dataReader, ILigaReader ligaReader, IConfiguration config)
+		public LigaWriter(IReadService readService, ITorneoDataReader dataReader, ILigaReader ligaReader,
+				IConfiguration config, ILogger<LigaWriter> log)
 		{
 			this.readService = readService;
 			ligaDataReader = dataReader;
 			this.ligaReader = ligaReader;
+			this.config = config;
+			this.log = log;
 		}
 
-		public void InsertarTorneoDeLiga(TorneoDTO torneo, List<ResultadosDTO> resultados, List<KnockoutsDTO> kos )
+		public void InsertarTorneoDeLiga( TorneoDTO torneo, List<ResultadosDTO> resultados, List<KnockoutsDTO> kos )
 		{
 			TorneoUnitOfWork uow = null;
 
@@ -76,8 +82,10 @@ namespace TorneosWeb.service.impl
 			LigaDTO liga = ligaDataReader.GetItems<LigaDTO>( file ).First();
 			using( TorneoUnitOfWork uow = new TorneoUnitOfWork( config.GetConnectionString( Properties.Resources.joserrasDb ) ) )
 			{
-				string query = @"insert into ligas (nombre, abierta, puntaje) output values ('{0}', {1}, '{2}')";
+				string query = @"insert into ligas (nombre, abierta, puntaje) values ('{0}', {1}, '{2}')";
 				uow.ExecuteNonQuery( query, liga.Nombre, 1, liga.Puntaje );
+
+				uow.Commit();
 			}
 		}
 

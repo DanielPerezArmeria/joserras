@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SimpleInjector;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using TorneosWeb.service;
@@ -33,6 +34,10 @@ namespace TorneosWeb
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
+			CultureInfo mex = new CultureInfo( "es-MX" );
+			CultureInfo.DefaultThreadCurrentCulture = mex;
+			CultureInfo.DefaultThreadCurrentUICulture = mex;
+
 			services.Configure<CookiePolicyOptions>( options =>
 			 {
 				 // This lambda determines whether user consent for non-essential cookies is needed for a given request.

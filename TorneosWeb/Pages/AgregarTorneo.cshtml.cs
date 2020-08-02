@@ -33,7 +33,6 @@ namespace TorneosWeb.Pages
 			if( !ModelState.IsValid )
 			{
 				Result = "Please correct the form.";
-
 				return Page();
 			}
 
