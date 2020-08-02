@@ -69,6 +69,7 @@ namespace TorneosWeb.Pages
 				return Page();
 			}
 
+			Result = string.Format( "El Torneo con fecha {0} se agregó con éxito a la liga!", Fecha.ToShortDateString() );
 			return Page();
 		}
 
