@@ -24,6 +24,8 @@ namespace TorneosWeb.service
 
 		SortedList<string, Dictionary<string, Knockouts>> GetAllKnockouts();
 
+		Torneo FindTorneoByFecha(DateTime fecha);
+
 	}
 
 }

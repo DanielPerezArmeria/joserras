@@ -19,6 +19,8 @@ namespace TorneosWeb.domain.dto
 
 		[Default(TournamentType.NORMAL)]
 		public TournamentType Tipo { get; set; }
-	}
+
+        public string Liga { get; set; }
+    }
 
 }

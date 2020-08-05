@@ -6,6 +6,8 @@ namespace TorneosWeb.service.impl
 {
 	public class CacheService : ICacheService
 	{
+		private Dictionary<string, object> map = new Dictionary<string, object>();
+
 		private readonly List<Jugador> getAllJugadores = new List<Jugador>();
 		public List<Jugador> GetAllJugadores => getAllJugadores;
 
@@ -46,8 +48,26 @@ namespace TorneosWeb.service.impl
 			GetKnockoutsByPlayer.Clear();
 			GetDetalleJugador.Clear();
 			GetStats = null;
+
+			map.Clear();
 		}
 
-	}
+        public void Add(string key, object value)
+        {
+			map.Add(key, value);
+        }
+
+        public T Get<T>(string key)
+        {
+			Object obj;
+			if(map.TryGetValue(key, out obj))
+            {
+				return (T)obj;
+            }
+
+			return default(T);
+        }
+
+    }
 
 }

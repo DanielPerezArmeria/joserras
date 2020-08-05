@@ -89,6 +89,12 @@ namespace TorneosWeb.service.impl
 			}
 		}
 
-	}
+        public void LigarTorneoEnFecha(DateTime date)
+        {
+			Torneo torneo = readService.FindTorneoByFecha(date);
+            throw new NotImplementedException();
+        }
+
+    }
 
 }

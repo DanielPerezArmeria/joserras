@@ -49,7 +49,7 @@
 					<a asp-page="./Torneo" asp-route-id="@torneo.Id">Resultados</a>
 				</td>
 				<td>
-					@Html.DisplayFor( modelItem => torneo.Fecha )
+					@Html.DisplayFor( modelItem => torneo.Fecha.ToString("dd 'de' MMMM yyyy") )
 				</td>
 				<td>
 					@Html.DisplayFor( modelItem => torneo.Tipo )

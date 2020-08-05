@@ -171,6 +171,26 @@ namespace TorneosWeb.service.decorators
 			return cacheService.GetDetalleJugador;
 		}
 
-	}
+        public Torneo FindTorneoByFecha(DateTime fecha)
+        {
+			Torneo torneo = cacheService.Get<Torneo>("Torneo" + fecha.ToShortDateString());
+
+			if (torneo == null)
+            {
+                try
+                {
+					cacheService.Add( "Torneo" + fecha.ToShortDateString(), wrapped.FindTorneoByFecha( fecha ) );
+                }
+				catch (Exception e)
+				{
+					log.LogWarning(e, e.Message);
+					throw new JoserrasException(e);
+				}
+			}
+
+			return cacheService.Get<Torneo>("Torneo" + fecha.ToShortDateString());
+        }
+
+    }
 
 }

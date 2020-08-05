@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using TorneosWeb.domain.models.ligas;
 using TorneosWeb.util;
 using TorneosWeb.util.automapper;
 
@@ -7,10 +9,13 @@ namespace TorneosWeb.domain.models
 {
 	public class Torneo
 	{
-		public Guid Id { get; set; }
-		public string Fecha { get; set; }
+		private IList<Posicion> posiciones;
 
-		[Display( Name = "$ Buyin" )]
+		public Guid Id { get; set; }
+
+		public DateTime Fecha { get; set; }
+
+        [Display( Name = "$ Buyin" )]
 		[NoMap]
 		public string Precio_Buyin
 		{
@@ -45,6 +50,13 @@ namespace TorneosWeb.domain.models
 		[NoMap]
 		[Display(Name = "Bounty")]
 		public string PremioBounty { get { return PremioBountyNumber > 0 ? PremioBountyNumber.ToString( "$###,###" ) : "-"; } }
-	}
+
+		[NoMap]
+        public Liga Liga { get; set; }
+
+		[NoMap]
+		IList<Posicion> Posiciones { get { return posiciones; } set { posiciones = value; } }
+
+    }
 
 }
