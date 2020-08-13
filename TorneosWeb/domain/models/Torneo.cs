@@ -13,19 +13,25 @@ namespace TorneosWeb.domain.models
 
 		public Guid Id { get; set; }
 
-		public DateTime Fecha { get; set; }
+		[NoMap]
+		public string Fecha { get { return FechaDate.ToShortDateString(); } }
+		public DateTime FechaDate { get; set; }
 
-        [Display( Name = "$ Buyin" )]
+		[Display( Name = "$ Buyin" )]
 		[NoMap]
 		public string Precio_Buyin
 		{
 			get
 			{
-				string buyin = PrecioBuyinNumber.ToString( Constants.CURRENCY_FORMAT );
-				if(Tipo == TournamentType.BOUNTY )
+				int total = PrecioBuyinNumber - PremioBountyNumber - (Liga == null ? 0 : Liga.Fee);
+				string buyin = total.ToString( Constants.CURRENCY_FORMAT );
+				if( Tipo == TournamentType.BOUNTY )
 				{
-					buyin = (PrecioBuyinNumber - PremioBountyNumber).ToString( Constants.CURRENCY_FORMAT );
-					buyin = buyin + " + " + PremioBountyNumber.ToString( Constants.CURRENCY_FORMAT );
+					buyin = buyin + " + " + PremioBountyNumber.ToString( Constants.CURRENCY_FORMAT ) + "(B)";
+				}
+				if( Liga != null )
+				{
+					buyin = buyin + " + " + Liga.Fee.ToString( Constants.CURRENCY_FORMAT ) + "(L)";
 				}
 				return buyin;
 			}
@@ -33,7 +39,7 @@ namespace TorneosWeb.domain.models
 
 		public int PrecioBuyinNumber { get; set; }
 
-		[Display( Name = "$ Re-buy")]
+		[Display( Name = "$ Re-buy" )]
 		[NoMap]
 		public string Precio_Rebuy { get { return PrecioRebuyNumber.ToString( Constants.CURRENCY_FORMAT ); } }
 
@@ -48,15 +54,15 @@ namespace TorneosWeb.domain.models
 		public int PremioBountyNumber { get; set; }
 
 		[NoMap]
-		[Display(Name = "Bounty")]
+		[Display( Name = "Bounty" )]
 		public string PremioBounty { get { return PremioBountyNumber > 0 ? PremioBountyNumber.ToString( "$###,###" ) : "-"; } }
 
 		[NoMap]
-        public Liga Liga { get; set; }
+		public Liga Liga { get; set; }
 
 		[NoMap]
 		IList<Posicion> Posiciones { get { return posiciones; } set { posiciones = value; } }
 
-    }
+	}
 
 }

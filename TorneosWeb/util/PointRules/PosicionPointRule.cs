@@ -1,28 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using TorneosWeb.domain.dto;
+using TorneosWeb.domain.models;
 using TorneosWeb.domain.models.ligas;
 
 namespace TorneosWeb.util.PointRules
 {
 	public class PosicionPointRule : PointRule
 	{
-		private int points;
-		private int posicion;
+		private Dictionary<int, int> puntos = new Dictionary<int, int>();
 
-		public PosicionPointRule(params string[] Params)
+		public PosicionPointRule(string Params)
 		{
-			posicion = int.Parse( Params[ 1 ] );
-			points = int.Parse( Params[ 2 ] );
+			string[] positionPairs = Params.Split( "|" );
+			foreach(string pair in positionPairs )
+			{
+				string[] valores = pair.Split( "-" );
+				puntos.Add( int.Parse( valores[ 0 ] ), int.Parse( valores[ 1 ] ) );
+			}
 		}
 
-		public override int GetPuntos(Guid jugadorId, Liga liga, TorneoDTO torneo, List<ResultadosDTO> resultados, List<KnockoutsDTO> kos)
+		public override int GetPuntos(Guid jugadorId, Liga liga, Resultados resultados)
 		{
-			ResultadosDTO res = resultados.Where( p => p.JugadorId == jugadorId ).First();
-			if(res.Posicion == posicion )
+			Posicion posicion = resultados.Posiciones.Where( p => p.JugadorId == jugadorId ).First();
+			if( puntos.ContainsKey( posicion.Lugar ) )
 			{
-				return points;
+				return puntos[ posicion.Lugar ];
 			}
 
 			return 0;

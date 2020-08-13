@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using TorneosWeb.domain.models;
+using TorneosWeb.domain.models.ligas;
 using TorneosWeb.util;
 
 namespace TorneosWeb.service.impl
@@ -16,7 +17,7 @@ namespace TorneosWeb.service.impl
 
 		public ReadServiceImpl(IConfiguration conf, IMapper mapper, JoserrasQuery joserrasQuery)
 		{
-			connString = conf.GetConnectionString( Properties.Resources.joserrasDb);
+			connString = conf.GetConnectionString( Properties.Resources.joserrasDb );
 			this.mapper = mapper;
 			this.joserrasQuery = joserrasQuery;
 		}
@@ -64,14 +65,31 @@ namespace TorneosWeb.service.impl
 		{
 			List<Torneo> torneos = new List<Torneo>();
 
-			joserrasQuery.ExecuteQuery( Properties.Queries.GetAllTorneos, reader =>
+			using( SqlConnection conn = new SqlConnection( connString ) )
 			{
-				while( reader.Read() )
+				conn.Open();
+
+				joserrasQuery.ExecuteQuery( conn, Properties.Queries.GetAllTorneos, reader =>
+					{
+						while( reader.Read() )
+						{
+							Torneo torneo = mapper.Map<SqlDataReader, Torneo>( reader );
+							torneos.Add( torneo );
+						}
+					} );
+
+				foreach( Torneo t in torneos )
 				{
-					Torneo torneo = mapper.Map<SqlDataReader, Torneo>( reader );
-					torneos.Add( torneo );
-				}
-			} );
+					string query = string.Format( "select * from ligas where id = (select liga_id from torneos_liga where torneo_id = '{0}')", t.Id );
+					joserrasQuery.ExecuteQuery( conn, query, reader =>
+					{
+						while( reader.Read() )
+						{
+							t.Liga = mapper.Map<SqlDataReader, Liga>( reader );
+						}
+					} );
+				} 
+			}
 
 			return torneos;
 		}
@@ -91,8 +109,8 @@ namespace TorneosWeb.service.impl
 				} );
 				detalleTorneo.Torneo = torneo;
 
-				query = string.Format("select dt.*, j.nombre from resultados dt, jugadores j "
-						+ "where dt.torneo_id = '{0}' and dt.jugador_id = j.id order by dt.posicion", torneoId);
+				query = string.Format( "select dt.*, j.nombre from resultados dt, jugadores j "
+						+ "where dt.torneo_id = '{0}' and dt.jugador_id = j.id order by dt.posicion", torneoId );
 				detalleTorneo.Posiciones = new List<Posicion>();
 				detalleTorneo.Jugadores = new SortedSet<string>();
 				joserrasQuery.ExecuteQuery( conn, query, reader =>
@@ -146,7 +164,7 @@ namespace TorneosWeb.service.impl
 
 		public SortedList<string, Dictionary<string, Knockouts>> GetKnockoutsByTournamentId(Guid torneoId)
 		{
-			SortedList<string, Dictionary<string, Knockouts>> knockouts = new SortedList<string, Dictionary<string,Knockouts>>();
+			SortedList<string, Dictionary<string, Knockouts>> knockouts = new SortedList<string, Dictionary<string, Knockouts>>();
 			string query = string.Format( "select j.nombre, elim.nombre as eliminado, sum(e.eliminaciones) as eliminaciones from knockouts e, jugadores j, jugadores elim"
 					+ " where torneo_id = '{0}' and e.jugador_id = j.id and e.eliminado_id = elim.id group by j.nombre, elim.nombre", torneoId );
 
@@ -159,7 +177,7 @@ namespace TorneosWeb.service.impl
 					{
 						knockouts.Add( ko.Nombre, new Dictionary<string, Knockouts>() );
 					}
-					knockouts[ ko.Nombre ].Add(ko.Eliminado, ko );
+					knockouts[ ko.Nombre ].Add( ko.Eliminado, ko );
 				}
 			} );
 
@@ -194,7 +212,7 @@ namespace TorneosWeb.service.impl
 				{
 					while( reader.Read() )
 					{
-						detalles.Add( mapper.Map<DetalleJugador>( reader ) ); 
+						detalles.Add( mapper.Map<DetalleJugador>( reader ) );
 					}
 				} );
 			}
@@ -202,25 +220,25 @@ namespace TorneosWeb.service.impl
 			return detalles;
 		}
 
-        public Torneo FindTorneoByFecha(DateTime fecha)
-        {
+		public Torneo FindTorneoByFecha(DateTime fecha)
+		{
 			Torneo torneo = null;
-            using (SqlConnection conn = new SqlConnection(connString))
-            {
+			using( SqlConnection conn = new SqlConnection( connString ) )
+			{
 				conn.Open();
-				string query = string.Format(@"select from torneos where fecha = '{0}'", fecha.ToString("yyyy-MM-dd"));
-				joserrasQuery.ExecuteQuery(conn, query, reader =>
-				{
-					while (reader.Read())
-					{
-						torneo = mapper.Map<Torneo>(reader);
-					}
-				});
+				string query = string.Format( @"select * from torneos where fecha = '{0}'", fecha.ToString( "yyyy-MM-dd" ) );
+				joserrasQuery.ExecuteQuery( conn, query, reader =>
+				 {
+					 while( reader.Read() )
+					 {
+						 torneo = mapper.Map<Torneo>( reader );
+					 }
+				 } );
 			}
 
 			return torneo;
-        }
+		}
 
-    }
+	}
 
 }

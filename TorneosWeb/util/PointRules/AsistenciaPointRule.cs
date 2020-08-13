@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using TorneosWeb.domain.dto;
+using TorneosWeb.domain.models;
 using TorneosWeb.domain.models.ligas;
 
 namespace TorneosWeb.util.PointRules
@@ -9,12 +8,12 @@ namespace TorneosWeb.util.PointRules
 	{
 		private int points;
 
-		public AsistenciaPointRule(params string[] Params)
+		public AsistenciaPointRule(string Params)
 		{
-			points = int.Parse( Params[1] );
+			points = int.Parse( Params );
 		}
 
-		public override int GetPuntos(Guid jugadorId, Liga liga, TorneoDTO torneo, List<ResultadosDTO> resultados, List<KnockoutsDTO> kos)
+		public override int GetPuntos(Guid jugadorId, Liga liga, Resultados resultados)
 		{
 			return points;
 		}

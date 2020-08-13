@@ -11,7 +11,7 @@ namespace TorneosWeb.util.automapper
 		{
 			CreateMap<SqlDataReader, Torneo>()
 				.ForMember( dest => dest.Id, opt => opt.MapFrom( src => (Guid)src[ "id" ] ) )
-				.ForMember( dest => dest.Fecha, opt => opt.MapFrom( src => (DateTime)src[ "fecha" ] ) )
+				.ForMember( dest => dest.FechaDate, opt => opt.MapFrom( src => (DateTime)src[ "fecha" ] ) )
 				.ForMember( dest => dest.PrecioBuyinNumber, opt => opt.MapFrom( src => src.GetFieldValue<int>( src.GetOrdinal( "precio_buyin" ) ) ) )
 				.ForMember( dest => dest.PrecioRebuyNumber, opt => opt.MapFrom( src => src.GetFieldValue<int>( src.GetOrdinal( "precio_rebuy" ) ) ) )
 				.ForMember( dest => dest.Entradas, opt => opt.MapFrom( src => src.GetFieldValue<int>( src.GetOrdinal( "entradas" ) ) ) )

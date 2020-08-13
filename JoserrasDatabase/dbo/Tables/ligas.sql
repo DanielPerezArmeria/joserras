@@ -5,6 +5,7 @@
     [abierta] BIT NOT NULL, 
     [fecha_inicio] DATE NOT NULL DEFAULT (GETDATE()), 
     [fecha_cierre] DATE NULL, 
-    [puntaje] VARCHAR(200) NULL,
-		CONSTRAINT NombreUniqueC UNIQUE([nombre])
+    [puntaje] VARCHAR(200) NOT NULL,
+		[fee] INT NOT NULL, 
+    CONSTRAINT NombreUniqueC UNIQUE([nombre])
 );

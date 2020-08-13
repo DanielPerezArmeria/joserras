@@ -20,18 +20,20 @@ namespace TorneosWeb.service.impl
 		private ITorneoDataReader ligaDataReader;
 		private ILigaReader ligaReader;
 		private IConfiguration config;
+		private ICacheService cacheService;
 
 		public LigaWriter(IReadService readService, ITorneoDataReader dataReader, ILigaReader ligaReader,
-				IConfiguration config, ILogger<LigaWriter> log)
+				IConfiguration config, ICacheService cacheService, ILogger<LigaWriter> log)
 		{
 			this.readService = readService;
 			ligaDataReader = dataReader;
 			this.ligaReader = ligaReader;
 			this.config = config;
 			this.log = log;
+			this.cacheService = cacheService;
 		}
 
-		public void InsertarTorneoDeLiga( TorneoDTO torneo, List<ResultadosDTO> resultados, List<KnockoutsDTO> kos )
+		public void InsertarTorneoDeLiga(TorneoDTO torneo, List<ResultadosDTO> resultados, List<KnockoutsDTO> kos)
 		{
 			TorneoUnitOfWork uow = null;
 
@@ -52,21 +54,21 @@ namespace TorneosWeb.service.impl
 
 		private Guid InsertarNuevaLiga(LigaDTO liga, TorneoUnitOfWork uow)
 		{
-			string query = @"insert into ligas (nombre, abierta, puntaje) output INSERTED.ID values ('{0}', {1}, '{2}')";
-			Guid ligaId = Guid.Parse( uow.ExecuteScalar( query, liga.Nombre, liga.Abierta, liga.Puntaje ).ToString() );
+			string query = @"insert into ligas (nombre, abierta, puntaje, fee) output INSERTED.ID values ('{0}', {1}, '{2}', {3})";
+			Guid ligaId = Guid.Parse( uow.ExecuteScalar( query, liga.Nombre, liga.Abierta, liga.Puntaje, liga.Fee ).ToString() );
 			return ligaId;
 		}
 
 		private void InsertarTorneoDeLiga(Liga liga, TorneoDTO torneo, TorneoUnitOfWork uow)
 		{
-			string query = "insert into torneos_liga values ('{0}', '{1}', {2})";
+			string query = "insert into torneos_liga values ('{0}', '{1}')";
 			uow.ExecuteNonQuery( query, liga.Id, torneo.Id );
 		}
 
 		private void InsertarPuntaje(Liga liga, TorneoDTO torneo, List<ResultadosDTO> resultados, TorneoUnitOfWork uow)
 		{
 			string[] reglas = liga.Puntaje.Split( ";" );
-			foreach(string pRule in reglas )
+			foreach( string pRule in reglas )
 			{
 
 			}
@@ -82,19 +84,42 @@ namespace TorneosWeb.service.impl
 			LigaDTO liga = ligaDataReader.GetItems<LigaDTO>( file ).First();
 			using( TorneoUnitOfWork uow = new TorneoUnitOfWork( config.GetConnectionString( Properties.Resources.joserrasDb ) ) )
 			{
-				string query = @"insert into ligas (nombre, abierta, puntaje) values ('{0}', {1}, '{2}')";
-				uow.ExecuteNonQuery( query, liga.Nombre, 1, liga.Puntaje );
+				string query = @"insert into ligas (nombre, abierta, puntaje, fee) values ('{0}', {1}, '{2}', {3})";
+				uow.ExecuteNonQuery( query, liga.Nombre, 1, liga.Puntaje, liga.Fee );
 
 				uow.Commit();
 			}
 		}
 
-        public void LigarTorneoEnFecha(DateTime date)
-        {
-			Torneo torneo = readService.FindTorneoByFecha(date);
-            throw new NotImplementedException();
-        }
+		public int AsociarTorneoEnFecha(DateTime date)
+		{
+			int rowsAffected = 0;
+			Torneo torneo = readService.FindTorneoByFecha( date );
+			if(torneo == null )
+			{
+				return rowsAffected;
+			}
+			using(TorneoUnitOfWork uow = new TorneoUnitOfWork( config.GetConnectionString( Properties.Resources.joserrasDb ) ) )
+			{
+				Liga liga = ligaReader.GetCurrentLiga();
+				string query = "insert into torneos_liga values ('{0}', '{1}')";
+				rowsAffected = uow.ExecuteNonQuery( query, liga.Id, torneo.Id );
 
-    }
+				Resultados resultados = readService.FindResultadosTorneo( torneo.Id );
+				foreach(Posicion pos in resultados.Posiciones )
+				{
+					int puntos = liga.PointRules.Sum( p => p.Value.GetPuntos( pos.JugadorId, liga, resultados ) );
+					query = "insert into puntos_torneo_liga values ('{0}', '{1}', {2})";
+					uow.ExecuteNonQuery( query, torneo.Id, pos.JugadorId, puntos );
+				}
+
+				uow.Commit();
+			}
+
+			cacheService.Clear();
+			return rowsAffected;
+		}
+
+	}
 
 }

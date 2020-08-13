@@ -12,7 +12,7 @@ namespace TorneosWeb.service
 
 		void AgregarNuevaLiga(IFormFile file);
 
-		void LigarTorneoEnFecha(DateTime date);
+		int AsociarTorneoEnFecha(DateTime date);
 	}
 
 }

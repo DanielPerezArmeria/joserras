@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using TorneosWeb.domain.dto;
+using TorneosWeb.domain.models;
 using TorneosWeb.domain.models.ligas;
 
 namespace TorneosWeb.util.PointRules
@@ -10,15 +9,15 @@ namespace TorneosWeb.util.PointRules
 	{
 		private int puntos;
 
-		public KosPointRule(params string[] Params)
+		public KosPointRule(string Params)
 		{
-			puntos = int.Parse( Params[ 1 ] );
+			puntos = int.Parse( Params );
 		}
 
-		public override int GetPuntos(Guid jugadorId, Liga liga, TorneoDTO torneo, List<ResultadosDTO> resultados, List<KnockoutsDTO> kos)
+		public override int GetPuntos(Guid jugadorId, Liga liga, Resultados resultados)
 		{
-			ResultadosDTO res = resultados.Where( p => p.JugadorId == jugadorId ).First();
-			return puntos * res.Kos;
+			Posicion posicion = resultados.Posiciones.Where( p => p.JugadorId == jugadorId ).First();
+			return puntos * posicion.Knockouts;
 		}
 
 	}

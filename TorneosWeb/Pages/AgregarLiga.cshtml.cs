@@ -22,19 +22,17 @@ namespace TorneosWeb.Pages
 		[BindProperty]
 		public DateTime Fecha { get; set; }
 
-		[BindProperty]
-		public int Fee { get; set; }
-
 
 		public AgregarLigaModel(ILigaReader ligaReader, ILigaWriter ligaWriter)
 		{
 			this.ligaReader = ligaReader;
 			this.ligaWriter = ligaWriter;
+			Liga = ligaReader.GetCurrentLiga();
 		}
 
 		public void OnGet()
 		{
-			Liga = ligaReader.GetCurrentLiga();
+			
 		}
 
 		public IActionResult OnPostAgregarLiga()
@@ -58,18 +56,16 @@ namespace TorneosWeb.Pages
 
 		public IActionResult OnPostAgregarTorneo()
 		{
-			if( !ModelState.IsValid )
+			int success = ligaWriter.AsociarTorneoEnFecha( Fecha );
+			if(success == 1 )
 			{
-				Result = "Agrega una fecha válida";
-				return Page();
+				Result = string.Format( "El Torneo con fecha {0} se agregó con éxito a la liga!", Fecha.ToShortDateString() );
 			}
-			/*if( Fee <= 0 )
+			else
 			{
-				Result = "El Fee de la liga debe ser mayor a 0";
-				return Page();
-			}*/
+				Result = string.Format( "El Torneo con fecha {0} no se pudo agregar", Fecha.ToShortDateString() );
+			}
 
-			Result = string.Format( "El Torneo con fecha {0} se agregó con éxito a la liga!", Fecha.ToShortDateString() );
 			return Page();
 		}
 

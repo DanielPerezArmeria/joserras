@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using TorneosWeb.domain.dto;
 using TorneosWeb.service;
@@ -17,6 +18,15 @@ namespace TorneosWeb.util
 			
 		}
 
+		public void InsertarTorneoDeLiga(TorneoDTO torneo, List<ResultadosDTO> resultados, List<KnockoutsDTO> kos)
+		{
+			throw new NotImplementedException();
+		}
+
+		public int AsociarTorneoEnFecha(DateTime date)
+		{
+			throw new NotImplementedException();
+		}
 	}
 
 }
