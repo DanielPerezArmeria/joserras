@@ -63,11 +63,11 @@ namespace TorneosWeb.Pages
 				Result = "Agrega una fecha válida";
 				return Page();
 			}
-			if( Fee <= 0 )
+			/*if( Fee <= 0 )
 			{
 				Result = "El Fee de la liga debe ser mayor a 0";
 				return Page();
-			}
+			}*/
 
 			Result = string.Format( "El Torneo con fecha {0} se agregó con éxito a la liga!", Fecha.ToShortDateString() );
 			return Page();

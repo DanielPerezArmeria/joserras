@@ -43,8 +43,8 @@
 			<label>Agregar torne de liga:</label>
 			<input type="date" asp-for="Fecha" value="@DateTime.Today.ToString("yyyy-MM-dd")" />
 			<span asp-validation-for="Fecha"></span>
-			<input type="number" asp-for="Fee" step="50" />
-			<span asp-validation-for="Fee"></span>
+			<!--<input type="number" asp-for="Fee" step="50" />
+			<span asp-validation-for="Fee"></span>-->
 			<input type="submit" value="Agregar Torneo" asp-page-handler="AgregarTorneo" />
 		</form>
 		}

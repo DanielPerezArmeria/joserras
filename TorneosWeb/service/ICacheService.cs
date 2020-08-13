@@ -25,6 +25,10 @@ namespace TorneosWeb.service
 		List<DetalleJugador> GetDetalleJugador { get; }
 
 		Estadisticas GetStats { get; set; }
+
+		void Add(string key, object value);
+
+		T Get<T>(string key);
 	}
 
 }

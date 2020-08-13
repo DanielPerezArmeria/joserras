@@ -202,6 +202,25 @@ namespace TorneosWeb.service.impl
 			return detalles;
 		}
 
-	}
+        public Torneo FindTorneoByFecha(DateTime fecha)
+        {
+			Torneo torneo = null;
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+				conn.Open();
+				string query = string.Format(@"select from torneos where fecha = '{0}'", fecha.ToString("yyyy-MM-dd"));
+				joserrasQuery.ExecuteQuery(conn, query, reader =>
+				{
+					while (reader.Read())
+					{
+						torneo = mapper.Map<Torneo>(reader);
+					}
+				});
+			}
+
+			return torneo;
+        }
+
+    }
 
 }
