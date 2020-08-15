@@ -39,7 +39,7 @@
 		{
 			<tr>
 				<td>
-					<a asp-page="./Torneo" asp-route-id="@torneo.Id">Resultados</a>
+					@Html.ActionLink("Resultados", "TorneoResults", "Home", new { torneoId = torneo.Id, listado = ViewData["Listado"] } )
 				</td>
 				<td>
 					@Html.DisplayFor( modelItem => torneo.Fecha )

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TorneosWeb.domain.models;
 using TorneosWeb.domain.models.ligas;
 
 namespace TorneosWeb.service
@@ -12,6 +13,8 @@ namespace TorneosWeb.service
 		List<Liga> GetAllLigas();
 
 		List<Standing> GetStandings(Liga liga);
+
+		List<Standing> GetStandings(Liga liga, Torneo torneo);
 	}
 
 }

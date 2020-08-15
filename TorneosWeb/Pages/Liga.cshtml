@@ -2,6 +2,7 @@
 @model TorneosWeb.Pages.LigaModel
 @{
 	ViewData[ "Title" ] = "Liga";
+	ViewData[ "Listado" ] = "Liga";
 	Layout = "~/Pages/Shared/_LayoutLigas.cshtml";
 }
 
@@ -35,57 +36,12 @@
 
 	<div>
 
-		<table class="table">
-
-			<thead>
-				<tr style="text-align:center;font-weight:bold">
-					<th>
-
-					</th>
-					<th>
-						@Html.DisplayNameFor( model => model.Standings[ 0 ].Total )
-					</th>
-					@foreach( var rule in Model.Standings[ 0 ].Puntos )
-					{
-						<th>
-							@rule.Key
-						</th>
-					}
-					<th>
-						@Html.DisplayNameFor( model => model.Standings[ 0 ].Profit )
-					</th>
-				</tr>
-			</thead>
-
-			<tbody>
-				@foreach( var standing in Model.Standings )
-				{
-					<tr>
-						<td style="font-weight:bold">
-							@Html.DisplayFor( item => standing.Jugador )
-						</td>
-						<td style="font-weight:bold;text-align:center">
-							@Html.DisplayFor( item => standing.Total )
-						</td>
-						@foreach( var rule in standing.Puntos )
-						{
-							<td style="text-align:center">
-								@Html.DisplayFor( item => rule.Value )
-							</td>
-						}
-						<td class="profit" style="text-align:right;margin-right:10em;color:@(standing.ProfitNumber < 0 ? "red" : "black")">
-							@Html.DisplayFor( item => standing.Profit )
-						</td>
-					</tr>
-				}
-			</tbody>
-
-		</table>
+		<partial name="_TorneoLigaResults" model="Model.Standings"/>
 
 	</div>
 
 	<hr style="margin-top:2em;margin-bottom:2em;border: 2px solid black" />
 
 	<h2>TORNEOS</h2>
-	<partial name="_TorneosListing" model="Model.Liga.Torneos" />
+	<partial name="_TorneosListing" model="Model.Liga.Torneos" view-data="ViewData" />
 }

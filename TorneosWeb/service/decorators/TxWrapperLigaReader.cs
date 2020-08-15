@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using TorneosWeb.domain.models;
 using TorneosWeb.domain.models.ligas;
 using TorneosWeb.exception;
 
@@ -75,12 +76,24 @@ namespace TorneosWeb.service.decorators
 
 		public List<Standing> GetStandings(Liga liga)
 		{
-			if(!cacheService.Contains("Standings:" + liga.Nombre ) )
+			string key = "Standings:" + liga.Nombre;
+			if(!cacheService.Contains( key ) )
 			{
-				cacheService.Add( "Standings:" + liga.Nombre, wrapped.GetStandings( liga ) );
+				cacheService.Add( key, wrapped.GetStandings( liga ) );
 			}
 
-			return cacheService.Get<List<Standing>>( "Standings:" + liga.Nombre );
+			return cacheService.Get<List<Standing>>( key );
+		}
+
+		public List<Standing> GetStandings(Liga liga, Torneo torneo)
+		{
+			string key = "Standings:" + liga.Nombre + ":" + torneo.Id;
+			if(!cacheService.Contains( key ) )
+			{
+				cacheService.Add( key, wrapped.GetStandings( liga, torneo ) );
+			}
+
+			return cacheService.Get<List<Standing>>( key );
 		}
 
 	}

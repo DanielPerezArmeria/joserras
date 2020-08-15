@@ -1,0 +1,10 @@
+﻿@page
+@model TorneosWeb.Pages.TorneoLigaModel
+@{
+    ViewData["Title"] = "TorneoLiga";
+    Layout = "~/Pages/Shared/_LayoutLigas.cshtml";
+}
+
+<h1>Torneo</h1>
+
+<partial name="_TorneoLigaResults" model="Model.Standings" />

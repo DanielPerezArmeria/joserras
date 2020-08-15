@@ -162,6 +162,30 @@ namespace TorneosWeb.service.impl
 			return list;
 		}
 
+		public List<Standing> GetStandings(Liga liga, Torneo torneo)
+		{
+			List<Standing> standings = new List<Standing>();
+			Resultados results = readService.FindResultadosTorneo( torneo.Id );
+			foreach( Posicion pos in results.Posiciones )
+			{
+				Standing standing = new Standing();
+				standing.Jugador = pos.Nombre;
+
+				foreach( KeyValuePair<string, PointRule> rule in liga.PointRules )
+				{
+					standing.Puntos.TryGetValue( rule.Value.Type, out int p );
+					standing.Puntos[ rule.Value.Type ] = rule.Value.GetPuntaje( pos.JugadorId, liga, results ) + p;
+				}
+
+				standing.Profit = pos.Profit;
+				standing.ProfitNumber = pos.ProfitNumber;
+
+				standings.Add( standing );
+			}
+
+			return standings.OrderByDescending( s => s.Total ).ToList();
+		}
+
 	}
 
 }
