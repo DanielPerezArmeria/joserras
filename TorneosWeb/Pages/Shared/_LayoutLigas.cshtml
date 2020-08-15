@@ -3,12 +3,12 @@
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>@ViewData[ "Title" ] - Torneos Joserras</title>
-	
+	<title>@ViewData[ "Title" ] - Ligas Joserras</title>
+
 
 	<environment include="Development">
 		<link rel="stylesheet" type="text/css" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-		<link rel="stylesheet" type="text/css" href="~/css/site.css"/>
+		<link rel="stylesheet" type="text/css" href="~/css/site.css" />
 		<script src="~/js/site.js" asp-append-version="true"></script>
 	</environment>
 	<environment exclude="Development">
@@ -26,27 +26,27 @@
 				<a class="nav-link text-dark" asp-area="" asp-page="/">
 					<img src="~/images/joseramonfernandez.jpg" width="66" height="71" />
 				</a>
-					<button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-									aria-expanded="false" aria-label="Toggle navigation">
-						<span class="navbar-toggler-icon"></span>
-					</button>
-					<div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-						<ul class="navbar-nav flex-grow-1">
-							<li class="nav-item">
-								<a class="nav-link text-dark" asp-area="" asp-page="/Torneos">Torneos</a>
-							</li>
-							<li>
-								<a class="nav-link text-dark" asp-area="" asp-page="/Jugadores">Jugadores</a>
-							</li>
-							<li>
-								<a class="nav-link text-dark" asp-area="" asp-page="/Estadisticas">Estadísticas</a>
-							</li>
-							<li>
-								<a class="nav-link text-dark" asp-area="" asp-page="/Liga" asp-page-handler="Current">Ligas</a>
-							</li>
-						</ul>
-					</div>
-</div>
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+								aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+					<ul class="navbar-nav flex-grow-1">
+						<li class="nav-item">
+							<a class="nav-link text-dark" asp-area="" asp-page="/Liga" asp-page-handler="Current">Liga Actual</a>
+						</li>
+						<li>
+							<a class="nav-link text-dark" asp-area="" asp-page="/Ligas">Ligas</a>
+						</li>
+						<li>
+							<a class="nav-link text-dark" asp-area="" asp-page="/Jugadores">Jugadores</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link text-dark" asp-area="" asp-page="/Torneos">Torneos</a>
+						</li>
+					</ul>
+				</div>
+			</div>
 		</nav>
 	</header>
 	<div class="container">

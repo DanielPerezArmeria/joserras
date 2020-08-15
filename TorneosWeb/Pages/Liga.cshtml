@@ -1,7 +1,8 @@
 ﻿@page
 @model TorneosWeb.Pages.LigaModel
 @{
-    ViewData["Title"] = "Liga";
+	ViewData[ "Title" ] = "Liga";
+	Layout = "~/Pages/Shared/_LayoutLigas.cshtml";
 }
 
 <div style="display:inline-block;font-size:45px;font-weight:bold;width:100%">
@@ -30,56 +31,61 @@
 @if( Model.Standings != null && Model.Standings.Count > 0 )
 {
 
-<h2>STANDINGS</h2>
+	<h2>STANDINGS</h2>
 
-<div>
+	<div>
 
-	<table class="table">
+		<table class="table">
 
-		<thead>
-			<tr style="text-align:center;font-weight:bold">
-				<th>
-					
-				</th>
-				<th>
-					@Html.DisplayNameFor( model => model.Standings[ 0 ].Total )
-				</th>
-				@foreach( var rule in Model.Standings[ 0 ].Puntos )
-				{
+			<thead>
+				<tr style="text-align:center;font-weight:bold">
 					<th>
-						@rule.Key
+
 					</th>
-				}
-				<th>
-					@Html.DisplayNameFor( model => model.Standings[ 0 ].Profit )
-				</th>
-			</tr>
-		</thead>
+					<th>
+						@Html.DisplayNameFor( model => model.Standings[ 0 ].Total )
+					</th>
+					@foreach( var rule in Model.Standings[ 0 ].Puntos )
+					{
+						<th>
+							@rule.Key
+						</th>
+					}
+					<th>
+						@Html.DisplayNameFor( model => model.Standings[ 0 ].Profit )
+					</th>
+				</tr>
+			</thead>
 
-		<tbody>
-			@foreach( var standing in Model.Standings )
-			{
-			<tr>
-				<td style="font-weight:bold">
-					@Html.DisplayFor( item => standing.Jugador )
-				</td>
-				<td style="font-weight:bold;text-align:center">
-					@Html.DisplayFor( item => standing.Total )
-				</td>
-				@foreach( var rule in standing.Puntos )
+			<tbody>
+				@foreach( var standing in Model.Standings )
 				{
-					<td style="text-align:center">
-						@Html.DisplayFor( item => rule.Value )
-					</td>
+					<tr>
+						<td style="font-weight:bold">
+							@Html.DisplayFor( item => standing.Jugador )
+						</td>
+						<td style="font-weight:bold;text-align:center">
+							@Html.DisplayFor( item => standing.Total )
+						</td>
+						@foreach( var rule in standing.Puntos )
+						{
+							<td style="text-align:center">
+								@Html.DisplayFor( item => rule.Value )
+							</td>
+						}
+						<td class="profit" style="text-align:right;margin-right:10em;color:@(standing.ProfitNumber < 0 ? "red" : "black")">
+							@Html.DisplayFor( item => standing.Profit )
+						</td>
+					</tr>
 				}
-				<td class="profit" style="text-align:right;margin-right:10em;color:@(standing.ProfitNumber < 0 ? "red" : "black")">
-					@Html.DisplayFor( item => standing.Profit )
-				</td>
-			</tr>
-			}
-		</tbody>
+			</tbody>
 
-	</table>
+		</table>
 
-</div>
+	</div>
+
+	<hr style="margin-top:2em;margin-bottom:2em;border: 2px solid black" />
+
+	<h2>TORNEOS</h2>
+	<partial name="_TorneosListing" model="Model.Liga.Torneos" />
 }

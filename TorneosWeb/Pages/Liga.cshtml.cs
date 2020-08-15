@@ -25,6 +25,10 @@ namespace TorneosWeb.Pages
 		public void OnGetCurrent()
 		{
 			Liga = ligaReader.GetCurrentLiga();
+			if(Liga == null )
+			{
+				RedirectToPage( "/Ligas" );
+			}
 			Standings = ligaReader.GetStandings( Liga );
 		}
 

@@ -9,74 +9,8 @@
     <title>Torneos</title>
 </head>
 <body>
-	<table class="table">
-		
-		<thead>
-			<tr>
-				<th></th>
-				<th>
-					@Html.DisplayNameFor( model => model.Torneos[ 0 ].Fecha )
-				</th>
-				<th>
-					@Html.DisplayNameFor( model => model.Torneos[ 0 ].Tipo )
-				</th>
-				<th>
-					@Html.DisplayNameFor( model => model.Torneos[ 0 ].Ganador )
-				</th>
-				<th>
-					@Html.DisplayNameFor( model => model.Torneos[ 0 ].Bolsa )
-				</th>
-				<th class="blockFull">
-					@Html.DisplayNameFor( model => model.Torneos[ 0 ].Precio_Buyin )
-				</th>
-				<th class="blockFull">
-					@Html.DisplayNameFor( model => model.Torneos[ 0 ].Precio_Rebuy )
-				</th>
-				<th class="blockFull">
-					@Html.DisplayNameFor( model => model.Torneos[ 0 ].Entradas )
-				</th>
-				<th class="blockFull">
-					@Html.DisplayNameFor( model => model.Torneos[ 0 ].Rebuys )
-				</th>
-			</tr>
-		</thead>
-
-		<tbody>
-			@foreach(var torneo in Model.Torneos )
-			{
-			<tr>
-				<td>
-					<a asp-page="./Torneo" asp-route-id="@torneo.Id">Resultados</a>
-				</td>
-				<td>
-					@Html.DisplayFor( modelItem => torneo.Fecha )
-				</td>
-				<td>
-					@Html.DisplayFor( modelItem => torneo.Tipo )
-				</td>
-				<td>
-					<a asp-page="./Jugador" asp-route-id="@torneo.GanadorId">@Html.DisplayFor( modelItem => torneo.Ganador )</a>
-				</td>
-				<td>
-					@Html.DisplayFor( modelItem => torneo.Bolsa )
-				</td>
-				<td class="blockFull">
-					@Html.DisplayFor( modelItem => torneo.Precio_Buyin )
-				</td>
-				<td class="blockFull">
-					@Html.DisplayFor( modelItem => torneo.Precio_Rebuy )
-				</td>
-				<td class="blockFull">
-					@Html.DisplayFor( modelItem => torneo.Entradas )
-				</td>
-				<td class="blockFull">
-					@Html.DisplayFor( modelItem => torneo.Rebuys )
-				</td>
-			</tr>
-			}
-		</tbody>
-
-	</table>
+	
+	<partial name="_TorneosListing" model="Model.Torneos"/>
 
 </body>
 </html>
