@@ -112,6 +112,11 @@ namespace TorneosWeb.service.impl
 
 		public List<Standing> GetStandings(Liga liga)
 		{
+			if(liga == null )
+			{
+				return new List<Standing>();
+			}
+
 			Dictionary<string, Standing> standings = new Dictionary<string, Standing>();
 			foreach(Torneo torneo in liga.Torneos )
 			{

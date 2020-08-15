@@ -25,6 +25,18 @@ namespace TorneosWeb.Controllers
 			return RedirectToPage( "/Liga", "Current" );
 		}
 
+		[Route("/LigaActual")]
+		public ActionResult LigaActual()
+		{
+			Liga liga = ligaReader.GetCurrentLiga();
+			if( liga == null )
+			{
+				return RedirectToPage( "/Ligas" );
+			}
+
+			return RedirectToPage( "/Liga", "Current" );
+		}
+
 	}
 
 }
