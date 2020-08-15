@@ -32,7 +32,7 @@ namespace TorneosWeb.Pages
 
 		public void OnGet()
 		{
-			
+			Liga = ligaReader.GetCurrentLiga();
 		}
 
 		public IActionResult OnPostAgregarLiga()

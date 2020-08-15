@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Humanizer;
+using System;
 using System.Collections.Generic;
 using TorneosWeb.domain.models;
 using TorneosWeb.domain.models.ligas;
@@ -7,14 +8,26 @@ namespace TorneosWeb.util.PointRules
 {
 	public abstract class PointRule
 	{
-		public PointRuleType Type { get; set; }
+		public abstract PointRuleType Type { get; }
 
-		public abstract int GetPuntos(Guid jugadorId, Liga liga, Resultados resultados);
+		protected int points;
 
-		public static Dictionary<string, PointRule> Build(string puntajeLiga)
+		public int Puntos => points;
+
+		public abstract int GetPuntaje(Guid jugadorId, Liga liga, Resultados resultados);
+
+		public virtual string Descripcion
+		{
+			get
+			{
+				return Type.ToString() + ": " + "punto".ToQuantity(Puntos);
+			}
+		}
+
+		public static IDictionary<string, PointRule> Build(string puntajeLiga)
 		{
 			string[] reglas = puntajeLiga.Split( ";" );
-			Dictionary<string, PointRule> pointRules = new Dictionary<string, PointRule>();
+			SortedDictionary<string, PointRule> pointRules = new SortedDictionary<string, PointRule>();
 			foreach( string pRule in reglas )
 			{
 				string[] ruleSplit = pRule.Split( ":" );

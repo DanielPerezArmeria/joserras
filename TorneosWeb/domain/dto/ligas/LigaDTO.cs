@@ -17,6 +17,8 @@ namespace TorneosWeb.domain.dto.ligas
 		public string Puntaje { get; set; }
 
 		public int Fee { get; set; }
+
+		public string Premiacion { get; set; }
 	}
 
 }

@@ -7,5 +7,6 @@
     [fecha_cierre] DATE NULL, 
     [puntaje] VARCHAR(200) NOT NULL,
 		[fee] INT NOT NULL, 
+    [premiacion] VARCHAR(200) NOT NULL, 
     CONSTRAINT NombreUniqueC UNIQUE([nombre])
 );

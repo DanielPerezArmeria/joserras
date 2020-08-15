@@ -52,22 +52,26 @@ namespace TorneosWeb.service.impl
 			map.Clear();
 		}
 
-        public void Add(string key, object value)
-        {
-			map.Add(key, value);
-        }
+		public void Add(string key, object value)
+		{
+			map.Add( key, value );
+		}
 
-        public T Get<T>(string key)
-        {
-			Object obj;
-			if(map.TryGetValue(key, out obj))
-            {
+		public T Get<T>(string key)
+		{
+			if( map.TryGetValue( key, out object obj ) )
+			{
 				return (T)obj;
-            }
+			}
 
-			return default(T);
-        }
+			return default( T );
+		}
 
-    }
+		public bool Contains(string key)
+		{
+			return map.ContainsKey( key );
+		}
+
+	}
 
 }

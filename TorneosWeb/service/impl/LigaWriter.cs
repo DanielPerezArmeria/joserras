@@ -84,11 +84,13 @@ namespace TorneosWeb.service.impl
 			LigaDTO liga = ligaDataReader.GetItems<LigaDTO>( file ).First();
 			using( TorneoUnitOfWork uow = new TorneoUnitOfWork( config.GetConnectionString( Properties.Resources.joserrasDb ) ) )
 			{
-				string query = @"insert into ligas (nombre, abierta, puntaje, fee) values ('{0}', {1}, '{2}', {3})";
-				uow.ExecuteNonQuery( query, liga.Nombre, 1, liga.Puntaje, liga.Fee );
+				string query = @"insert into ligas (nombre, abierta, puntaje, fee, premiacion) values ('{0}', {1}, '{2}', {3}, '{4}')";
+				uow.ExecuteNonQuery( query, liga.Nombre, 1, liga.Puntaje, liga.Fee, liga.Premiacion );
 
 				uow.Commit();
 			}
+
+			cacheService.Clear();
 		}
 
 		public int AsociarTorneoEnFecha(DateTime date)
@@ -108,7 +110,7 @@ namespace TorneosWeb.service.impl
 				Resultados resultados = readService.FindResultadosTorneo( torneo.Id );
 				foreach(Posicion pos in resultados.Posiciones )
 				{
-					int puntos = liga.PointRules.Sum( p => p.Value.GetPuntos( pos.JugadorId, liga, resultados ) );
+					int puntos = liga.PointRules.Sum( p => p.Value.GetPuntaje( pos.JugadorId, liga, resultados ) );
 					query = "insert into puntos_torneo_liga values ('{0}', '{1}', {2})";
 					uow.ExecuteNonQuery( query, torneo.Id, pos.JugadorId, puntos );
 				}

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Humanizer;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TorneosWeb.domain.models;
@@ -20,7 +21,9 @@ namespace TorneosWeb.util.PointRules
 			}
 		}
 
-		public override int GetPuntos(Guid jugadorId, Liga liga, Resultados resultados)
+		public override PointRuleType Type => PointRuleType.POSICION;
+
+		public override int GetPuntaje(Guid jugadorId, Liga liga, Resultados resultados)
 		{
 			Posicion posicion = resultados.Posiciones.Where( p => p.JugadorId == jugadorId ).First();
 			if( puntos.ContainsKey( posicion.Lugar ) )
@@ -29,6 +32,19 @@ namespace TorneosWeb.util.PointRules
 			}
 
 			return 0;
+		}
+
+		public override string Descripcion
+		{
+			get
+			{
+				return Type.ToString() + ": " + puntos.Humanize( formatPositionPoints, ", " );
+			}
+		}
+
+		private string formatPositionPoints(KeyValuePair<int, int> pair)
+		{
+			return pair.Key.Ordinalize() + " = " + "punto".ToQuantity( pair.Value );
 		}
 
 	}

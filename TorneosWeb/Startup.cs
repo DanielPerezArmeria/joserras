@@ -12,7 +12,6 @@ using System.Linq;
 using System.Reflection;
 using TorneosWeb.service;
 using TorneosWeb.service.decorators;
-using TorneosWeb.service.impl;
 using TorneosWeb.util;
 using TorneosWeb.util.automapper;
 
@@ -69,6 +68,7 @@ namespace TorneosWeb
 
 			container.RegisterDecorator<IReadService, TransactionWrapperReadService>( Lifestyle.Singleton );
 			container.RegisterDecorator<IStatsService, TransactionWrapperStatsService>( Lifestyle.Singleton );
+			container.RegisterDecorator<ILigaReader, TxWrapperLigaReader>( Lifestyle.Singleton );
 
 			container.RegisterSingleton<JoserrasQuery>();
 		}

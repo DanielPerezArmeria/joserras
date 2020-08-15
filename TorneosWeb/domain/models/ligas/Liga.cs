@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using TorneosWeb.util;
 using TorneosWeb.util.automapper;
 using TorneosWeb.util.PointRules;
 
@@ -34,7 +35,39 @@ namespace TorneosWeb.domain.models.ligas
 		public int Fee { get; set; }
 
 		[NoMap]
-		public Dictionary<string, PointRule> PointRules { get; set; }
+		public IDictionary<string, PointRule> PointRules { get; set; }
+
+		[NoMap]
+		public List<PointRule> RulesList
+		{
+			get
+			{
+				return new List<PointRule>( PointRules.Values );
+			}
+		}
+
+		[NoMap]
+		public List<Torneo> Torneos { get; set; }
+
+		public int GetAcumulado()
+		{
+			int sum = 0;
+			foreach(Torneo t in Torneos )
+			{
+				sum = sum + (t.Entradas + t.Rebuys) * Fee;
+			}
+			return sum;
+		}
+
+		public string Acumulado
+		{
+			get
+			{
+				return GetAcumulado().ToString( Constants.CURRENCY_FORMAT );
+			}
+		}
+
+		public string Premiacion { get; set; }
 
 	}
 
