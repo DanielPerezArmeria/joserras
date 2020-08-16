@@ -153,12 +153,12 @@ namespace TorneosWeb.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to select detalles.id, detalles.nombre, detalles.costo_total, detalles.premios, detalles.podios, detalles.victorias,
-        ///	(detalles.premios - detalles.costo_total) as profit, detalles.burbujas, ISNULL(kk.ko, 0) as kos,
+        ///	(detalles.premios - detalles.costo_total) as profit, detalles.burbujas, detalles.kos,
         ///	detalles.torneos, detalles.rebuys
         ///from
         ///(select j.id, j.nombre, sum(t.precio_buyin + (d.rebuys * t.precio_rebuy)) as costo_total, count(t.id) as torneos,
         ///	sum(d.premio + d.premio_bounties) as premios, count(case when d.posicion = 1 then 1 end) as victorias, sum(d.rebuys) as rebuys,
-        ///	count(case [rest of string was truncated]&quot;;.
+        ///	count(case when d.pod [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string GetStats {
             get {
