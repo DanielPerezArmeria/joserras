@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using TorneosWeb.domain.models;
+using TorneosWeb.domain.models.ligas;
 using TorneosWeb.exception;
 
 namespace TorneosWeb.service.decorators
@@ -58,6 +59,26 @@ namespace TorneosWeb.service.decorators
 			return cacheService.GetAllKnockouts;
 		}
 
+		public SortedList<string, Dictionary<string, Knockouts>> GetAllKnockouts(DateTime start, DateTime end)
+		{
+			string key = "GetAllKnockouts:" + start.ToShortDateString() + ":" + end.ToShortDateString();
+			if( !cacheService.Contains( key ) )
+			{
+				cacheService.Add( key, wrapped.GetAllKnockouts( start, end ) );
+			}
+			return cacheService.Get<SortedList<string, Dictionary<string, Knockouts>>>( key );
+		}
+
+		public SortedList<string, Dictionary<string, Knockouts>> GetAllKnockouts(Liga liga)
+		{
+			string key = "GetAllKnockouts:" + liga.Nombre;
+			if( !cacheService.Contains( key ) )
+			{
+				cacheService.Add( key, wrapped.GetAllKnockouts( liga ) );
+			}
+			return cacheService.Get<SortedList<string, Dictionary<string, Knockouts>>>( key );
+		}
+
 		public List<Torneo> GetAllTorneos()
 		{
 			if( cacheService.GetAllTorneos.Count == 0 )
@@ -76,13 +97,13 @@ namespace TorneosWeb.service.decorators
 			return cacheService.GetAllTorneos;
 		}
 
-		public DetalleTorneo GetDetalleTorneo(Guid id)
+		public Resultados FindResultadosTorneo(Guid id)
 		{
-			if( !cacheService.GetDetalleTorneo.ContainsKey(id) )
+			if( !cacheService.GetDetalleTorneo.ContainsKey( id ) )
 			{
 				try
 				{
-					cacheService.GetDetalleTorneo.Add( id, wrapped.GetDetalleTorneo( id ) );
+					cacheService.GetDetalleTorneo.Add( id, wrapped.FindResultadosTorneo( id ) );
 				}
 				catch( Exception e )
 				{
@@ -91,16 +112,16 @@ namespace TorneosWeb.service.decorators
 				}
 			}
 
-			return cacheService.GetDetalleTorneo[id];
+			return cacheService.GetDetalleTorneo[ id ];
 		}
 
-		public DetalleJugador GetDetalleJugador(Guid id)
+		public DetalleJugador FindDetalleJugador(Guid id)
 		{
 			if( !cacheService.GetDetalleJugadorById.ContainsKey( id ) )
 			{
 				try
 				{
-					cacheService.GetDetalleJugadorById.Add( id, wrapped.GetDetalleJugador( id ) );
+					cacheService.GetDetalleJugadorById.Add( id, wrapped.FindDetalleJugador( id ) );
 				}
 				catch( Exception e )
 				{
@@ -112,7 +133,7 @@ namespace TorneosWeb.service.decorators
 			return cacheService.GetDetalleJugadorById[ id ];
 		}
 
-		public DetalleJugador GetDetalleJugador(string nombre)
+		public DetalleJugador FindDetalleJugador(string nombre)
 		{
 			throw new NotImplementedException();
 		}
@@ -153,13 +174,13 @@ namespace TorneosWeb.service.decorators
 			return cacheService.GetKnockoutsByPlayer[ playerId ];
 		}
 
-		public List<DetalleJugador> GetDetalleJugador()
+		public List<DetalleJugador> GetAllDetalleJugador()
 		{
 			if( cacheService.GetDetalleJugador.Count == 0 )
 			{
 				try
 				{
-					cacheService.GetDetalleJugador.AddRange( wrapped.GetDetalleJugador() );
+					cacheService.GetDetalleJugador.AddRange( wrapped.GetAllDetalleJugador() );
 				}
 				catch( Exception e )
 				{
@@ -169,6 +190,64 @@ namespace TorneosWeb.service.decorators
 			}
 
 			return cacheService.GetDetalleJugador;
+		}
+
+		public List<DetalleJugador> GetAllDetalleJugador(DateTime start, DateTime end)
+		{
+			string key = "GetAllDetalleJugador:" + start.ToShortDateString() + ":" + end.ToShortDateString();
+			if( !cacheService.Contains( key ) )
+			{
+				try
+				{
+					cacheService.Add( key, wrapped.GetAllDetalleJugador( start, end ) );
+				}
+				catch( Exception e )
+				{
+					log.LogWarning( e, e.Message );
+					throw new JoserrasException( e );
+				}
+			}
+
+			return cacheService.Get<List<DetalleJugador>>( key );
+		}
+
+		public List<DetalleJugador> GetAllDetalleJugador(Liga liga)
+		{
+			string key = "GetAllDetalleJugador:" + liga.Nombre;
+			if( !cacheService.Contains( key ) )
+			{
+				try
+				{
+					cacheService.Add( key, wrapped.GetAllDetalleJugador( liga ) );
+				}
+				catch( Exception e )
+				{
+					log.LogWarning( e, e.Message );
+					throw new JoserrasException( e );
+				}
+			}
+
+			return cacheService.Get<List<DetalleJugador>>( key );
+		}
+
+		public Torneo FindTorneoByFecha(DateTime fecha)
+		{
+			Torneo torneo = cacheService.Get<Torneo>( "Torneo" + fecha.ToShortDateString() );
+
+			if( torneo == null )
+			{
+				try
+				{
+					cacheService.Add( "Torneo" + fecha.ToShortDateString(), wrapped.FindTorneoByFecha( fecha ) );
+				}
+				catch( Exception e )
+				{
+					log.LogWarning( e, e.Message );
+					throw new JoserrasException( e );
+				}
+			}
+
+			return cacheService.Get<Torneo>( "Torneo" + fecha.ToShortDateString() );
 		}
 
 	}

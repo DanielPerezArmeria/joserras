@@ -1,0 +1,61 @@
+﻿@page
+@model TorneosWeb.Pages.AgregarLigaModel
+@{ 
+	Layout = "~/Pages/Shared/_LayoutLigas.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+	<meta name="viewport" content="width=device-width" />
+	<title>Liga</title>
+</head>
+
+<body>
+
+	<div>
+		@if( Model.Liga == null )
+		{
+			<form enctype="multipart/form-data" method="post">
+				<dl>
+					<dt>
+						<label asp-for="LigaUpload.FormFile"></label>
+					</dt>
+					<dd>
+						<input asp-for="LigaUpload.FormFile" type="file" />
+						<span asp-validation-for="LigaUpload.FormFile"></span>
+					</dd>
+				</dl>
+				<input type="submit" value="Upload" asp-page-handler="AgregarLiga" />
+			</form>
+		}
+		else
+		{
+			<input type="submit" value="Cerrar Liga" asp-page-handler="CerrarLiga"/>
+		}
+	</div>
+
+	<hr style="margin-top:3em;margin-bottom:3em;border: 2px solid black" />
+
+	<div>
+		@if( Model.Liga != null )
+		{
+		<form method="post">
+			<label>Agregar torneo de liga:</label>
+			<input type="date" asp-for="Fecha" value="@DateTime.Today.ToString("yyyy-MM-dd")" />
+			<input type="submit" value="Agregar Torneo" asp-page-handler="AgregarTorneo" />
+		</form>
+		}
+	</div>
+
+	<div>
+		<p>
+			@Model.Result
+		</p>
+	</div>
+
+</body>
+
+</html>

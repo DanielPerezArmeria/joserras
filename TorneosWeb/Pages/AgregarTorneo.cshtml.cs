@@ -12,13 +12,16 @@ namespace TorneosWeb.Pages
 	{
 		private IWriteService writeService;
 
+		public string Result { get; private set; }
+
+		[BindProperty]
+		public BufferedMultipleFileUploadPhysical TorneoUpload { get; set; }
+
+
 		public AgregarTorneoModel(IWriteService service)
 		{
 			writeService = service;
 		}
-
-		[BindProperty]
-		public BufferedMultipleFileUploadPhysical FileUpload { get; set; }
 
 		public void OnGet()
 		{
@@ -27,16 +30,22 @@ namespace TorneosWeb.Pages
 
 		public IActionResult OnPost()
 		{
+			if( !ModelState.IsValid )
+			{
+				Result = "Please correct the form.";
+				return Page();
+			}
+
 			try
 			{
-				writeService.uploadTournament( FileUpload.FormFiles );
+				writeService.uploadTournament( TorneoUpload.FormFiles );
 			}
 			catch( JoserrasException )
 			{
-
+				throw;
 			}
 
-			return RedirectToPage( "./Index" );
+			return RedirectToPage( "./Torneos" );
 		}
 
 	}

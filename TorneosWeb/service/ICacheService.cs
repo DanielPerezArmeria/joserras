@@ -14,7 +14,7 @@ namespace TorneosWeb.service
 
 		List<Torneo> GetAllTorneos { get; }
 
-		Dictionary<Guid, DetalleTorneo> GetDetalleTorneo { get; }
+		Dictionary<Guid, Resultados> GetDetalleTorneo { get; }
 
 		Dictionary<Guid, DetalleJugador> GetDetalleJugadorById { get; }
 
@@ -25,6 +25,12 @@ namespace TorneosWeb.service
 		List<DetalleJugador> GetDetalleJugador { get; }
 
 		Estadisticas GetStats { get; set; }
+
+		void Add(string key, object value);
+
+		T Get<T>(string key);
+
+		bool Contains(string key);
 	}
 
 }

@@ -62,9 +62,8 @@ namespace TorneosWeb.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to select j.nombre, elim.nombre as eliminado, sum(e.eliminaciones) as kos
-        ///from eliminaciones e, jugadores j, jugadores elim
-        ///where e.jugador_id = j.id and e.eliminado_id = elim.id
-        ///group by j.nombre, elim.nombre order by kos desc.
+        ///from knockouts e, jugadores j, jugadores elim, torneos t
+        ///where e.jugador_id = j.id and e.eliminado_id = elim.id and t.id = e.torneo_id {0} group by j.nombre, elim.nombre order by kos desc.
         /// </summary>
         internal static string GetAllKOs {
             get {
@@ -73,7 +72,7 @@ namespace TorneosWeb.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select t.*, j.nombre, j.id from torneos t, jugadores j, detalletorneos d where t.id = d.torneo_id and d.posicion = 1 and d.jugador_id = j.id order by Fecha desc.
+        ///   Looks up a localized string similar to select t.*, j.nombre, j.id from torneos t, jugadores j, resultados d where t.id = d.torneo_id and d.posicion = 1 and d.jugador_id = j.id order by Fecha desc.
         /// </summary>
         internal static string GetAllTorneos {
             get {
@@ -85,8 +84,8 @@ namespace TorneosWeb.Properties {
         ///   Looks up a localized string similar to select tt.nombre, count(tt.posicion) as ult_lugares
         ///from
         ///(select j.nombre, dt.posicion, t.entradas
-        ///from jugadores j, torneos t, DetalleTorneos dt
-        ///where dt.torneo_id = t.id and dt.jugador_id = j.id and dt.posicion = t.entradas
+        ///from jugadores j, torneos t, resultados dt
+        ///where dt.torneo_id = t.id and dt.jugador_id = j.id and dt.posicion = t.entradas {0}
         ///) as tt
         ///group by nombre.
         /// </summary>
@@ -98,9 +97,8 @@ namespace TorneosWeb.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to select j.nombre, count(dt.burbuja) as burbuja
-        ///from jugadores j, torneos t, DetalleTorneos dt
-        ///where dt.torneo_id = t.id and dt.jugador_id = j.id and dt.burbuja = 1
-        ///group by nombre.
+        ///from jugadores j, torneos t, resultados dt
+        ///where dt.torneo_id = t.id and dt.jugador_id = j.id and dt.burbuja = 1 {0} group by nombre.
         /// </summary>
         internal static string GetBurbuja {
             get {
@@ -124,7 +122,7 @@ namespace TorneosWeb.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select j.nombre, elim.nombre as eliminado, sum(e.eliminaciones) as eliminaciones from eliminaciones e, jugadores j, jugadores elim
+        ///   Looks up a localized string similar to select j.nombre, elim.nombre as eliminado, sum(e.eliminaciones) as eliminaciones from knockouts e, jugadores j, jugadores elim
         ///where j.id = &apos;{0}&apos; and e.jugador_id = j.id and e.eliminado_id = elim.id
         ///group by j.nombre, elim.nombre order by eliminaciones desc.
         /// </summary>
@@ -138,9 +136,8 @@ namespace TorneosWeb.Properties {
         ///   Looks up a localized string similar to select res.nombre, count(res.nombre) as podios_neg
         ///from
         ///(select t.fecha, j.nombre, sum(d.premio) as premio, sum((t.precio_rebuy * d.rebuys) + t.precio_buyin ) as costos
-        ///from jugadores j, DetalleTorneos d, torneos t
-        ///where d.podio = 1 and j.id = d.jugador_id and t.id = d.torneo_id
-        ///group by t.fecha, j.nombre
+        ///from jugadores j, resultados d, torneos t
+        ///where d.podio = 1 and j.id = d.jugador_id and t.id = d.torneo_id {0} group by t.fecha, j.nombre
         ///) as res
         ///where res.premio - res.costos &lt; 0
         ///group by res.nombre order by podios_neg desc.
@@ -153,12 +150,12 @@ namespace TorneosWeb.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to select detalles.id, detalles.nombre, detalles.costo_total, detalles.premios, detalles.podios, detalles.victorias,
-        ///	(detalles.premios - detalles.costo_total) as profit, detalles.burbujas, ISNULL(kk.ko, 0) as kos,
+        ///	(detalles.premios - detalles.costo_total) as profit, detalles.burbujas, detalles.kos,
         ///	detalles.torneos, detalles.rebuys
         ///from
         ///(select j.id, j.nombre, sum(t.precio_buyin + (d.rebuys * t.precio_rebuy)) as costo_total, count(t.id) as torneos,
         ///	sum(d.premio + d.premio_bounties) as premios, count(case when d.posicion = 1 then 1 end) as victorias, sum(d.rebuys) as rebuys,
-        ///	count(case [rest of string was truncated]&quot;;.
+        ///	count(case when d.pod [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string GetStats {
             get {

@@ -3,7 +3,7 @@ using System;
 
 namespace TorneosWeb.domain.dto
 {
-	public class DetalleTorneoDTO
+	public class ResultadosDTO
 	{
 		public Guid TorneoId { get; set; }
 		public Guid JugadorId { get; set; }
@@ -21,6 +21,11 @@ namespace TorneosWeb.domain.dto
 
 		[Default( false )]
 		public bool Burbuja { get; set; }
+
+		[Default(true)]
+		public bool Puntualidad { get; set; }
+
+		public int Kos { get; set; }
 	}
 
 }

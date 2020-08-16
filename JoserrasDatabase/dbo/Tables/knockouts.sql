@@ -1,4 +1,4 @@
-﻿CREATE TABLE [dbo].[eliminaciones] (
+﻿CREATE TABLE [dbo].[knockouts] (
     [id]            UNIQUEIDENTIFIER CONSTRAINT [DF_eliminaciones_id] DEFAULT (newid()) NOT NULL,
     [torneo_id]     UNIQUEIDENTIFIER NOT NULL,
     [jugador_id]    UNIQUEIDENTIFIER NOT NULL,

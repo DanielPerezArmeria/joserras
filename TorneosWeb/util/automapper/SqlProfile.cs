@@ -11,7 +11,7 @@ namespace TorneosWeb.util.automapper
 		{
 			CreateMap<SqlDataReader, Torneo>()
 				.ForMember( dest => dest.Id, opt => opt.MapFrom( src => (Guid)src[ "id" ] ) )
-				.ForMember( dest => dest.Fecha, opt => opt.MapFrom( src => ((DateTime)src[ "fecha" ]).ToString( "dd 'de' MMMM yyyy" ) ) )
+				.ForMember( dest => dest.FechaDate, opt => opt.MapFrom( src => (DateTime)src[ "fecha" ] ) )
 				.ForMember( dest => dest.PrecioBuyinNumber, opt => opt.MapFrom( src => src.GetFieldValue<int>( src.GetOrdinal( "precio_buyin" ) ) ) )
 				.ForMember( dest => dest.PrecioRebuyNumber, opt => opt.MapFrom( src => src.GetFieldValue<int>( src.GetOrdinal( "precio_rebuy" ) ) ) )
 				.ForMember( dest => dest.Entradas, opt => opt.MapFrom( src => src.GetFieldValue<int>( src.GetOrdinal( "entradas" ) ) ) )
@@ -33,6 +33,7 @@ namespace TorneosWeb.util.automapper
 				.ForMember( dest => dest.Nombre, opt => opt.MapFrom( src => src.GetFieldValue<string>( src.GetOrdinal( "nombre" ) ) ) )
 				.ForMember( dest => dest.PremioBountiesNumber, opt => opt.MapFrom( src => src.GetFieldValue<int>( src.GetOrdinal( "premio_bounties" ) ) ) )
 				.ForMember( dest => dest.Knockouts, opt => opt.MapFrom( src => src.GetFieldValue<int>( src.GetOrdinal( "kos" ) ) ) )
+				.ForMember( dest => dest.Puntualidad, opt => opt.MapFrom( src => src.GetFieldValue<bool>( src.GetOrdinal( "puntualidad" ) ) ) )
 				.IgnoreNoMap();
 
 			CreateMap<SqlDataReader, Knockouts>()

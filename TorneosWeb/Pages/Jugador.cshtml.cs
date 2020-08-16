@@ -20,7 +20,7 @@ namespace TorneosWeb.Pages
 
 		public void OnGet(Guid id)
 		{
-			DetalleJugador = readService.GetDetalleJugador( id );
+			DetalleJugador = readService.FindDetalleJugador( id );
 		}
 			
 	}

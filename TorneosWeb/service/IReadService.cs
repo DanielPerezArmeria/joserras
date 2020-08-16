@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using TorneosWeb.domain.models;
+using TorneosWeb.domain.models.ligas;
 
 namespace TorneosWeb.service
 {
@@ -10,19 +11,25 @@ namespace TorneosWeb.service
 
 		List<Jugador> GetAllJugadores();
 
-		DetalleTorneo GetDetalleTorneo(Guid id);
+		Resultados FindResultadosTorneo(Guid id);
 
-		DetalleJugador GetDetalleJugador(Guid id);
+		DetalleJugador FindDetalleJugador(Guid id);
 
-		DetalleJugador GetDetalleJugador(string nombre);
+		DetalleJugador FindDetalleJugador(string nombre);
 
-		List<DetalleJugador> GetDetalleJugador();
+		List<DetalleJugador> GetAllDetalleJugador();
+		List<DetalleJugador> GetAllDetalleJugador(DateTime start, DateTime end);
+		List<DetalleJugador> GetAllDetalleJugador(Liga liga);
 
 		SortedList<string, Dictionary<string,Knockouts>> GetKnockoutsByTournamentId(Guid torneoId);
 
 		List<Knockouts> GetKnockoutsByPlayer(Guid playerId);
 
 		SortedList<string, Dictionary<string, Knockouts>> GetAllKnockouts();
+		SortedList<string, Dictionary<string, Knockouts>> GetAllKnockouts(DateTime start, DateTime end);
+		SortedList<string, Dictionary<string, Knockouts>> GetAllKnockouts(Liga liga);
+
+		Torneo FindTorneoByFecha(DateTime fecha);
 
 	}
 

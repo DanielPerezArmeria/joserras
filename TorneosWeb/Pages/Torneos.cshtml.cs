@@ -5,13 +5,13 @@ using TorneosWeb.service;
 
 namespace TorneosWeb.Pages
 {
-	public class IndexModel : PageModel
+	public class TorneosModel : PageModel
 	{
 		private IReadService readService;
 
 		public List<Torneo> Torneos { get; set; }
 
-		public IndexModel(IReadService readService)
+		public TorneosModel(IReadService readService)
 		{
 			this.readService = readService;
 		}

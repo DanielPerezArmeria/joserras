@@ -1,0 +1,15 @@
+﻿@page
+@model TorneosWeb.Pages.LigasModel
+@{
+	ViewData["Title"] = "Ligas";
+	Layout = "~/Pages/Shared/_LayoutLigas.cshtml";
+}
+
+<h1>Ligas</h1>
+
+<ul>
+	@foreach( var liga in Model.Ligas )
+	{
+		<li>@liga.Nombre</li>
+	}
+</ul>

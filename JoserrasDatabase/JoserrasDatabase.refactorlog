@@ -7,4 +7,60 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="premio_x_bounty" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="ab271867-5cf1-4da2-8b8a-4768e69e3971" ChangeDateTime="08/01/2020 04:54:16">
+    <Property Name="ElementName" Value="[dbo].[ligas].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ligas]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="id" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="ead6be79-c780-4b30-833e-33f2a9409029" ChangeDateTime="08/01/2020 05:00:16">
+    <Property Name="ElementName" Value="[dbo].[torneos_liga].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[torneos_liga]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="liga_id" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="17705efc-e7d1-4476-bfea-a1a0924b9ae4" ChangeDateTime="08/01/2020 05:08:06">
+    <Property Name="ElementName" Value="[dbo].[ligas].[tag]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ligas]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="nombre" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="4e8cbb9b-5e18-4f70-b822-45213656048a" ChangeDateTime="08/01/2020 05:12:59">
+    <Property Name="ElementName" Value="[dbo].[puntos_liga].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[puntos_liga]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="torneo_id" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="b8ec6797-cb61-4187-a259-821060353635" ChangeDateTime="08/01/2020 05:18:26">
+    <Property Name="ElementName" Value="[dbo].[standings_liga].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[standings_liga]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="liga_id" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="0100007a-94ee-4a5b-8e7f-76c9813a7986" ChangeDateTime="08/01/2020 05:22:29">
+    <Property Name="ElementName" Value="[dbo].[torneos_liga].[acumulado]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[torneos_liga]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="liga_fee" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="2df13d19-3983-49a5-932f-e6373ee0c798" ChangeDateTime="08/01/2020 19:35:26">
+    <Property Name="ElementName" Value="[dbo].[ligas].[fecha_creada]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ligas]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="fecha_inicio" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="3cd4e955-1870-49a6-82b4-6bf8129db228" ChangeDateTime="08/01/2020 19:35:33">
+    <Property Name="ElementName" Value="[dbo].[ligas].[fecha_cerrada]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ligas]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="fecha_cierre" />
+  </Operation>
 </Operations>

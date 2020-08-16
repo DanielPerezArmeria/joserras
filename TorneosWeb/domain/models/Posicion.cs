@@ -29,6 +29,8 @@ namespace TorneosWeb.domain.models
 		[NoMap]
 		public int ProfitNumber { get; set; }
 
+		public bool Puntualidad { get; set; }
+
 		public int PremioBountiesNumber { get; set; }
 
 		[NoMap]

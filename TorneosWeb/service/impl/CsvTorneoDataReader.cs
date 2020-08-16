@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace TorneosWeb.service.impl
 {
-	public class CsvTournamentReader : ITournamentReader
+	public class CsvTorneoDataReader : ITorneoDataReader
 	{
 		public IEnumerable<T> GetItems<T>(IFormFile file) where T : class
 		{
@@ -22,7 +22,6 @@ namespace TorneosWeb.service.impl
 			CsvConfiguration config = new CsvConfiguration( CultureInfo.CurrentCulture );
 			config.HeaderValidated = null;
 			config.MissingFieldFound = null;
-			//config.RegisterClassMap<TorneoMap>();
 			using( StreamReader streamReader = new StreamReader( file.OpenReadStream() ) )
 			{
 				CsvReader csv = new CsvReader( streamReader, config );
