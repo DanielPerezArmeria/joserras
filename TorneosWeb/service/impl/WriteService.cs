@@ -108,14 +108,14 @@ namespace TorneosWeb.service.impl
 		private void InsertarResultados(Guid torneoId, List<ResultadosDTO> resultados, TorneoUnitOfWork uow)
 		{
 			string query = "insert into resultados (torneo_id, jugador_id, rebuys, posicion, podio, premio, burbuja, puntualidad) values('{0}', (select id from jugadores where nombre='{1}'), "
-				+ "{2}, {3}, '{4}', {5}, '{6}', {7})";
+				+ "{2}, {3}, '{4}', {5}, '{6}', '{7}')";
 
 			foreach( ResultadosDTO dto in resultados )
 			{
 				try
 				{
 					uow.ExecuteNonQuery( query, torneoId, dto.Jugador, dto.Rebuys, dto.Posicion,
-							dto.Premio > 0 ? true.ToString() : false.ToString(), dto.Premio, dto.Burbuja.ToString(), dto.Puntualidad );
+							dto.Premio > 0 ? true.ToString() : false.ToString(), dto.Premio, dto.Burbuja.ToString(), dto.Puntualidad.ToString() );
 				}
 				catch( Exception e )
 				{
