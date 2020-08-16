@@ -45,7 +45,7 @@ namespace TorneosWeb.Pages
 				throw;
 			}
 
-			return RedirectToPage( "./Index" );
+			return RedirectToPage( "./Torneos" );
 		}
 
 	}
