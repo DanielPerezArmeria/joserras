@@ -5,47 +5,56 @@
 	ViewData[ "Listado" ] = "Liga";
 	Layout = "~/Pages/Shared/_LayoutLigas.cshtml";
 }
+<head>
+	<meta name="viewport" content="width=device-width" />
+	<link rel="stylesheet" type="text/css" href="~/css/site.css" />
+	<title>Liga</title>
+</head>
 
-<div style="display:inline-block;font-size:45px;font-weight:bold;width:100%">
-	<span style="float:left">Liga - @Html.DisplayFor( model => model.Liga.Nombre )</span>
-	<span style="float:right;text-align:right">Acumulado: @Model.Liga.Acumulado</span>
-</div>
+<body>
 
-<div style="margin-top=20px;display:inline-block;width:100%">
-	<span style="float:left">
-		<h2>Puntaje:</h2>
-		<ul>
-			@foreach( var rule in Model.Liga.RulesList )
-			{
-				<li>@Html.DisplayFor( item => rule.Descripcion )</li>
-			}
-		</ul>
-	</span>
-	<span style="float:right;text-align:right">
-		<h2>Premiación:</h2>
-		@Model.Liga.Premiacion
-	</span>
-</div>
+	<div style="display:inline-block;font-size:45px;font-weight:bold;width:100%">
+		<span style="float:left">Liga - @Html.DisplayFor( model => model.Liga.Nombre )</span>
+		<span style="float:right;text-align:right">Acumulado: @Model.Liga.Acumulado</span>
+	</div>
 
-<hr style="margin-top:2em;margin-bottom:2em;border: 2px solid black" />
-
-@if( Model.Standings != null && Model.Standings.Count > 0 )
-{
-
-	<h2>STANDINGS</h2>
-
-	<div>
-
-		<partial name="_TorneoLigaResults" model="Model.Standings" />
-
+	<div style="margin-top=20px;display:inline-block;width:100%">
+		<span style="float:left">
+			<h2>Puntaje:</h2>
+			<ul>
+				@foreach( var rule in Model.Liga.RulesList )
+				{
+					<li>@Html.DisplayFor( item => rule.Descripcion )</li>
+				}
+			</ul>
+		</span>
+		<span style="float:right;text-align:right">
+			<h2>Premiación:</h2>
+			@Model.Liga.Premiacion
+		</span>
 	</div>
 
 	<hr style="margin-top:2em;margin-bottom:2em;border: 2px solid black" />
 
-	<h2>TORNEOS</h2>
-	<partial name="_TorneosListing" model="Model.Liga.Torneos" view-data="ViewData" />
+	@if( Model.Standings != null && Model.Standings.Count > 0 )
+	{
 
-	<hr style="margin-top:2em;margin-bottom:2em;border: 2px solid black" />
-}
+		<h2>STANDINGS</h2>
 
-<partial name="_Estadisticas" model="Model.Estadisticas"/>
+		<div>
+
+			<partial name="_TorneoLigaResults" model="Model.Standings" />
+
+		</div>
+
+		<hr style="margin-top:2em;margin-bottom:2em;border: 2px solid black" />
+
+		<h2>TORNEOS</h2>
+		<partial name="_TorneosListing" model="Model.Liga.Torneos" view-data="ViewData" />
+
+		<hr style="margin-top:2em;margin-bottom:2em;border: 2px solid black" />
+	}
+
+	<partial name="_Estadisticas" model="Model.Estadisticas" />
+
+</body>
