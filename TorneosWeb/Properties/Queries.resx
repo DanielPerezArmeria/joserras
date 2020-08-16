@@ -119,9 +119,8 @@
   </resheader>
   <data name="GetAllKOs" xml:space="preserve">
     <value>select j.nombre, elim.nombre as eliminado, sum(e.eliminaciones) as kos
-from knockouts e, jugadores j, jugadores elim
-where e.jugador_id = j.id and e.eliminado_id = elim.id
-group by j.nombre, elim.nombre order by kos desc</value>
+from knockouts e, jugadores j, jugadores elim, torneos t
+where e.jugador_id = j.id and e.eliminado_id = elim.id and t.id = e.torneo_id {0} group by j.nombre, elim.nombre order by kos desc</value>
   </data>
   <data name="GetAllTorneos" xml:space="preserve">
     <value>select t.*, j.nombre, j.id from torneos t, jugadores j, resultados d where t.id = d.torneo_id and d.posicion = 1 and d.jugador_id = j.id order by Fecha desc</value>
@@ -131,15 +130,14 @@ group by j.nombre, elim.nombre order by kos desc</value>
 from
 (select j.nombre, dt.posicion, t.entradas
 from jugadores j, torneos t, resultados dt
-where dt.torneo_id = t.id and dt.jugador_id = j.id and dt.posicion = t.entradas
+where dt.torneo_id = t.id and dt.jugador_id = j.id and dt.posicion = t.entradas {0}
 ) as tt
 group by nombre</value>
   </data>
   <data name="GetBurbuja" xml:space="preserve">
     <value>select j.nombre, count(dt.burbuja) as burbuja
 from jugadores j, torneos t, resultados dt
-where dt.torneo_id = t.id and dt.jugador_id = j.id and dt.burbuja = 1
-group by nombre</value>
+where dt.torneo_id = t.id and dt.jugador_id = j.id and dt.burbuja = 1 {0} group by nombre</value>
   </data>
   <data name="GetDetalleJugador" xml:space="preserve">
     <value>select detalles.id, detalles.nombre, detalles.costo_total, detalles.premios, detalles.podios, detalles.victorias,
@@ -165,8 +163,7 @@ group by j.nombre, elim.nombre order by eliminaciones desc</value>
 from
 (select t.fecha, j.nombre, sum(d.premio) as premio, sum((t.precio_rebuy * d.rebuys) + t.precio_buyin ) as costos
 from jugadores j, resultados d, torneos t
-where d.podio = 1 and j.id = d.jugador_id and t.id = d.torneo_id
-group by t.fecha, j.nombre
+where d.podio = 1 and j.id = d.jugador_id and t.id = d.torneo_id {0} group by t.fecha, j.nombre
 ) as res
 where res.premio - res.costos &lt; 0
 group by res.nombre order by podios_neg desc</value>
@@ -180,8 +177,7 @@ from
 	sum(d.premio + d.premio_bounties) as premios, count(case when d.posicion = 1 then 1 end) as victorias, sum(d.rebuys) as rebuys,
 	count(case when d.podio = 1 then 1 end) as podios, count(case when d.burbuja = 1 then 1 end) as burbujas, sum(kos) as kos
 from torneos t, resultados d, jugadores j
-where t.id = d.torneo_id
-	and d.jugador_id = j.id
+where t.id = d.torneo_id {0} and d.jugador_id = j.id
 group by j.id, j.nombre
 ) as detalles
 order by profit desc</value>

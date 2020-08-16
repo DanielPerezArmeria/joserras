@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Linq;
 using TorneosWeb.domain.models;
 using TorneosWeb.domain.models.ligas;
 using TorneosWeb.util;
@@ -40,10 +41,27 @@ namespace TorneosWeb.service.impl
 			return jugadores;
 		}
 
+
+		#region GetAllKnockouts
 		public SortedList<string, Dictionary<string, Knockouts>> GetAllKnockouts()
 		{
+			return GetAllKnockouts( string.Empty );
+		}
+
+		public SortedList<string, Dictionary<string, Knockouts>> GetAllKnockouts(DateTime start, DateTime end)
+		{
+			return GetAllKnockouts( QueryUtils.FormatTorneoBetween( start, end ) );
+		}
+
+		public SortedList<string, Dictionary<string, Knockouts>> GetAllKnockouts(Liga liga)
+		{
+			return GetAllKnockouts( QueryUtils.FormatTorneoIdIn( liga ) );
+		}
+
+		private SortedList<string, Dictionary<string, Knockouts>> GetAllKnockouts(string q)
+		{
 			SortedList<string, Dictionary<string, Knockouts>> knockouts = new SortedList<string, Dictionary<string, Knockouts>>();
-			string query = Properties.Queries.GetAllKOs;
+			string query = string.Format( Properties.Queries.GetAllKOs, q );
 
 			joserrasQuery.ExecuteQuery( query, reader =>
 			{
@@ -60,6 +78,8 @@ namespace TorneosWeb.service.impl
 
 			return knockouts;
 		}
+		#endregion
+
 
 		public List<Torneo> GetAllTorneos()
 		{
@@ -200,14 +220,31 @@ namespace TorneosWeb.service.impl
 			return kos;
 		}
 
+
+		#region GetAllDetalleJugador
 		public List<DetalleJugador> GetAllDetalleJugador()
+		{
+			return GetAllDetalleJugador( string.Empty );
+		}
+
+		public List<DetalleJugador> GetAllDetalleJugador(DateTime start, DateTime end)
+		{
+			return GetAllDetalleJugador( QueryUtils.FormatTorneoBetween( start, end ) );
+		}
+
+		public List<DetalleJugador> GetAllDetalleJugador(Liga liga)
+		{
+			return GetAllDetalleJugador( QueryUtils.FormatTorneoIdIn( liga ) );
+		}
+
+		public List<DetalleJugador> GetAllDetalleJugador(string q)
 		{
 			List<DetalleJugador> detalles = new List<DetalleJugador>();
 			using( SqlConnection conn = new SqlConnection( connString ) )
 			{
 				conn.Open();
 
-				string query = string.Format( Properties.Queries.GetStats );
+				string query = string.Format( Properties.Queries.GetStats, q );
 				joserrasQuery.ExecuteQuery( conn, query, reader =>
 				{
 					while( reader.Read() )
@@ -219,6 +256,9 @@ namespace TorneosWeb.service.impl
 
 			return detalles;
 		}
+
+		#endregion
+
 
 		public Torneo FindTorneoByFecha(DateTime fecha)
 		{

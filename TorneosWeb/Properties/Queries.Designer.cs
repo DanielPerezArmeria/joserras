@@ -62,9 +62,8 @@ namespace TorneosWeb.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to select j.nombre, elim.nombre as eliminado, sum(e.eliminaciones) as kos
-        ///from knockouts e, jugadores j, jugadores elim
-        ///where e.jugador_id = j.id and e.eliminado_id = elim.id
-        ///group by j.nombre, elim.nombre order by kos desc.
+        ///from knockouts e, jugadores j, jugadores elim, torneos t
+        ///where e.jugador_id = j.id and e.eliminado_id = elim.id and t.id = e.torneo_id {0} group by j.nombre, elim.nombre order by kos desc.
         /// </summary>
         internal static string GetAllKOs {
             get {
@@ -86,7 +85,7 @@ namespace TorneosWeb.Properties {
         ///from
         ///(select j.nombre, dt.posicion, t.entradas
         ///from jugadores j, torneos t, resultados dt
-        ///where dt.torneo_id = t.id and dt.jugador_id = j.id and dt.posicion = t.entradas
+        ///where dt.torneo_id = t.id and dt.jugador_id = j.id and dt.posicion = t.entradas {0}
         ///) as tt
         ///group by nombre.
         /// </summary>
@@ -99,8 +98,7 @@ namespace TorneosWeb.Properties {
         /// <summary>
         ///   Looks up a localized string similar to select j.nombre, count(dt.burbuja) as burbuja
         ///from jugadores j, torneos t, resultados dt
-        ///where dt.torneo_id = t.id and dt.jugador_id = j.id and dt.burbuja = 1
-        ///group by nombre.
+        ///where dt.torneo_id = t.id and dt.jugador_id = j.id and dt.burbuja = 1 {0} group by nombre.
         /// </summary>
         internal static string GetBurbuja {
             get {
@@ -139,8 +137,7 @@ namespace TorneosWeb.Properties {
         ///from
         ///(select t.fecha, j.nombre, sum(d.premio) as premio, sum((t.precio_rebuy * d.rebuys) + t.precio_buyin ) as costos
         ///from jugadores j, resultados d, torneos t
-        ///where d.podio = 1 and j.id = d.jugador_id and t.id = d.torneo_id
-        ///group by t.fecha, j.nombre
+        ///where d.podio = 1 and j.id = d.jugador_id and t.id = d.torneo_id {0} group by t.fecha, j.nombre
         ///) as res
         ///where res.premio - res.costos &lt; 0
         ///group by res.nombre order by podios_neg desc.

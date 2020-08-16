@@ -36,7 +36,7 @@
 
 	<div>
 
-		<partial name="_TorneoLigaResults" model="Model.Standings"/>
+		<partial name="_TorneoLigaResults" model="Model.Standings" />
 
 	</div>
 
@@ -44,4 +44,8 @@
 
 	<h2>TORNEOS</h2>
 	<partial name="_TorneosListing" model="Model.Liga.Torneos" view-data="ViewData" />
+
+	<hr style="margin-top:2em;margin-bottom:2em;border: 2px solid black" />
 }
+
+<partial name="_Estadisticas" model="Model.Estadisticas"/>
