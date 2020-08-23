@@ -10,6 +10,7 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.0.0" />
     <PackageReference Include="CsvHelper" Version="15.0.5" />
+    <PackageReference Include="Google.Apis.Sheets.v4" Version="1.49.0.2037" />
     <PackageReference Include="Humanizer.Core.es" Version="2.8.26" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
@@ -32,6 +33,13 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Content Update="Files\Joserras Project-fd7d4368e5dd.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 

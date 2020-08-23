@@ -7,11 +7,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SimpleInjector;
+using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using TorneosWeb.service;
 using TorneosWeb.service.decorators;
+using TorneosWeb.service.impl;
 using TorneosWeb.util;
 using TorneosWeb.util.automapper;
 
@@ -20,11 +23,13 @@ namespace TorneosWeb
 	public class Startup
 	{
 		private Container container = new SimpleInjector.Container();
+		private string contentRoot;
 
 		public Startup(IConfiguration configuration, ILogger<Startup> logger)
 		{
 			container.Options.ResolveUnregisteredConcreteTypes = false;
 			Configuration = configuration;
+			contentRoot = configuration.GetValue<string>( WebHostDefaults.ContentRootKey );
 			logger.LogDebug( "********  STARTING APP  ********" );
 		}
 
@@ -61,10 +66,19 @@ namespace TorneosWeb
 
 		private void InitializeContainer()
 		{
+			List<Type> ignoreClasses = new List<Type>();
+
 			container.RegisterSingleton<MapperProvider>();
 			container.RegisterSingleton( () => GetMapper( container ) );
 
-			RegisterNamespace( "TorneosWeb.service.impl" );
+			container.RegisterSingleton<IProfitsExporter>( () =>
+				new GoogleSheetsProfitsExporter( contentRoot + @"/Files/Joserras Project-fd7d4368e5dd.json",
+				"1fWhxbneW19urTN7RFMaTRtycIB32X6C4LPM9QGzDY-w", container.GetInstance<ILogger<GoogleSheetsProfitsExporter>>(),
+				container.GetInstance<IReadService>() ) );
+
+			ignoreClasses.Add( Type.GetType( "TorneosWeb.service.IProfitsExporter" ) );
+
+			RegisterNamespace( "TorneosWeb.service.impl", ignoreClasses );
 
 			container.RegisterDecorator<IReadService, TransactionWrapperReadService>( Lifestyle.Singleton );
 			container.RegisterDecorator<IStatsService, TransactionWrapperStatsService>( Lifestyle.Singleton );
@@ -73,7 +87,7 @@ namespace TorneosWeb
 			container.RegisterSingleton<JoserrasQuery>();
 		}
 
-		private void RegisterNamespace(string nameSpace)
+		private void RegisterNamespace(string nameSpace, List<Type> ignoreServiceClasses)
 		{
 			var registrations =
 				from type in Assembly.GetExecutingAssembly().GetExportedTypes()
@@ -83,6 +97,10 @@ namespace TorneosWeb
 
 			foreach( var reg in registrations )
 			{
+				if( ignoreServiceClasses.Contains( reg.service ) )
+				{
+					continue;
+				}
 				container.Register( reg.service, reg.implementation, Lifestyle.Singleton );
 			}
 		}
