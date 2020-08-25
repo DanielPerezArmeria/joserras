@@ -45,29 +45,44 @@ namespace TorneosWeb.service.impl
 			cacheService.Clear();
 		}
 
-		public int AsociarTorneo(Guid torneoId, TorneoUnitOfWork uow)
+		public int AsociarTorneo(Guid torneoId)
 		{
-			int rowsAffected = 0;
-
-			if( ligaReader.GetCurrentLiga() == null )
+			using( TorneoUnitOfWork uow = new TorneoUnitOfWork( config.GetConnectionString( Properties.Resources.joserrasDb ) ) )
 			{
-				log.LogWarning( "No hay una Liga abierta. No se puede asociar el torneo." );
-				return rowsAffected;
+				int rowsAffected = 0;
+
+				if( ligaReader.GetCurrentLiga() == null )
+				{
+					log.LogWarning( "No hay una Liga abierta. No se puede asociar el torneo." );
+					return rowsAffected;
+				}
+
+				Liga liga = ligaReader.GetCurrentLiga();
+				log.LogDebug( "Asociando torneo con id'{0}' en Liga '{1}'", torneoId, liga.Nombre );
+				string query = "insert into torneos_liga (liga_id, torneo_id) values ('{0}', '{1}')";
+				try
+				{
+					rowsAffected = uow.ExecuteNonQuery( query, liga.Id, torneoId );
+				}
+				catch( Exception )
+				{
+
+					throw;
+				}
+
+				Resultados resultados = readService.FindResultadosTorneo( torneoId );
+				foreach( Posicion pos in resultados.Posiciones )
+				{
+					int puntos = liga.PointRules.Sum( p => p.Value.GetPuntaje( pos.JugadorId, liga, resultados ) );
+					query = "insert into puntos_torneo_liga values ('{0}', '{1}', {2})";
+					uow.ExecuteNonQuery( query, torneoId, pos.JugadorId, puntos );
+				}
+
+				uow.Commit();
+				cacheService.Clear();
+
+				return rowsAffected; 
 			}
-
-			Liga liga = ligaReader.GetCurrentLiga();
-			string query = "insert into torneos_liga values ('{0}', '{1}')";
-			rowsAffected = uow.ExecuteNonQuery( query, liga.Id, torneoId );
-
-			Resultados resultados = readService.FindResultadosTorneo( torneoId );
-			foreach( Posicion pos in resultados.Posiciones )
-			{
-				int puntos = liga.PointRules.Sum( p => p.Value.GetPuntaje( pos.JugadorId, liga, resultados ) );
-				query = "insert into puntos_torneo_liga values ('{0}', '{1}', {2})";
-				uow.ExecuteNonQuery( query, torneoId, pos.JugadorId, puntos );
-			}
-
-			return rowsAffected;
 		}
 
 		public int AsociarTorneoEnFecha(DateTime date)
@@ -78,11 +93,7 @@ namespace TorneosWeb.service.impl
 				return 0;
 			}
 
-			using( TorneoUnitOfWork uow = new TorneoUnitOfWork( config.GetConnectionString( Properties.Resources.joserrasDb ) ) )
-			{
-				return AsociarTorneo( torneo.Id, uow );
-			}
-
+			return AsociarTorneo( torneo.Id );
 		}
 
 	}

@@ -10,7 +10,7 @@ namespace TorneosWeb.service
 
 		int AsociarTorneoEnFecha(DateTime date);
 
-		int AsociarTorneo(Guid torneoId, TorneoUnitOfWork uow);
+		int AsociarTorneo(Guid torneoId);
 	}
 
 }

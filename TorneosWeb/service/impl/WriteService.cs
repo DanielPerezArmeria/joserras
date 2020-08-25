@@ -64,15 +64,9 @@ namespace TorneosWeb.service.impl
 						InsertarKos( torneo, resultados, kos, uow );
 					}
 
-					if( !string.IsNullOrEmpty( torneo.Liga ) )
-					{
-						ligaWriter.AsociarTorneo( torneo.Id, uow );
-					}
-
 					uow.Commit();
+					cacheService.Clear();
 				}
-
-				cacheService.Clear();
 			}
 			catch(Exception e )
 			{
@@ -88,14 +82,18 @@ namespace TorneosWeb.service.impl
 				throw new JoserrasException( e );
 			}
 
+			if( torneo.Liga )
+			{
+				ligaWriter.AsociarTorneo( torneo.Id );
+			}
+
 			DayOfWeek dayOfWeek = torneo.Fecha.DayOfWeek;
 			if(dayOfWeek == DayOfWeek.Sunday )
 			{
 				DateTime monday = torneo.Fecha.AddDays( -6 );
-				List<Torneo> torneos = readService.GetAllTorneos().Where( t => monday <= t.FechaDate && t.FechaDate <= t.FechaDate ).ToList();
+				List<Torneo> torneos = readService.GetAllTorneos().Where( t => monday <= t.FechaDate && t.FechaDate <= torneo.Fecha ).ToList();
 				profitsExporter.ExportProfits( torneos );
 			}
-
 		}
 
 		private void InsertarNuevosJugadores(List<ResultadosDTO> resultados, TorneoUnitOfWork uow)
