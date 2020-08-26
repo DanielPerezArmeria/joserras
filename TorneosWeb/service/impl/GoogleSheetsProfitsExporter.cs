@@ -15,6 +15,7 @@ namespace TorneosWeb.service.impl
 	public class GoogleSheetsProfitsExporter : IProfitsExporter
 	{
 		private const int DATES_FOR_REPORT = 8;
+		private readonly string SHEET = "Deudas";
 
 		private string CredentialFileName;
 		private readonly string SpreadsheetId;
@@ -54,23 +55,38 @@ namespace TorneosWeb.service.impl
 
 		public void ExportProfits(List<Torneo> torneos)
 		{
+			torneos.Reverse();
 			cleanRows();
-			insertProfitData( torneos );
+			InsertProfitData( torneos );
 			log.LogDebug( "Profits Exported successfully!" );
 		}
 
-		private void insertProfitData(List<Torneo> torneos)
+		private void InsertProfitData(List<Torneo> torneos)
 		{
 			IList<object> firstRowDates = CreateDatesRow( torneos );
 
 			SortedDictionary<string, ProfitRow> rowValues = new SortedDictionary<string, ProfitRow>();
 			CreateRowValues( rowValues, torneos );
 
-			string range = string.Format( "Deudas!A2:B{0}", rowValues.Count + 1 );
+			string range = string.Format( "{0}!A2:H{1}", SHEET, rowValues.Count + 1 );
 			IList<IList<object>> rows = new List<IList<object>>();
 			foreach( ProfitRow profitRow in rowValues.Values )
 			{
-				rows.Add( profitRow.ToList() );
+				IList<object> row = new List<object>();
+				row.Add( profitRow.Nombre );
+				foreach( Torneo torneo in torneos )
+				{
+					KeyValuePair<Guid, int> pair = profitRow.Profits.Where( p => p.Key.Equals( torneo.Id ) ).FirstOrDefault();
+					if(pair.Equals(default( KeyValuePair<Guid, int> ) ) )
+					{
+						row.Add( "" );
+					}
+					else
+					{
+						row.Add( pair.Value );
+					}
+				}
+				rows.Add( row );
 			}
 			ValueRange valueRequest = new ValueRange
 			{
@@ -102,7 +118,7 @@ namespace TorneosWeb.service.impl
 						profitRow.Nombre = posicion.Nombre;
 						rowValues.Add( posicion.Nombre, profitRow );
 					}
-					profitRow.ProfitTotal += posicion.ProfitNumber;
+					profitRow.Profits.Add( new KeyValuePair<Guid, int>( torneo.Id, posicion.ProfitNumber ) );
 				}
 			}
 		}
@@ -110,18 +126,24 @@ namespace TorneosWeb.service.impl
 		private IList<object> CreateDatesRow(List<Torneo> torneos)
 		{
 			List<object> datesRow = new List<object>();
-			for(int i = 0; i < DATES_FOR_REPORT; i++ )
+			foreach(Torneo t in torneos )
 			{
-				Torneo t = torneos.ElementAtOrDefault( i );
-				if( t == null )
-				{
-					datesRow.Add( string.Empty );
-				}
-				else
-				{
-					datesRow.Add( t.FechaDate.ToShortDateString() );
-				}
+				datesRow.Add( t.Fecha );
 			}
+
+			IList<IList<object>> rows = new List<IList<object>>();
+			rows.Add( datesRow );
+			ValueRange valueRequest = new ValueRange
+			{
+				Range = string.Format( "{0}!B1:H1", SHEET ),
+				MajorDimension = "ROWS",
+				Values = new List<IList<object>>( rows )
+			};
+
+			SpreadsheetsResource.ValuesResource.UpdateRequest updateRequest =
+				sheetsService.Spreadsheets.Values.Update( valueRequest, SpreadsheetId, valueRequest.Range );
+			updateRequest.ValueInputOption = SpreadsheetsResource.ValuesResource.UpdateRequest.ValueInputOptionEnum.USERENTERED;
+			UpdateValuesResponse updateResponse = updateRequest.Execute();
 
 			return datesRow;
 		}
@@ -130,7 +152,7 @@ namespace TorneosWeb.service.impl
 		{
 			int rowsToClean = readService.GetAllJugadores().Count + 1;
 
-			string range = string.Format("Deudas!A1:B{0}", rowsToClean);
+			string range = string.Format("{0}!A1:H{1}", SHEET, rowsToClean);
 			IList<object> cellValues;
 			IList<IList<object>> rows = new List<IList<object>>();
 			for(int i = 1; i <= rowsToClean;  i++ )
