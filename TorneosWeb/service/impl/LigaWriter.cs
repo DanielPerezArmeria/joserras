@@ -47,15 +47,15 @@ namespace TorneosWeb.service.impl
 
 		public int AsociarTorneo(Guid torneoId)
 		{
+			if( ligaReader.GetCurrentLiga() == null )
+			{
+				log.LogWarning( "No hay una Liga abierta. No se puede asociar el torneo." );
+				return 0;
+			}
+
 			using( TorneoUnitOfWork uow = new TorneoUnitOfWork( config.GetConnectionString( Properties.Resources.joserrasDb ) ) )
 			{
 				int rowsAffected = 0;
-
-				if( ligaReader.GetCurrentLiga() == null )
-				{
-					log.LogWarning( "No hay una Liga abierta. No se puede asociar el torneo." );
-					return rowsAffected;
-				}
 
 				Liga liga = ligaReader.GetCurrentLiga();
 				log.LogDebug( "Asociando torneo con id'{0}' en Liga '{1}'", torneoId, liga.Nombre );
