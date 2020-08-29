@@ -131,7 +131,9 @@ namespace TorneosWeb.service.impl
 					else
 					{
 						standing = new Standing();
+						standing.Liga = liga;
 						standing.Jugador = pos.Nombre;
+						standing.JugadorId = pos.JugadorId;
 						standings.Add( pos.Nombre, standing );
 					}
 					
@@ -141,6 +143,20 @@ namespace TorneosWeb.service.impl
 						standing.Puntos[ rule.Value.Type ] = rule.Value.GetPuntaje( pos.JugadorId, liga, results ) + p;
 					}
 				}
+			}
+
+			if( !liga.Abierta )
+			{
+				string query = string.Format( "select * from puntos_torneo_liga where liga_id = '{0}'", liga.Id );
+				joserrasQuery.ExecuteQuery( query, reader =>
+				{
+					while( reader.Read() )
+					{
+						Guid jugadorId = (Guid)reader[ "jugador_id" ];
+						decimal premio = reader.GetFieldValue<decimal>( reader.GetOrdinal( "premio" ) );
+						standings.Where( s => s.Value.JugadorId == jugadorId ).First().Value.PremioNumber = premio;
+					}
+				} );
 			}
 
 			List<Standing> list = standings.Values.OrderByDescending( s => s.Total ).ToList();
@@ -169,7 +185,9 @@ namespace TorneosWeb.service.impl
 			foreach( Posicion pos in results.Posiciones )
 			{
 				Standing standing = new Standing();
+				standing.Liga = liga;
 				standing.Jugador = pos.Nombre;
+				standing.JugadorId = pos.JugadorId;
 
 				foreach( KeyValuePair<string, PointRule> rule in liga.PointRules )
 				{
@@ -185,41 +203,6 @@ namespace TorneosWeb.service.impl
 
 			return standings.OrderByDescending( s => s.Total ).ToList();
 		}
-
-		/*public Estadisticas GetStats(Liga liga)
-		{
-			List<Resultados> resultados = new List<Resultados>();
-			foreach(Torneo t in liga.Torneos )
-			{
-				resultados.Add( readService.FindResultadosTorneo( t.Id ) );
-			}
-
-			Dictionary<string, List<Posicion>> posiciones = new Dictionary<string, List<Posicion>>();
-			foreach(Resultados r in resultados )
-			{
-				foreach(Posicion p in r.Posiciones )
-				{
-					if( !posiciones.ContainsKey( p.Nombre ) )
-					{
-						posiciones.Add( p.Nombre, new List<Posicion>() );
-					}
-					posiciones[ p.Nombre ].Add( p );
-				}
-			}
-
-			List<Tuple<string, int, string>> profitTuples = new List<Tuple<string, int, string>>();
-			foreach(string key in posiciones.Keys )
-			{
-				List<Posicion> positionList = posiciones[ key ];
-				int profit = positionList.Sum( p => p.ProfitNumber );
-			}
-
-
-			Stat joserramon = new Stat( "Joserramón", "Más Profit", "joseramon_t.png" );
-			joserramon.Participantes.Add( new StatProps( estadisticas.Detalles[ 0 ].Nombre, estadisticas.Detalles[ 0 ].Profit,
-				estadisticas.Detalles[ 0 ].ProfitNumber > 0 ? true : false ) );
-
-		}*/
 
 	}
 

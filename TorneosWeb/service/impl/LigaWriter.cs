@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using TorneosWeb.domain.dto.ligas;
 using TorneosWeb.domain.models;
@@ -66,17 +67,16 @@ namespace TorneosWeb.service.impl
 				}
 				catch( Exception )
 				{
-
 					throw;
 				}
 
-				Resultados resultados = readService.FindResultadosTorneo( torneoId );
+				/*Resultados resultados = readService.FindResultadosTorneo( torneoId );
 				foreach( Posicion pos in resultados.Posiciones )
 				{
 					int puntos = liga.PointRules.Sum( p => p.Value.GetPuntaje( pos.JugadorId, liga, resultados ) );
 					query = "insert into puntos_torneo_liga values ('{0}', '{1}', {2})";
 					uow.ExecuteNonQuery( query, torneoId, pos.JugadorId, puntos );
-				}
+				}*/
 
 				uow.Commit();
 				cacheService.Clear();
@@ -94,6 +94,40 @@ namespace TorneosWeb.service.impl
 			}
 
 			return AsociarTorneo( torneo.Id );
+		}
+
+		public void CerrarLiga()
+		{
+			Liga liga = ligaReader.GetCurrentLiga();
+			List<Standing> standings = ligaReader.GetStandings( liga );
+			SetPremiosLiga( liga, standings );
+			using( TorneoUnitOfWork uow = new TorneoUnitOfWork( config.GetConnectionString( Properties.Resources.joserrasDb ) ) )
+			{
+				string query = "insert into puntos_torneo_liga values ('{0}', '{1}', {2}, {3})";
+				foreach(Standing standing in standings )
+				{
+					uow.ExecuteNonQuery( query, liga.Id, standing.JugadorId, standing.Total, standing.PremioNumber );
+				}
+
+				string updateLigaQuery = "update ligas set Abierta = {0}, fecha_cierre = '{1}' where id = '{2}'";
+				uow.ExecuteNonQuery( updateLigaQuery, 0, liga.Torneos.First().FechaDate.ToString( "yyyy-MM-dd" ), liga.Id );
+
+				uow.Commit();
+				cacheService.Clear();
+			}
+		}
+
+		private void SetPremiosLiga(Liga liga, List<Standing> standings)
+		{
+			string[] prizesString = liga.Premiacion.Split( "-" );
+			int placesAwarded = prizesString.Length;
+			decimal totalToSplit = liga.GetAcumulado();
+			for(int i = placesAwarded - 1; i >= 0; i-- )
+			{
+				Standing standing = standings.ElementAt( i );
+				decimal factor = decimal.Parse( prizesString[ i ].Replace( "%", "" ) ) / 100;
+				standing.PremioNumber = totalToSplit * factor;
+			}
 		}
 
 	}

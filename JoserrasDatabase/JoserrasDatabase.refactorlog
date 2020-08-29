@@ -63,4 +63,11 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="fecha_cierre" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="c6bd2b98-fb55-482f-b1f2-cdaf3a400c5c" ChangeDateTime="08/29/2020 06:18:03">
+    <Property Name="ElementName" Value="[dbo].[puntos_torneo_liga].[torneo_id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[puntos_torneo_liga]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="liga_id" />
+  </Operation>
 </Operations>

@@ -57,6 +57,12 @@ namespace TorneosWeb.Controllers
 			}
 		}
 
+		[Route("/LigaNombre")]
+		public ActionResult LigaNombre(string nombreLiga)
+		{
+			return RedirectToPage( "/Liga", "Liga", new { nombre = nombreLiga } );
+		}
+
 	}
 
 }

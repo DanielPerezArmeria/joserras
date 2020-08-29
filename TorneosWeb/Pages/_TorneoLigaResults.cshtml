@@ -23,29 +23,41 @@
 				<th>
 					@Html.DisplayNameFor( model => model[ 0 ].Profit )
 				</th>
+				@if( !Model[ 0 ].Liga.Abierta && Model[0].PremioNumber > 0 )
+				{
+					<th>
+						@Html.DisplayNameFor( model => model[ 0 ].Premio )
+					</th>
+				}
 			</tr>
 		</thead>
 
 		<tbody>
 			@foreach( var standing in Model )
 			{
-				<tr>
-					<td style="font-weight:bold;font-size:larger">
-						@Html.DisplayFor( item => standing.Jugador )
+			<tr>
+				<td style="font-weight:bold;font-size:larger">
+					@Html.DisplayFor( item => standing.Jugador )
+				</td>
+				<td style="font-weight:bold;text-align:center;font-size:larger">
+					@Html.DisplayFor( item => standing.Total )
+				</td>
+				@foreach( var rule in standing.Puntos )
+				{
+					<td style="text-align:center">
+						@Html.DisplayFor( item => rule.Value )
 					</td>
-					<td style="font-weight:bold;text-align:center;font-size:larger">
-						@Html.DisplayFor( item => standing.Total )
+				}
+				<td class="profit" style="text-align:right;margin-right:10em;color:@(standing.ProfitNumber < 0 ? "red" : "black")">
+					@Html.DisplayFor( item => standing.Profit )
+				</td>
+				@if( !standing.Liga.Abierta && Model[ 0 ].PremioNumber > 0 )
+				{
+					<td class="profit" style="text-align:right;margin-right:10em">
+						@Html.DisplayFor( item => standing.Premio )
 					</td>
-					@foreach( var rule in standing.Puntos )
-					{
-						<td style="text-align:center">
-							@Html.DisplayFor( item => rule.Value )
-						</td>
-					}
-					<td class="profit" style="text-align:right;margin-right:10em;color:@(standing.ProfitNumber < 0 ? "red" : "black")">
-						@Html.DisplayFor( item => standing.Profit )
-					</td>
-				</tr>
+				}
+			</tr>
 			}
 		</tbody>
 
