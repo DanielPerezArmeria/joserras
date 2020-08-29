@@ -140,8 +140,7 @@ from jugadores j, torneos t, resultados dt
 where dt.torneo_id = t.id and dt.jugador_id = j.id and dt.burbuja = 1 {0} group by nombre</value>
   </data>
   <data name="GetDetalleJugador" xml:space="preserve">
-    <value>select detalles.id, detalles.nombre, detalles.costo_total, detalles.premios, detalles.podios, detalles.victorias,
-	(detalles.premios - detalles.costo_total) as profit, detalles.burbujas, detalles.kos,
+    <value>select detalles.id, detalles.nombre, detalles.costo_total, detalles.premios, detalles.podios, detalles.victorias, detalles.burbujas, detalles.kos,
 	detalles.torneos, detalles.rebuys
 from
 (select j.id, j.nombre, sum(t.precio_buyin + (d.rebuys * t.precio_rebuy)) as costo_total, count(t.id) as torneos, sum(d.kos) as kos,
@@ -169,8 +168,7 @@ where res.premio - res.costos &lt; 0
 group by res.nombre order by podios_neg desc</value>
   </data>
   <data name="GetStats" xml:space="preserve">
-    <value>select detalles.id, detalles.nombre, detalles.costo_total, detalles.premios, detalles.podios, detalles.victorias,
-	(detalles.premios - detalles.costo_total) as profit, detalles.burbujas, detalles.kos,
+    <value>select detalles.id, detalles.nombre, detalles.costo_total, detalles.premios, detalles.podios, detalles.victorias, detalles.burbujas, detalles.kos,
 	detalles.torneos, detalles.rebuys
 from
 (select j.id, j.nombre, sum(t.precio_buyin + (d.rebuys * t.precio_rebuy)) as costo_total, count(t.id) as torneos,
@@ -179,8 +177,7 @@ from
 from torneos t, resultados d, jugadores j
 where t.id = d.torneo_id {0} and d.jugador_id = j.id
 group by j.id, j.nombre
-) as detalles
-order by profit desc</value>
+) as detalles</value>
   </data>
   <data name="InsertTorneo" xml:space="preserve">
     <value>insert into torneos (fecha, precio_buyin, precio_rebuy, entradas, rebuys, bolsa, tipo, premio_x_bounty) output INSERTED.ID

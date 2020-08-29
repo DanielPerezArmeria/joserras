@@ -10,12 +10,22 @@ namespace TorneosWeb.domain.models
 	{
 		public Guid Id { get; set; }
 		public string Nombre { get; set; }
-		public int ProfitNumber { get; set; }
+
+		[NoMap]
+		public int ProfitNumber
+		{
+			get
+			{
+				return PremiosNumber + decimal.ToInt32( PremiosLigaNumber ) - CostosNumber;
+			}
+		}
+
 		[NoMap]
 		public string Profit
 		{
 			get { return ProfitNumber.ToString( Constants.CURRENCY_FORMAT ); }
 		}
+
 		[NoMap]
 		public List<Knockouts> Knockouts { get; set; }
 		public int Torneos { get; set; }
@@ -55,6 +65,24 @@ namespace TorneosWeb.domain.models
 				return (float)ProfitNumber / CostosNumber;
 			}
 		}
+
+		[NoMap]
+		public decimal PremiosLigaNumber { get; set; }
+
+		[NoMap]
+		[Display( Name = "Premios Liga" )]
+		public string PremiosLiga
+		{
+			get
+			{
+				if(PremiosLigaNumber > 0 )
+				{
+					return PremiosLigaNumber.ToString( Constants.CURRENCY_FORMAT );
+				}
+				return "-";
+			}
+		}
+
 	}
 
 }

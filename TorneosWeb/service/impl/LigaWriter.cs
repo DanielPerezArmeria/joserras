@@ -70,14 +70,6 @@ namespace TorneosWeb.service.impl
 					throw;
 				}
 
-				/*Resultados resultados = readService.FindResultadosTorneo( torneoId );
-				foreach( Posicion pos in resultados.Posiciones )
-				{
-					int puntos = liga.PointRules.Sum( p => p.Value.GetPuntaje( pos.JugadorId, liga, resultados ) );
-					query = "insert into puntos_torneo_liga values ('{0}', '{1}', {2})";
-					uow.ExecuteNonQuery( query, torneoId, pos.JugadorId, puntos );
-				}*/
-
 				uow.Commit();
 				cacheService.Clear();
 
