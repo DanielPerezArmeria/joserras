@@ -16,25 +16,37 @@ namespace TorneosWeb.service.impl
 		private IReadService readService;
 		private ICacheService cacheService;
 		private ILogger<WriteService> log;
-		private ITorneoDataReader tourneyReader;
+		private IFileService tourneyReader;
+		private ILigaWriter ligaWriter;
+		private IProfitsExporter profitsExporter;
 
 		private string connString;
 
-		public WriteService(IReadService service, ICacheService cacheService, IConfiguration config,
-			ITorneoDataReader tourneyReader, ILogger<WriteService> logger)
+
+		public WriteService(IReadService service, ICacheService cacheService, IConfiguration config, IProfitsExporter profitsExporter,
+			IFileService tourneyReader, ILigaWriter ligaWriter, ILogger<WriteService> logger)
 		{
 			readService = service;
 			this.cacheService = cacheService;
 			log = logger;
 			connString = config.GetConnectionString( Properties.Resources.joserrasDb );
 			this.tourneyReader = tourneyReader;
+			this.ligaWriter = ligaWriter;
+			this.profitsExporter = profitsExporter;
 		}
 
 		public void uploadTournament(List<IFormFile> files)
 		{
-			TorneoDTO torneo = tourneyReader.GetItems<TorneoDTO>( files.Find( t => t.FileName.Contains( "torneo" ) ) ).First();
-			List<ResultadosDTO> resultados = tourneyReader.GetItems<ResultadosDTO>( files.Find( t => t.FileName.Contains( "resultados" ) ) ).ToList();
-			List<KnockoutsDTO> kos = tourneyReader.GetItems<KnockoutsDTO>( files.Find( t => t.FileName.Contains( "knockouts" ) ) ).ToList();
+			TorneoDTO torneo = tourneyReader.GetFormFileItems<TorneoDTO>( files.Find( t => t.FileName.Contains( "torneo" ) ) ).First();
+			List<ResultadosDTO> resultados = tourneyReader.GetFormFileItems<ResultadosDTO>( files.Find( t => t.FileName.Contains( "resultados" ) ) ).ToList();
+			List<KnockoutsDTO> kos = tourneyReader.GetFormFileItems<KnockoutsDTO>( files.Find( t => t.FileName.Contains( "knockouts" ) ) ).ToList();
+
+			if(torneo == null || resultados == null || resultados.Count == 0 )
+			{
+				string msg = "Datos incompletos. No se puede agregar el torneo";
+				log.LogError( msg );
+				throw new JoserrasException( msg );
+			}
 
 			TorneoUnitOfWork uow = null;
 			try
@@ -53,8 +65,8 @@ namespace TorneosWeb.service.impl
 					}
 
 					uow.Commit();
+					cacheService.Clear();
 				}
-				cacheService.Clear();
 			}
 			catch(Exception e )
 			{
@@ -68,6 +80,19 @@ namespace TorneosWeb.service.impl
 					log.LogError( xe, xe.Message );
 				}
 				throw new JoserrasException( e );
+			}
+
+			if( torneo.Liga )
+			{
+				ligaWriter.AsociarTorneo( torneo.Id );
+			}
+
+			DayOfWeek dayOfWeek = torneo.Fecha.DayOfWeek;
+			if(dayOfWeek == DayOfWeek.Sunday )
+			{
+				DateTime monday = torneo.Fecha.AddDays( -6 );
+				List<Torneo> torneos = readService.GetAllTorneos().Where( t => monday <= t.FechaDate && t.FechaDate <= torneo.Fecha ).ToList();
+				profitsExporter.ExportProfits( torneos );
 			}
 		}
 

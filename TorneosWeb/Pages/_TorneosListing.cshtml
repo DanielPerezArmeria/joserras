@@ -2,71 +2,74 @@
 @*
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 *@
-<table class="table">
 
-	<thead>
-		<tr>
-			<th></th>
-			<th>
-				@Html.DisplayNameFor( model => model[ 0 ].Fecha )
-			</th>
-			<th>
-				@Html.DisplayNameFor( model => model[ 0 ].Tipo )
-			</th>
-			<th>
-				@Html.DisplayNameFor( model => model[ 0 ].Ganador )
-			</th>
-			<th>
-				@Html.DisplayNameFor( model => model[ 0 ].Bolsa )
-			</th>
-			<th class="blockFull">
-				@Html.DisplayNameFor( model => model[ 0 ].Precio_Buyin )
-			</th>
-			<th class="blockFull">
-				@Html.DisplayNameFor( model => model[ 0 ].Precio_Rebuy )
-			</th>
-			<th class="blockFull">
-				@Html.DisplayNameFor( model => model[ 0 ].Entradas )
-			</th>
-			<th class="blockFull">
-				@Html.DisplayNameFor( model => model[ 0 ].Rebuys )
-			</th>
-		</tr>
-	</thead>
+<div style="overflow:auto;width:100%">
+	<table class="table" style="width:100%">
 
-	<tbody>
-		@foreach( var torneo in Model )
-		{
+		<thead>
 			<tr>
-				<td>
-					@Html.ActionLink("Resultados", "TorneoResults", "Home", new { torneoId = torneo.Id, listado = ViewData["Listado"] } )
-				</td>
-				<td>
-					@Html.DisplayFor( modelItem => torneo.Fecha )
-				</td>
-				<td>
-					@Html.DisplayFor( modelItem => torneo.Tipo )
-				</td>
-				<td>
-					<a asp-page="./Jugador" asp-route-id="@torneo.GanadorId">@Html.DisplayFor( modelItem => torneo.Ganador )</a>
-				</td>
-				<td>
-					@Html.DisplayFor( modelItem => torneo.Bolsa )
-				</td>
-				<td class="blockFull">
-					@Html.DisplayFor( modelItem => torneo.Precio_Buyin )
-				</td>
-				<td class="blockFull">
-					@Html.DisplayFor( modelItem => torneo.Precio_Rebuy )
-				</td>
-				<td class="blockFull">
-					@Html.DisplayFor( modelItem => torneo.Entradas )
-				</td>
-				<td class="blockFull">
-					@Html.DisplayFor( modelItem => torneo.Rebuys )
-				</td>
+				<th></th>
+				<th>
+					@Html.DisplayNameFor( model => model[ 0 ].Fecha )
+				</th>
+				<th>
+					@Html.DisplayNameFor( model => model[ 0 ].Tipo )
+				</th>
+				<th>
+					@Html.DisplayNameFor( model => model[ 0 ].Ganador )
+				</th>
+				<th>
+					@Html.DisplayNameFor( model => model[ 0 ].Bolsa )
+				</th>
+				<th class="blockFull">
+					@Html.DisplayNameFor( model => model[ 0 ].Precio_Buyin )
+				</th>
+				<th class="blockFull">
+					@Html.DisplayNameFor( model => model[ 0 ].Precio_Rebuy )
+				</th>
+				<th class="blockFull">
+					@Html.DisplayNameFor( model => model[ 0 ].Entradas )
+				</th>
+				<th class="blockFull">
+					@Html.DisplayNameFor( model => model[ 0 ].Rebuys )
+				</th>
 			</tr>
-		}
-	</tbody>
+		</thead>
 
-</table>
+		<tbody>
+			@foreach( var torneo in Model )
+			{
+				<tr>
+					<td>
+						@Html.ActionLink( "Resultados", "TorneoResults", "Home", new { torneoId = torneo.Id, listado = ViewData[ "Listado" ] } )
+					</td>
+					<td>
+						@Html.DisplayFor( modelItem => torneo.Fecha )
+					</td>
+					<td>
+						@Html.DisplayFor( modelItem => torneo.Tipo )
+					</td>
+					<td>
+						<a asp-page="./Jugador" asp-route-id="@torneo.GanadorId">@Html.DisplayFor( modelItem => torneo.Ganador )</a>
+					</td>
+					<td>
+						@Html.DisplayFor( modelItem => torneo.Bolsa )
+					</td>
+					<td class="blockFull">
+						@Html.DisplayFor( modelItem => torneo.Precio_Buyin )
+					</td>
+					<td class="blockFull">
+						@Html.DisplayFor( modelItem => torneo.Precio_Rebuy )
+					</td>
+					<td class="blockFull">
+						@Html.DisplayFor( modelItem => torneo.Entradas )
+					</td>
+					<td class="blockFull">
+						@Html.DisplayFor( modelItem => torneo.Rebuys )
+					</td>
+				</tr>
+			}
+		</tbody>
+
+	</table>
+</div>

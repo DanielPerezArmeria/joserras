@@ -17,10 +17,11 @@ namespace TorneosWeb.domain.dto
 		[Default( 0 )]
 		public int PrecioBounty { get; set; }
 
-		[Default(TournamentType.NORMAL)]
+		[Default( TournamentType.NORMAL )]
 		public TournamentType Tipo { get; set; }
 
-        public string Liga { get; set; }
-    }
+		[Default( false )]
+		public bool Liga { get; set; }
+	}
 
 }

@@ -1,16 +1,30 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
 using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using TorneosWeb.domain.models;
 
 namespace TorneosWeb.service.impl
 {
-	public class CsvTorneoDataReader : ITorneoDataReader
+	public class FileService : IFileService
 	{
-		public IEnumerable<T> GetItems<T>(IFormFile file) where T : class
+		private IReadService readService;
+
+		public FileService(IReadService readService)
+		{
+			this.readService = readService;
+		}
+
+		public void ExportProfits(DateTime start, DateTime end)
+		{
+			List<DetalleJugador> detalles = readService.GetAllDetalleJugador( start, end );
+		}
+
+		public IEnumerable<T> GetFormFileItems<T>(IFormFile file) where T : class
 		{
 			if(file == null )
 			{

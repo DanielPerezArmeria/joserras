@@ -11,8 +11,6 @@
 	<title>Liga</title>
 </head>
 
-<body>
-
 	<div style="display:inline-block;font-size:45px;font-weight:bold;width:100%">
 		<span style="float:left">Liga - @Html.DisplayFor( model => model.Liga.Nombre )</span>
 		<span style="float:right;text-align:right">Acumulado: @Model.Liga.Acumulado</span>
@@ -34,27 +32,20 @@
 		</span>
 	</div>
 
-	<hr style="margin-top:2em;margin-bottom:2em;border: 2px solid black" />
+	<hr style="margin-top:2em;margin-bottom:2em;border: 2px solid black;width:100%" />
 
 	@if( Model.Standings != null && Model.Standings.Count > 0 )
 	{
 
 		<h2>STANDINGS</h2>
 
-		<div>
+		<partial name="_TorneoLigaResults" model="Model.Standings" />
 
-			<partial name="_TorneoLigaResults" model="Model.Standings" />
-
-		</div>
-
-		<hr style="margin-top:2em;margin-bottom:2em;border: 2px solid black" />
+		<hr style="margin-top:2em;margin-bottom:2em;border: 2px solid black;width:100%" />
 
 		<h2>TORNEOS</h2>
 		<partial name="_TorneosListing" model="Model.Liga.Torneos" view-data="ViewData" />
-
-		<hr style="margin-top:2em;margin-bottom:2em;border: 2px solid black" />
+		<hr style="margin-top:2em;margin-bottom:2em;border: 2px solid black;width:100%" />
 	}
 
 	<partial name="_Estadisticas" model="Model.Estadisticas" />
-
-</body>

@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "joserras-project",
+  "private_key_id": "fd7d4368e5dda6ed812243e016a8449a7b6df4f5",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDKoFVmnBamBXPy\nQ0Z/29s89a3vmRiBJzV70wvBLAeX7MHarCwW+cw92J+Jo6s6uFzhonpcc1E67MpI\ngZlbo2I6zb5EOwxGAZoUnM62Upy0Rg9Jf9LZHikAdCrm6lpFXC7znxdqApA1zpIt\nqrchDDImXrsoKoG+HNPpo9iXlRGnR5ElP04WLOgiTUolPCEYZioVawKQGqtQPdiT\n33ohehldED4PMya2tnmG5HKMfZGfmHyQtDQFLnZENgygiIHjPwB3SJMeoKEzTC4X\nIUsIcjqolyHN1drhI4LBSZA/LSbvgn59oKH2MDT5WxdoeELq7nMxVz5vyGz5xgXt\nkS1BGBinAgMBAAECggEABxQh16NVUTh4i/qYsGfMWW1VxbyJ9B0cC7bcPsPcggy1\n2v9PzP+uCG0UabkLhtIhAIruDmPC7zWNfYn1gxOKn3ZHktejPqDYsqalvA3Xxp55\n8z3hbk9U7FyikQ2X2Lt3MnCY3022nwKX7bt8iU2FRPzjOex+OteD+bINI4KEKt1P\ntvD84IT8FN34yAXW37aYUlYgv1KgwD0gFfdbxEkzCXV4sUJgmMNT90lDMa4ki9Hd\nF+CVNewSV0EtCAwyoyauioZ9DoKwHt9DyL/zKLSCGteHyZtvgxQI3E0U3xUihZMI\nXK44bm+pZ1VWyrW4r5zGsLLkL+sD07udOUS5piQavQKBgQD31QurXM+AseU9h/Mh\nJiHdSvAgJ3QQtevOUjmBRok1t2f8orl9wZhd8a3lQKpM6pMMjEp0MFSQmOQkJp6R\n76iCpg9hFsM7mwM1ZtYFsEVEpDI7Ne/31rYhELCofLbtpVpJMfJp1uybIMO5zvJI\ncH/Qpm9RzNatp3tIcSU/QcsKZQKBgQDRTeMJl8esOMXKFc7aidXSsmO6uFUxypUX\nuEpCBZokCORWz3q9Azb2ABUfG+5NYH/UHtZsasNkmTQ+xbLZC980nH/abIbWaMbN\nMOkp4Gc83lyq+w2DC9HaosttIubA9BwHCU8qBBUo6eU7CyAuxS9CDJodL3kSX0Tf\n8CfX/BYAGwKBgFnUvE0Z8BDa6pf6DjOmycGXpyBQjK598oIvpa5pLdTtrOCS7x9Z\nK+xpbLnbTZ9hq3lx5I7m8dATyyYbZYDKWM86d/qeMJgLYQdbRhp7wS/XQGnb7CZu\nikfD7/Syd+/97pL3asHYaJz2LFvOWl3NgVbU7Sa+U9ZQDcy9Tl32cC1NAoGBAIYL\nj7/xCNvvcBzAYr3rUJmjzeMjcsx0pY+PY19tHw688x/1uPGcQXLDEsPdq3y6tKMx\nLLo6lfCzfZZGHwiKZeTX5boJj0F50PhQvsMnCHcfIdIO/tRSmY+gew/mLkqdC+Yl\nvCF4g+S0By8NLQtHFcEDOSA/6xYtFXsl3x6gP6bJAoGAHc5b49ZBLAvfMVOTzmP7\n9/OrekHtzIo+Bew5NgBPTDbMvp64zaXR7z8110I55W2aLzUpiBgsAZVMbv5Vy+q0\nfRdvCYKSgu+UKS0e/cmqY+ARib+xrHz9lhGQ7wlhvTxrUpraOnsd1huthRbLi/PA\nX+WMGDp7znr8fxBoqGacbhM=\n-----END PRIVATE KEY-----\n",
+  "client_email": "joserrasservice@joserras-project.iam.gserviceaccount.com",
+  "client_id": "111954619337643000111",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/joserrasservice%40joserras-project.iam.gserviceaccount.com"
+}
