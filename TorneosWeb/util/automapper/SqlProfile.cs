@@ -48,11 +48,10 @@ namespace TorneosWeb.util.automapper
 				.ForMember( dest => dest.PremiosNumber, opt => opt.MapFrom( src => src.GetInt32( 3 ) ) )
 				.ForMember( dest => dest.Podios, opt => opt.MapFrom( src => src.GetInt32( 4 ) ) )
 				.ForMember( dest => dest.Victorias, opt => opt.MapFrom( src => src.GetInt32( 5 ) ) )
-				.ForMember( dest => dest.ProfitNumber, opt => opt.MapFrom( src => src.GetInt32( 6 ) ) )
-				.ForMember( dest => dest.Burbujas, opt => opt.MapFrom( src => src.GetInt32( 7 ) ) )
-				.ForMember( dest => dest.Kos, opt => opt.MapFrom( src => src.GetInt32( 8 ) ) )
-				.ForMember( dest => dest.Torneos, opt => opt.MapFrom( src => src.GetInt32( 9 ) ) )
-				.ForMember( dest => dest.Rebuys, opt => opt.MapFrom( src => src.GetInt32( 10 ) ) )
+				.ForMember( dest => dest.Burbujas, opt => opt.MapFrom( src => src.GetInt32( 6 ) ) )
+				.ForMember( dest => dest.Kos, opt => opt.MapFrom( src => src.GetInt32( 7 ) ) )
+				.ForMember( dest => dest.Torneos, opt => opt.MapFrom( src => src.GetInt32( 8 ) ) )
+				.ForMember( dest => dest.Rebuys, opt => opt.MapFrom( src => src.GetInt32( 9 ) ) )
 				.IgnoreNoMap();
 		}
 

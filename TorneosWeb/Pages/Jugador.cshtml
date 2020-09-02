@@ -48,8 +48,13 @@
 			<div class="statLabel">@Html.DisplayNameFor( model => model.DetalleJugador.Premios ):</div>
 			<div class="statValue">@Model.DetalleJugador.Premios</div>
 
+			<div class="statLabel">@Html.DisplayNameFor( model => model.DetalleJugador.PremiosLiga ):</div>
+			<div class="statValue">@Model.DetalleJugador.PremiosLiga</div>
+
 			<div class="statLabel">@Html.DisplayNameFor( model => model.DetalleJugador.Costos ):</div>
-			<div class="statValue">@Model.DetalleJugador.Costos</div>
+			<div class="statValue" style="color:red">@Model.DetalleJugador.Costos</div>
+
+			<hr align="left" style="margin-top:1em;margin-bottom:1em;border: 2px solid black;grid-column: 1 / span 2;width:75%" />
 
 			<div class="statLabel" style="font-weight:bold">@Html.DisplayNameFor( model => model.DetalleJugador.Profit ):</div>
 			<div class="statValue" style="font-weight:bold;color:@(Model.DetalleJugador.ProfitNumber < 0 ? "red" : "black")">@Model.DetalleJugador.Profit</div>

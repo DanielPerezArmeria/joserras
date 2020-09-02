@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
-using TorneosWeb.util;
 
 namespace TorneosWeb.service
 {
@@ -11,6 +10,8 @@ namespace TorneosWeb.service
 		int AsociarTorneoEnFecha(DateTime date);
 
 		int AsociarTorneo(Guid torneoId);
+
+		void CerrarLiga();
 	}
 
 }

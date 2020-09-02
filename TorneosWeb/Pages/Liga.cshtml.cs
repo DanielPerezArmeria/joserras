@@ -23,9 +23,15 @@ namespace TorneosWeb.Pages
 			this.statsService = statsService;
 		}
 
-		public void OnGet(string nombre)
+		public void OnGetLiga(string nombre)
 		{
 			Liga = ligaReader.FindLigaByNombre( nombre );
+			if( Liga == null )
+			{
+				RedirectToPage( "/Ligas" );
+			}
+			Standings = ligaReader.GetStandings( Liga );
+			Estadisticas = statsService.GetStats( Liga );
 		}
 
 		public void OnGetCurrent()

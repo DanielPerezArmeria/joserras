@@ -10,6 +10,6 @@
 <ul>
 	@foreach( var liga in Model.Ligas )
 	{
-		<li>@liga.Nombre</li>
+		<li>@Html.ActionLink( liga.Nombre, "LigaNombre", "Home", new { nombreLiga = liga.Nombre } )</li>
 	}
 </ul>
