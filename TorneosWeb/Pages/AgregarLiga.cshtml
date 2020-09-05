@@ -18,6 +18,7 @@
 	<div>
 		@if( Model.Liga == null )
 		{
+			<H2>AGREGAR LIGA</H2>
 			<form enctype="multipart/form-data" method="post">
 				<dl>
 					<dt>
@@ -28,7 +29,7 @@
 						<span asp-validation-for="LigaUpload.FormFile"></span>
 					</dd>
 				</dl>
-				<input type="submit" value="Upload" asp-page-handler="AgregarLiga" />
+				<input type="submit" value="Agregar" asp-page-handler="AgregarLiga" />
 			</form>
 		}
 		else

@@ -24,7 +24,7 @@ namespace TorneosWeb.domain.models
 		public int Knockouts { get; set; }
 
 		[NoMap]
-		public string Profit { get { return ProfitNumber.ToString( Constants.CURRENCY_FORMAT ); } }
+		public string Profit { get { return ProfitNumber != 0 ? ProfitNumber.ToString( Constants.CURRENCY_FORMAT ) : "$0"; } }
 
 		[NoMap]
 		public int ProfitNumber { get; set; }

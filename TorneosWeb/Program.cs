@@ -13,7 +13,7 @@ namespace TorneosWeb
 			Log.Logger = new LoggerConfiguration()
 				.MinimumLevel.Debug()
 				.WriteTo.Console()
-				.WriteTo.File( "joserras-.log", rollingInterval: RollingInterval.Day )
+				.WriteTo.File( "joserras-.log", rollingInterval: RollingInterval.Month )
 				.MinimumLevel.Override( "Microsoft.AspNetCore", LogEventLevel.Warning )
 				.CreateLogger();
 			CreateWebHostBuilder( args ).Build().Run();
