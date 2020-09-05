@@ -23,7 +23,7 @@ namespace TorneosWeb.domain.models
 		[NoMap]
 		public string Profit
 		{
-			get { return ProfitNumber != 0 ? ProfitNumber.ToString( Constants.CURRENCY_FORMAT ) : "-"; }
+			get { return ProfitNumber != 0 ? ProfitNumber.ToString( Constants.CURRENCY_FORMAT ) : "$0"; }
 		}
 
 		[NoMap]
@@ -36,7 +36,7 @@ namespace TorneosWeb.domain.models
 		[NoMap]
 		public string Premios
 		{
-			get { return PremiosNumber > 0 ? PremiosNumber.ToString( Constants.CURRENCY_FORMAT ) : "-"; }
+			get { return PremiosNumber > 0 ? PremiosNumber.ToString( Constants.CURRENCY_FORMAT ) : "$0"; }
 		}
 		public int PremiosNumber { get; set; }
 		[NoMap]
