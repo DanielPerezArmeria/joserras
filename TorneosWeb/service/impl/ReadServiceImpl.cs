@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Data.SqlTypes;
 using System.Linq;
 using TorneosWeb.domain.models;
 using TorneosWeb.domain.models.ligas;
@@ -177,7 +178,13 @@ namespace TorneosWeb.service.impl
 				{
 					while( reader.Read() )
 					{
-						decimal premio = reader.GetFieldValue<decimal>( reader.GetOrdinal( "premio_liga" ) );
+						decimal premio = 0;
+						try
+						{
+							premio = reader.GetFieldValue<decimal>( reader.GetOrdinal( "premio_liga" ) );
+						}
+						catch( SqlNullValueException ) { }
+
 						detalle.PremiosLigaNumber = premio;
 					}
 				} );
