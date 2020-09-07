@@ -6,7 +6,7 @@ using TorneosWeb.util.automapper;
 
 namespace TorneosWeb.domain.models
 {
-	public class DetalleJugador
+	public class DetalleJugador : IComparable<DetalleJugador>
 	{
 		public Guid Id { get; set; }
 		public string Nombre { get; set; }
@@ -53,7 +53,7 @@ namespace TorneosWeb.domain.models
 		{
 			get
 			{
-				return ROINumber != 0 ? (ProfitNumber / (float)CostosNumber).ToString( "%###,###.##" ) : "%0.0";
+				return ROINumber != 0 ? (ProfitNumber / (float)CostosNumber).ToString( "%###,###.#" ) : "%0.0";
 			}
 		}
 
@@ -80,6 +80,22 @@ namespace TorneosWeb.domain.models
 					return PremiosLigaNumber.ToString( Constants.CURRENCY_FORMAT );
 				}
 				return "-";
+			}
+		}
+
+		public int CompareTo(DetalleJugador other)
+		{
+			if( this.ProfitNumber > other.ProfitNumber )
+			{
+				return -1;
+			}
+			else if( this.ProfitNumber == other.ProfitNumber )
+			{
+				return 0;
+			}
+			else
+			{
+				return 1;
 			}
 		}
 

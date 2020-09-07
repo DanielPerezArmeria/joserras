@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Collections.Generic;
-using TorneosWeb.domain.models;
 using TorneosWeb.domain.models.ligas;
 using TorneosWeb.service;
 
@@ -11,10 +9,8 @@ namespace TorneosWeb.Pages
 		private ILigaReader ligaReader;
 		private IReadService readService;
 		private IStatsService statsService;
-		public Estadisticas Estadisticas { get; set; }
 
 		public Liga Liga { get; set; }
-		public List<Standing> Standings { get; set; }
 
 		public LigaModel(ILigaReader ligaReader, IReadService readService, IStatsService statsService)
 		{
@@ -30,8 +26,6 @@ namespace TorneosWeb.Pages
 			{
 				RedirectToPage( "/Ligas" );
 			}
-			Standings = ligaReader.GetStandings( Liga );
-			Estadisticas = statsService.GetStats( Liga );
 		}
 
 		public void OnGetCurrent()
@@ -41,8 +35,6 @@ namespace TorneosWeb.Pages
 			{
 				RedirectToPage( "/Ligas" );
 			}
-			Standings = ligaReader.GetStandings( Liga );
-			Estadisticas = statsService.GetStats( Liga );
 		}
 
 	}

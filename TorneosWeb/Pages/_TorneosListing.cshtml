@@ -9,6 +9,10 @@
 		<thead>
 			<tr>
 				<th></th>
+				@if( "Liga".Equals( ViewData[ "Listado" ] ) )
+				{
+					<th></th>
+				}
 				<th>
 					@Html.DisplayNameFor( model => model[ 0 ].Fecha )
 				</th>
@@ -41,8 +45,12 @@
 			{
 				<tr>
 					<td>
-						@Html.ActionLink( "Resultados", "TorneoResults", "Home", new { torneoId = torneo.Id, listado = ViewData[ "Listado" ] } )
+						@Html.ActionLink( "Resultados", "TorneoResults", "Home", new { torneoId = torneo.Id, listado = "Torneos" } )
 					</td>
+					@if( "Liga".Equals( ViewData[ "Listado" ] ) )
+					{
+						@Html.ActionLink( "Puntos", "TorneoResults", "Home", new { torneoId = torneo.Id, listado = "Liga" } )
+					}
 					<td>
 						@Html.DisplayFor( modelItem => torneo.Fecha )
 					</td>

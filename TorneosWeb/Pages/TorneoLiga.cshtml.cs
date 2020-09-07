@@ -11,6 +11,8 @@ namespace TorneosWeb.Pages
 	public class TorneoLigaModel : PageModel
 	{
 		public List<Standing> Standings { get; set; }
+		public string Fecha { get; set; }
+
 		private ILigaReader ligaReader;
 		private IReadService readService;
 
@@ -24,6 +26,7 @@ namespace TorneosWeb.Pages
 		{
 			Torneo torneo = readService.GetAllTorneos().Where( t => t.Id == torneoId ).First();
 			Standings = ligaReader.GetStandings( torneo.Liga, torneo );
+			Fecha = torneo.Fecha;
 		}
 
 	}

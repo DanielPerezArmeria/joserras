@@ -19,6 +19,8 @@ namespace TorneosWeb.domain.dto.ligas
 		public int Fee { get; set; }
 
 		public string Premiacion { get; set; }
+
+		public string Desempate { get; set; }
 	}
 
 }

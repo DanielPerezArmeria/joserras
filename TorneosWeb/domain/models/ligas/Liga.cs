@@ -69,6 +69,31 @@ namespace TorneosWeb.domain.models.ligas
 
 		public string Premiacion { get; set; }
 
+		private string desempate;
+		public string Desempate
+		{
+			get { return desempate; }
+			set
+			{
+				desempate = value;
+			}
+		}
+
+		[NoMap]
+		public Estadisticas Estadisticas { get; set; }
+
+
+		private List<Standing> standings;
+		[NoMap]
+		public List<Standing> Standings
+		{
+			get { return standings; }
+			set
+			{
+				standings = value;
+			}
+		}
+
 	}
 
 }
