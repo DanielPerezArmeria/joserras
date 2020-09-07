@@ -49,7 +49,9 @@
 					</td>
 					@if( "Liga".Equals( ViewData[ "Listado" ] ) )
 					{
+					<td>
 						@Html.ActionLink( "Puntos", "TorneoResults", "Home", new { torneoId = torneo.Id, listado = "Liga" } )
+					</td>
 					}
 					<td>
 						@Html.DisplayFor( modelItem => torneo.Fecha )
