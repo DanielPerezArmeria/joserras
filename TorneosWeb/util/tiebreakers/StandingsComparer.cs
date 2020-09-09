@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Humanizer;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TorneosWeb.domain.models.ligas;
@@ -21,7 +22,8 @@ namespace TorneosWeb.util.tiebreakers
 				string d = string.Empty;
 				try
 				{
-					d = string.Join( ", ", comparers.Select( c => c.Description ).ToArray(), 1, comparers.Count - 1 );
+					int i = 1;
+					d = string.Join( "; ", comparers.Select( c => comparers.IndexOf(c).Ordinalize() + " " + c.Description ).ToArray(), 1, comparers.Count - 1 );
 				}
 				catch( Exception ) { }
 
