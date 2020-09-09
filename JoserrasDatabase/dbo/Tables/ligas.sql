@@ -8,5 +8,6 @@
     [puntaje] VARCHAR(200) NOT NULL,
 		[fee] INT NOT NULL, 
     [premiacion] VARCHAR(200) NOT NULL, 
+    [desempate] VARCHAR(200) NULL, 
     CONSTRAINT NombreUniqueC UNIQUE([nombre])
 );

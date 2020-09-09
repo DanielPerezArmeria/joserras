@@ -117,7 +117,7 @@ namespace TorneosWeb.service.impl
 
 		public Resultados FindResultadosTorneo(Guid torneoId)
 		{
-			Resultados detalleTorneo = new Resultados();
+			Resultados resultados = new Resultados();
 
 			using( SqlConnection conn = new SqlConnection( connString ) )
 			{
@@ -128,12 +128,12 @@ namespace TorneosWeb.service.impl
 					reader.Read();
 					return mapper.Map<SqlDataReader, Torneo>( reader );
 				} );
-				detalleTorneo.Torneo = torneo;
+				resultados.Torneo = torneo;
 
 				query = string.Format( "select dt.*, j.nombre from resultados dt, jugadores j "
 						+ "where dt.torneo_id = '{0}' and dt.jugador_id = j.id order by dt.posicion", torneoId );
-				detalleTorneo.Posiciones = new List<Posicion>();
-				detalleTorneo.Jugadores = new SortedSet<string>();
+				List<Posicion> posiciones = new List<Posicion>();
+				resultados.Jugadores = new SortedSet<string>();
 				joserrasQuery.ExecuteQuery( conn, query, reader =>
 				{
 					while( reader.Read() )
@@ -145,17 +145,19 @@ namespace TorneosWeb.service.impl
 							premio = int.Parse( posicion.Premio, System.Globalization.NumberStyles.Currency );
 						}
 						catch( FormatException ) { }
-						int costos = detalleTorneo.Torneo.PrecioBuyinNumber + (posicion.Rebuys * detalleTorneo.Torneo.PrecioRebuyNumber);
+						int costos = resultados.Torneo.PrecioBuyinNumber + (posicion.Rebuys * resultados.Torneo.PrecioRebuyNumber);
 						posicion.ProfitNumber = premio + posicion.PremioBountiesNumber - costos;
-						detalleTorneo.Posiciones.Add( posicion );
-						detalleTorneo.Jugadores.Add( posicion.Nombre );
+						posiciones.Add( posicion );
+						resultados.Jugadores.Add( posicion.Nombre );
 					}
 				} );
+
+				resultados.Posiciones = posiciones;
 			}
 
-			detalleTorneo.Knockouts = GetKnockoutsByTournamentId( torneoId );
+			resultados.Knockouts = GetKnockoutsByTournamentId( torneoId );
 
-			return detalleTorneo;
+			return resultados;
 		}
 
 		public DetalleJugador FindDetalleJugador(Guid playerId)
@@ -258,15 +260,12 @@ namespace TorneosWeb.service.impl
 				}
 			} );
 
-			detalles = detalles.OrderByDescending( d => d.ProfitNumber ).ToList();
-
 			return detalles;
 		}
 
 		public List<DetalleJugador> GetAllDetalleJugador(DateTime start, DateTime end)
 		{
 			List<DetalleJugador> detalles = GetAllDetalleJugador( QueryUtils.FormatTorneoBetween( start, end ) );
-			detalles = detalles.OrderByDescending( d => d.ProfitNumber ).ToList();
 
 			return detalles;
 		}
@@ -288,8 +287,6 @@ namespace TorneosWeb.service.impl
 					detalle.PremiosLigaNumber = premio;
 				}
 			} );
-
-			detalles = detalles.OrderByDescending( d => d.ProfitNumber ).ToList();
 
 			return detalles;
 		}

@@ -5,7 +5,7 @@ using TorneosWeb.util.automapper;
 
 namespace TorneosWeb.domain.models
 {
-	public class Posicion
+	public class Posicion : IComparable<Posicion>
 	{
 		public Guid JugadorId { get; set; }
 		public string Nombre { get; set; }
@@ -36,6 +36,23 @@ namespace TorneosWeb.domain.models
 		[NoMap]
 		[Display(Name = "$ Bounties")]
 		public string PremioBounties { get { return PremioBountiesNumber > 0 ? PremioBountiesNumber.ToString( Constants.CURRENCY_FORMAT ) : "-"; } }
+
+		public int CompareTo(Posicion other)
+		{
+			if( Lugar > other.Lugar )
+			{
+				return 1;
+			}
+			else if( Lugar == other.Lugar )
+			{
+				return 0;
+			}
+			else
+			{
+				return -1;
+			}
+		}
+
 	}
 
 }

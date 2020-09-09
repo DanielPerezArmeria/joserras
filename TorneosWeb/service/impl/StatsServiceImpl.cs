@@ -60,6 +60,9 @@ namespace TorneosWeb.service.impl
 
 		private Estadisticas GetStats(Estadisticas estadisticas, string q, SqlConnection conn)
 		{
+			int maxTorneos = estadisticas.Detalles.Max( d => d.Torneos );
+			estadisticas.Detalles = estadisticas.Detalles.Where( d => d.Torneos >= maxTorneos / 10 ).ToList();
+
 			estadisticas.Jugadores = new SortedSet<string>( from e in estadisticas.Detalles orderby e.Nombre ascending select e.Nombre );
 
 			estadisticas.Stats = new List<Stat>();

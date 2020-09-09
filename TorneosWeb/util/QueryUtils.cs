@@ -14,6 +14,11 @@ namespace TorneosWeb.util
 
 		public static string FormatTorneoIdIn(Liga liga)
 		{
+			if( liga.Torneos == null || liga.Torneos.Count < 1 )
+			{
+				return string.Empty;
+			}
+
 			string ids = "'" + string.Join( "','", liga.Torneos.Select( t => t.Id ) ) + "'";
 			return string.Format( "and t.id in ({0})", ids );
 		}

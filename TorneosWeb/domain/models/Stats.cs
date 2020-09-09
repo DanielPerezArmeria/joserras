@@ -5,9 +5,22 @@ namespace TorneosWeb.domain.models
 	public class Estadisticas
 	{
 		public SortedList<string, Dictionary<string, Knockouts>> Knockouts { get; set; }
-		public List<DetalleJugador> Detalles { get; set; }
 		public List<Stat> Stats { get; set; }
 		public SortedSet<string> Jugadores { get; set; }
+
+		private List<DetalleJugador> detalles;
+		public List<DetalleJugador> Detalles
+		{
+			get { return detalles; }
+			set
+			{
+				detalles = value;
+				if( detalles != null )
+				{
+					detalles.Sort(); 
+				}
+			}
+		}
 
 	}
 

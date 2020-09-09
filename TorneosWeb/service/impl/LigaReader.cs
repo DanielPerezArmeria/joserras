@@ -20,13 +20,16 @@ namespace TorneosWeb.service.impl
 		private ILogger<LigaReader> Log;
 		private string ConnString;
 		private IReadService readService;
+		private IStatsService statsService;
 
-		public LigaReader(IConfiguration conf, IReadService readService, IMapper mapper, JoserrasQuery joserrasQuery, ILogger<LigaReader> log)
+		public LigaReader(IConfiguration conf, IReadService readService, IMapper mapper, JoserrasQuery joserrasQuery,
+			IStatsService statsService, ILogger<LigaReader> log)
 		{
 			this.conf = conf;
 			this.mapper = mapper;
 			this.joserrasQuery = joserrasQuery;
 			this.readService = readService;
+			this.statsService = statsService;
 			Log = log;
 			ConnString = conf.GetConnectionString( Properties.Resources.joserrasDb );
 		}
@@ -59,6 +62,9 @@ namespace TorneosWeb.service.impl
 
 				liga.Torneos = readService.GetAllTorneos().Where( t => torneosIds.Contains( t.Id ) ).ToList();
 			}
+
+			liga.Standings = GetStandings( liga );
+			liga.Estadisticas = statsService.GetStats( liga );
 
 			return liga;
 		}
