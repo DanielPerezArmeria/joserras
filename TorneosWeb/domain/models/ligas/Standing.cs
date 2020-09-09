@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TorneosWeb.util;
 using TorneosWeb.util.PointRules;
 
 namespace TorneosWeb.domain.models.ligas
@@ -25,7 +26,21 @@ namespace TorneosWeb.domain.models.ligas
 			}
 		}
 
-		public string Profit { get; set; }
+		public string Profit
+		{
+			get
+			{
+				if( ProfitNumber != 0 )
+				{
+					return ProfitNumber.ToString( Constants.CURRENCY_FORMAT );
+				}
+				else
+				{
+					return "$0.0";
+				}
+			}
+		}
+
 		public int ProfitNumber { get; set; }
 
 		public string Premio

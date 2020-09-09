@@ -24,6 +24,7 @@
 				{
 					<li>@Html.DisplayFor( item => rule.Descripcion )</li>
 				}
+				<li>DESEMPATE: @Model.Liga.Tiebreakers.Description</li>
 			</ul>
 		</span>
 		<span style="float:right;text-align:right">
@@ -41,7 +42,7 @@
 
 		<partial name="_TorneoLigaResults" model="Model.Liga.Standings" />
 
-		<hr style="margin-top:2em;margin-bottom:2em;border: 2px solid black;width:100%" />
+		<hr style="margin-top:2em;margin-bottom:2em;border: 2px solid black;width:100%;background-color:black" />
 
 		<h2>TORNEOS</h2>
 		<partial name="_TorneosListing" model="Model.Liga.Torneos" view-data="ViewData" />

@@ -63,8 +63,8 @@ namespace TorneosWeb.service.impl
 				liga.Torneos = readService.GetAllTorneos().Where( t => torneosIds.Contains( t.Id ) ).ToList();
 			}
 
-			liga.Standings = GetStandings( liga );
 			liga.Estadisticas = statsService.GetStats( liga );
+			liga.Standings = GetStandings( liga );
 
 			return liga;
 		}
@@ -177,7 +177,6 @@ namespace TorneosWeb.service.impl
 						profit = profit + pos.ProfitNumber;
 					}
 				}
-				s.Profit = profit.ToString( Constants.CURRENCY_FORMAT );
 				s.ProfitNumber = profit;
 			}
 
@@ -201,7 +200,6 @@ namespace TorneosWeb.service.impl
 					standing.Puntos[ rule.Value.Type ] = rule.Value.GetPuntaje( pos.JugadorId, liga, results ) + p;
 				}
 
-				standing.Profit = pos.Profit;
 				standing.ProfitNumber = pos.ProfitNumber;
 
 				standings.Add( standing );

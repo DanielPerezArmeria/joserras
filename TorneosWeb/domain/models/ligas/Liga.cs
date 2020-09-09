@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TorneosWeb.util;
 using TorneosWeb.util.automapper;
 using TorneosWeb.util.PointRules;
+using TorneosWeb.util.tiebreakers;
 
 namespace TorneosWeb.domain.models.ligas
 {
@@ -76,6 +77,7 @@ namespace TorneosWeb.domain.models.ligas
 			set
 			{
 				desempate = value;
+				Tiebreakers = StandingsComparer.Build( desempate );
 			}
 		}
 
@@ -90,9 +92,13 @@ namespace TorneosWeb.domain.models.ligas
 			get { return standings; }
 			set
 			{
-				standings = value;
+				standings = new List<Standing>( value );
+				standings.Sort( Tiebreakers );
 			}
 		}
+
+		[NoMap]
+		public AbstractStandingComparer Tiebreakers { get; set; }
 
 	}
 

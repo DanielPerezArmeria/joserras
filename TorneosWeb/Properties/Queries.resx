@@ -154,7 +154,7 @@ group by j.id, j.nombre
   </data>
   <data name="GetKnockoutsByPlayer" xml:space="preserve">
     <value>select j.nombre, elim.nombre as eliminado, sum(e.eliminaciones) as eliminaciones from knockouts e, jugadores j, jugadores elim
-where j.id = '{0}' and e.jugador_id = j.id and e.eliminado_id = elim.id
+where j.id = '{0}' and e.jugador_id = j.id and e.eliminado_id = elim.id {0}
 group by j.nombre, elim.nombre order by eliminaciones desc</value>
   </data>
   <data name="GetPodiosNegativos" xml:space="preserve">
