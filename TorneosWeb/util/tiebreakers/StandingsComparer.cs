@@ -22,7 +22,6 @@ namespace TorneosWeb.util.tiebreakers
 				string d = string.Empty;
 				try
 				{
-					int i = 1;
 					d = string.Join( "; ", comparers.Select( c => comparers.IndexOf(c).Ordinalize() + " " + c.Description ).ToArray(), 1, comparers.Count - 1 );
 				}
 				catch( Exception ) { }
