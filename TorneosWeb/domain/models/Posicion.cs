@@ -11,7 +11,7 @@ namespace TorneosWeb.domain.models
 		public string Nombre { get; set; }
 		public int Lugar { get; set; }
 
-		public int PremioNumber { get; set; }
+		public decimal PremioNumber { get; set; }
 
 		[NoMap]
 		[Display(Name = "$ Premio")]
@@ -27,7 +27,7 @@ namespace TorneosWeb.domain.models
 		public string Profit { get { return ProfitNumber != 0 ? ProfitNumber.ToString( Constants.CURRENCY_FORMAT ) : "$0"; } }
 
 		[NoMap]
-		public int ProfitNumber { get; set; }
+		public decimal ProfitNumber { get; set; }
 
 		public bool Puntualidad { get; set; }
 

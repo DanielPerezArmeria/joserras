@@ -76,7 +76,7 @@ namespace TorneosWeb.service.impl
 				row.Add( profitRow.Nombre );
 				foreach( Torneo torneo in torneos )
 				{
-					KeyValuePair<Guid, int> pair = profitRow.Profits.Where( p => p.Key.Equals( torneo.Id ) ).FirstOrDefault();
+					KeyValuePair<Guid, decimal> pair = profitRow.Profits.Where( p => p.Key.Equals( torneo.Id ) ).FirstOrDefault();
 					if(pair.Equals(default( KeyValuePair<Guid, int> ) ) )
 					{
 						row.Add( "" );
@@ -118,7 +118,7 @@ namespace TorneosWeb.service.impl
 						profitRow.Nombre = posicion.Nombre;
 						rowValues.Add( posicion.Nombre, profitRow );
 					}
-					profitRow.Profits.Add( new KeyValuePair<Guid, int>( torneo.Id, posicion.ProfitNumber ) );
+					profitRow.Profits.Add( new KeyValuePair<Guid, decimal>( torneo.Id, posicion.ProfitNumber ) );
 				}
 			}
 		}

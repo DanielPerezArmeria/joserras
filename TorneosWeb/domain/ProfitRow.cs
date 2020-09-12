@@ -7,11 +7,11 @@ namespace TorneosWeb.domain
 	{
 		public ProfitRow()
 		{
-			Profits = new List<KeyValuePair<Guid, int>>();
+			Profits = new List<KeyValuePair<Guid, decimal>>();
 		}
 
 		public string Nombre { get; set; }
-		public List<KeyValuePair<Guid,int>> Profits { get; set; }
+		public List<KeyValuePair<Guid, decimal>> Profits { get; set; }
 	}
 
 }

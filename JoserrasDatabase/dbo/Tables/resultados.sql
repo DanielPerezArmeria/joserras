@@ -4,7 +4,7 @@
     [rebuys]     INT              NOT NULL,
     [posicion]   INT              NOT NULL,
     [podio]      BIT              NOT NULL,
-    [premio]     INT              NOT NULL,
+    [premio]     NUMERIC(6, 2)              NOT NULL,
     [burbuja]    BIT              NULL,
     [premio_bounties] INT NOT NULL DEFAULT 0, 
     [kos] INT NOT NULL DEFAULT 0, 

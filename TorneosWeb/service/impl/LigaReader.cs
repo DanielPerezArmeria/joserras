@@ -168,7 +168,7 @@ namespace TorneosWeb.service.impl
 			List<Standing> list = standings.Values.OrderByDescending( s => s.Total ).ToList();
 			foreach(Standing s in list )
 			{
-				int profit = 0;
+				decimal profit = 0M;
 				foreach( Torneo torneo in liga.Torneos )
 				{
 					Resultados results = readService.FindResultadosTorneo( torneo.Id );
