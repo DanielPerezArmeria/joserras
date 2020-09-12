@@ -12,11 +12,11 @@ namespace TorneosWeb.domain.models
 		public string Nombre { get; set; }
 
 		[NoMap]
-		public int ProfitNumber
+		public decimal ProfitNumber
 		{
 			get
 			{
-				return PremiosNumber + decimal.ToInt32( PremiosLigaNumber ) - CostosNumber;
+				return PremiosNumber + PremiosLigaNumber - CostosNumber;
 			}
 		}
 
@@ -38,7 +38,7 @@ namespace TorneosWeb.domain.models
 		{
 			get { return PremiosNumber > 0 ? PremiosNumber.ToString( Constants.CURRENCY_FORMAT ) : "$0"; }
 		}
-		public int PremiosNumber { get; set; }
+		public decimal PremiosNumber { get; set; }
 		[NoMap]
 		public string Costos
 		{
@@ -53,7 +53,7 @@ namespace TorneosWeb.domain.models
 		{
 			get
 			{
-				return ROINumber != 0 ? (ProfitNumber / (float)CostosNumber).ToString( "%###,###.#" ) : "%0.0";
+				return ROINumber != 0 ? ((float)ProfitNumber / CostosNumber).ToString( "%###,###.#" ) : "%0.0";
 			}
 		}
 

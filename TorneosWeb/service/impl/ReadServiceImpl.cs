@@ -139,10 +139,10 @@ namespace TorneosWeb.service.impl
 					while( reader.Read() )
 					{
 						Posicion posicion = mapper.Map<SqlDataReader, Posicion>( reader );
-						int premio = 0;
+						decimal premio = 0;
 						try
 						{
-							premio = int.Parse( posicion.Premio, System.Globalization.NumberStyles.Currency );
+							premio = decimal.Parse( posicion.Premio, System.Globalization.NumberStyles.Currency );
 						}
 						catch( FormatException ) { }
 						int costos = resultados.Torneo.PrecioBuyinNumber + (posicion.Rebuys * resultados.Torneo.PrecioRebuyNumber);

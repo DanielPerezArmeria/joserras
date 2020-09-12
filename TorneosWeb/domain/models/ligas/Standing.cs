@@ -36,12 +36,12 @@ namespace TorneosWeb.domain.models.ligas
 				}
 				else
 				{
-					return "$0.0";
+					return "$0";
 				}
 			}
 		}
 
-		public int ProfitNumber { get; set; }
+		public decimal ProfitNumber { get; set; }
 
 		public string Premio
 		{
@@ -49,7 +49,7 @@ namespace TorneosWeb.domain.models.ligas
 			{
 				if(PremioNumber > 0 )
 				{
-					return PremioNumber.ToString( "$###,###.##" );
+					return PremioNumber.ToString( Constants.CURRENCY_FORMAT );
 				}
 				else
 				{

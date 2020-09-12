@@ -17,7 +17,7 @@ namespace TorneosWeb.domain.dto
 		public bool Podio { get; set; }
 
 		[Default( 0 )]
-		public int Premio { get; set; }
+		public decimal Premio { get; set; }
 
 		[Default( false )]
 		public bool Burbuja { get; set; }

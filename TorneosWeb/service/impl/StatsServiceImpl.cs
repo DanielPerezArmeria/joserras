@@ -72,7 +72,7 @@ namespace TorneosWeb.service.impl
 				estadisticas.Detalles[ 0 ].ProfitNumber > 0 ? true : false ) );
 
 			Stat pichon = new Stat( "El Pichón", "Mayores pérdidas", "pichon_t.png" );
-			int mayor = estadisticas.Detalles.Last().ProfitNumber;
+			decimal mayor = estadisticas.Detalles.Last().ProfitNumber;
 			pichon.Participantes.AddRange( from d in estadisticas.Detalles where d.ProfitNumber == mayor select new StatProps( d.Nombre, d.Profit, d.ProfitNumber > 0 ? true : false ) );
 
 			Stat brailovsky = new Stat( "Brailovsky", "Mayor ROI", "brailovsky_t.png" );
