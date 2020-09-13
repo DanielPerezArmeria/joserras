@@ -72,15 +72,6 @@ namespace TorneosWeb.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select t.*, j.nombre, j.id from torneos t, jugadores j, resultados d where t.id = d.torneo_id and d.posicion = 1 and d.jugador_id = j.id order by Fecha desc.
-        /// </summary>
-        internal static string GetAllTorneos {
-            get {
-                return ResourceManager.GetString("GetAllTorneos", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to select tt.nombre, count(tt.posicion) as ult_lugares
         ///from
         ///(select j.nombre, dt.posicion, t.entradas
