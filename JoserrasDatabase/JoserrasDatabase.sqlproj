@@ -75,4 +75,7 @@
   <ItemGroup>
     <RefactorLog Include="JoserrasDatabase.refactorlog" />
   </ItemGroup>
+  <ItemGroup>
+    <PostDeploy Include="dbo\Script.FillPremiaciones.sql" />
+  </ItemGroup>
 </Project>

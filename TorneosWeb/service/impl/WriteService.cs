@@ -141,6 +141,8 @@ namespace TorneosWeb.service.impl
 
 			prizeService.SetPremiosTorneo( torneo, resultados );
 
+			SetBurbuja( resultados );
+
 			foreach( ResultadosDTO dto in resultados )
 			{
 				try
@@ -154,6 +156,12 @@ namespace TorneosWeb.service.impl
 					throw;
 				}
 			}
+		}
+
+		private void SetBurbuja(List<ResultadosDTO> resultados)
+		{
+			int bubblePosition = resultados.Where( r => r.Premio > 0 ).Max( r => r.Posicion ) + 1;
+			resultados.First( r => r.Posicion == bubblePosition ).Burbuja = true;
 		}
 
 		private void InsertarKos(TorneoDTO torneo, List<ResultadosDTO> resultados, List<KnockoutsDTO> kos, TorneoUnitOfWork uow)
