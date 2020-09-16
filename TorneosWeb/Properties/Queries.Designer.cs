@@ -113,7 +113,7 @@ namespace TorneosWeb.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to select j.nombre, elim.nombre as eliminado, sum(e.eliminaciones) as eliminaciones from knockouts e, jugadores j, jugadores elim
-        ///where j.id = &apos;{0}&apos; and e.jugador_id = j.id and e.eliminado_id = elim.id {0}
+        ///where j.id = &apos;{0}&apos; and e.jugador_id = j.id and e.eliminado_id = elim.id
         ///group by j.nombre, elim.nombre order by eliminaciones desc.
         /// </summary>
         internal static string GetKnockoutsByPlayer {
