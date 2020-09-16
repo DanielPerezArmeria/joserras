@@ -122,9 +122,6 @@
 from knockouts e, jugadores j, jugadores elim, torneos t
 where e.jugador_id = j.id and e.eliminado_id = elim.id and t.id = e.torneo_id {0} group by j.nombre, elim.nombre order by kos desc</value>
   </data>
-  <data name="GetAllTorneos" xml:space="preserve">
-    <value>select t.*, j.nombre, j.id from torneos t, jugadores j, resultados d where t.id = d.torneo_id and d.posicion = 1 and d.jugador_id = j.id order by Fecha desc</value>
-  </data>
   <data name="GetBundy" xml:space="preserve">
     <value>select tt.nombre, count(tt.posicion) as ult_lugares
 from
@@ -154,7 +151,7 @@ group by j.id, j.nombre
   </data>
   <data name="GetKnockoutsByPlayer" xml:space="preserve">
     <value>select j.nombre, elim.nombre as eliminado, sum(e.eliminaciones) as eliminaciones from knockouts e, jugadores j, jugadores elim
-where j.id = '{0}' and e.jugador_id = j.id and e.eliminado_id = elim.id {0}
+where j.id = '{0}' and e.jugador_id = j.id and e.eliminado_id = elim.id
 group by j.nombre, elim.nombre order by eliminaciones desc</value>
   </data>
   <data name="GetPodiosNegativos" xml:space="preserve">

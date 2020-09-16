@@ -22,6 +22,8 @@ namespace TorneosWeb.domain.dto
 
 		[Default( false )]
 		public bool Liga { get; set; }
+
+		public string Premiacion { get; set; }
 	}
 
 }

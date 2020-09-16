@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using TorneosWeb.domain.models.ligas;
 using TorneosWeb.util;
 using TorneosWeb.util.automapper;
@@ -9,8 +10,6 @@ namespace TorneosWeb.domain.models
 {
 	public class Torneo
 	{
-		private IList<Posicion> posiciones;
-
 		public Guid Id { get; set; }
 
 		[NoMap]
@@ -48,10 +47,22 @@ namespace TorneosWeb.domain.models
 		public int Entradas { get; set; }
 		public int Rebuys { get; set; }
 		public string Bolsa { get; set; }
-		public string Ganador { get; set; }
-		public Guid GanadorId { get; set; }
+
+		public string Ganador
+		{
+			get { return Resultados.Posiciones.First( p => p.Lugar == 1 ).Nombre; }
+		}
+
+		public Guid GanadorId
+		{
+			get { return Resultados.Posiciones.First( p => p.Lugar == 1 ).JugadorId; }
+		}
+
 		public TournamentType Tipo { get; set; }
 		public int PremioBountyNumber { get; set; }
+
+		[NoMap]
+		public Resultados Resultados { get; set; }
 
 		[NoMap]
 		[Display( Name = "Bounty" )]
@@ -61,7 +72,7 @@ namespace TorneosWeb.domain.models
 		public Liga Liga { get; set; }
 
 		[NoMap]
-		IList<Posicion> Posiciones { get { return posiciones; } set { posiciones = value; } }
+		IList<Posicion> Posiciones { get; set; }
 
 	}
 

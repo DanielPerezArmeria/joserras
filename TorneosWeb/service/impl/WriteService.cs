@@ -19,12 +19,13 @@ namespace TorneosWeb.service.impl
 		private IFileService tourneyReader;
 		private ILigaWriter ligaWriter;
 		private IProfitsExporter profitsExporter;
+		private IPrizeService prizeService;
 
 		private string connString;
 
 
 		public WriteService(IReadService service, ICacheService cacheService, IConfiguration config, IProfitsExporter profitsExporter,
-			IFileService tourneyReader, ILigaWriter ligaWriter, ILogger<WriteService> logger)
+			IFileService tourneyReader, ILigaWriter ligaWriter, IPrizeService prizeService, ILogger<WriteService> logger)
 		{
 			readService = service;
 			this.cacheService = cacheService;
@@ -33,6 +34,7 @@ namespace TorneosWeb.service.impl
 			this.tourneyReader = tourneyReader;
 			this.ligaWriter = ligaWriter;
 			this.profitsExporter = profitsExporter;
+			this.prizeService = prizeService;
 		}
 
 		public void uploadTournament(List<IFormFile> files)
@@ -57,7 +59,7 @@ namespace TorneosWeb.service.impl
 
 					torneo.Id = InsertarTorneo( torneo, resultados, uow );
 
-					InsertarResultados( torneo.Id, resultados, uow );
+					InsertarResultados( torneo, resultados, uow );
 
 					if(kos != null && kos.Count > 0 )
 					{
@@ -122,6 +124,8 @@ namespace TorneosWeb.service.impl
 		{
 			int rebuys = resultados.Sum( d => d.Rebuys );
 			int bolsa = (torneo.PrecioBuyin * resultados.Count) + (torneo.PrecioRebuy * rebuys);
+			torneo.Rebuys = rebuys;
+			torneo.Bolsa = bolsa;
 
 			Guid torneoId = Guid.Parse( uow.ExecuteScalar( Properties.Queries.InsertTorneo, torneo.Fecha.ToString( "yyyy-MM-dd" ),
 					torneo.PrecioBuyin, torneo.PrecioRebuy, resultados.Count, rebuys, bolsa, torneo.Tipo.ToString(), torneo.PrecioBounty )
@@ -130,16 +134,20 @@ namespace TorneosWeb.service.impl
 			return torneoId;
 		}
 
-		private void InsertarResultados(Guid torneoId, List<ResultadosDTO> resultados, TorneoUnitOfWork uow)
+		private void InsertarResultados(TorneoDTO torneo, List<ResultadosDTO> resultados, TorneoUnitOfWork uow)
 		{
 			string query = "insert into resultados (torneo_id, jugador_id, rebuys, posicion, podio, premio, burbuja, puntualidad) values('{0}', (select id from jugadores where nombre='{1}'), "
 				+ "{2}, {3}, '{4}', {5}, '{6}', '{7}')";
+
+			prizeService.SetPremiosTorneo( torneo, resultados );
+
+			SetBurbuja( resultados );
 
 			foreach( ResultadosDTO dto in resultados )
 			{
 				try
 				{
-					uow.ExecuteNonQuery( query, torneoId, dto.Jugador, dto.Rebuys, dto.Posicion,
+					uow.ExecuteNonQuery( query, torneo.Id, dto.Jugador, dto.Rebuys, dto.Posicion,
 							dto.Premio > 0 ? true.ToString() : false.ToString(), dto.Premio, dto.Burbuja.ToString(), dto.Puntualidad.ToString() );
 				}
 				catch( Exception e )
@@ -148,6 +156,12 @@ namespace TorneosWeb.service.impl
 					throw;
 				}
 			}
+		}
+
+		private void SetBurbuja(List<ResultadosDTO> resultados)
+		{
+			int bubblePosition = resultados.Where( r => r.Premio > 0 ).Max( r => r.Posicion ) + 1;
+			resultados.First( r => r.Posicion == bubblePosition ).Burbuja = true;
 		}
 
 		private void InsertarKos(TorneoDTO torneo, List<ResultadosDTO> resultados, List<KnockoutsDTO> kos, TorneoUnitOfWork uow)

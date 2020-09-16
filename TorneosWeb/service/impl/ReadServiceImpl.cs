@@ -90,7 +90,8 @@ namespace TorneosWeb.service.impl
 			{
 				conn.Open();
 
-				joserrasQuery.ExecuteQuery( conn, Properties.Queries.GetAllTorneos, reader =>
+				string query = "select * from torneos order by fecha desc";
+				joserrasQuery.ExecuteQuery( conn, query, reader =>
 					{
 						while( reader.Read() )
 						{
@@ -101,7 +102,11 @@ namespace TorneosWeb.service.impl
 
 				foreach( Torneo t in torneos )
 				{
-					string query = string.Format( "select * from ligas where id = (select liga_id from torneos_liga where torneo_id = '{0}')", t.Id );
+					// Obtener Resultados
+					t.Resultados = FindResultadosTorneo( conn, t.Id );
+
+					// Obtener Liga
+					query = string.Format( "select * from ligas where id = (select liga_id from torneos_liga where torneo_id = '{0}')", t.Id );
 					joserrasQuery.ExecuteQuery( conn, query, reader =>
 					{
 						while( reader.Read() )
@@ -112,50 +117,57 @@ namespace TorneosWeb.service.impl
 				} 
 			}
 
+
+
 			return torneos;
 		}
 
 		public Resultados FindResultadosTorneo(Guid torneoId)
 		{
-			Resultados resultados = new Resultados();
-
 			using( SqlConnection conn = new SqlConnection( connString ) )
 			{
 				conn.Open();
-				string query = string.Format( "select * from torneos where id = '{0}'", torneoId );
-				Torneo torneo = joserrasQuery.ExecuteQuery( conn, query, reader =>
-				{
-					reader.Read();
-					return mapper.Map<SqlDataReader, Torneo>( reader );
-				} );
-				resultados.Torneo = torneo;
-
-				query = string.Format( "select dt.*, j.nombre from resultados dt, jugadores j "
-						+ "where dt.torneo_id = '{0}' and dt.jugador_id = j.id order by dt.posicion", torneoId );
-				List<Posicion> posiciones = new List<Posicion>();
-				resultados.Jugadores = new SortedSet<string>();
-				joserrasQuery.ExecuteQuery( conn, query, reader =>
-				{
-					while( reader.Read() )
-					{
-						Posicion posicion = mapper.Map<SqlDataReader, Posicion>( reader );
-						decimal premio = 0;
-						try
-						{
-							premio = decimal.Parse( posicion.Premio, System.Globalization.NumberStyles.Currency );
-						}
-						catch( FormatException ) { }
-						int costos = resultados.Torneo.PrecioBuyinNumber + (posicion.Rebuys * resultados.Torneo.PrecioRebuyNumber);
-						posicion.ProfitNumber = premio + posicion.PremioBountiesNumber - costos;
-						posiciones.Add( posicion );
-						resultados.Jugadores.Add( posicion.Nombre );
-					}
-				} );
-
-				resultados.Posiciones = posiciones;
+				return FindResultadosTorneo( conn, torneoId );
 			}
+		}
 
-			resultados.Knockouts = GetKnockoutsByTournamentId( torneoId );
+		private Resultados FindResultadosTorneo( SqlConnection conn, Guid torneoId)
+		{
+			Resultados resultados = new Resultados();
+			
+			string query = string.Format( "select * from torneos where id = '{0}'", torneoId );
+			Torneo torneo = joserrasQuery.ExecuteQuery( conn, query, reader =>
+			{
+				reader.Read();
+				return mapper.Map<SqlDataReader, Torneo>( reader );
+			} );
+			resultados.Torneo = torneo;
+
+			query = string.Format( "select dt.*, j.nombre from resultados dt, jugadores j "
+					+ "where dt.torneo_id = '{0}' and dt.jugador_id = j.id order by dt.posicion", torneoId );
+			List<Posicion> posiciones = new List<Posicion>();
+			resultados.Jugadores = new SortedSet<string>();
+			joserrasQuery.ExecuteQuery( conn, query, reader =>
+			{
+				while( reader.Read() )
+				{
+					Posicion posicion = mapper.Map<SqlDataReader, Posicion>( reader );
+					decimal premio = 0;
+					try
+					{
+						premio = decimal.Parse( posicion.Premio, System.Globalization.NumberStyles.Currency );
+					}
+					catch( FormatException ) { }
+					int costos = resultados.Torneo.PrecioBuyinNumber + (posicion.Rebuys * resultados.Torneo.PrecioRebuyNumber);
+					posicion.ProfitNumber = premio + posicion.PremioBountiesNumber - costos;
+					posiciones.Add( posicion );
+					resultados.Jugadores.Add( posicion.Nombre );
+				}
+			} );
+
+			resultados.Posiciones = posiciones;
+			
+			resultados.Knockouts = GetKnockoutsByTournamentId( conn, torneoId );
 
 			return resultados;
 		}
@@ -204,11 +216,21 @@ namespace TorneosWeb.service.impl
 
 		public SortedList<string, Dictionary<string, Knockouts>> GetKnockoutsByTournamentId(Guid torneoId)
 		{
+			using( SqlConnection conn = new SqlConnection( connString ) )
+			{
+				conn.Open();
+
+				return GetKnockoutsByTournamentId( conn, torneoId );
+			}
+		}
+
+		private SortedList<string, Dictionary<string, Knockouts>> GetKnockoutsByTournamentId(SqlConnection conn, Guid torneoId)
+		{
 			SortedList<string, Dictionary<string, Knockouts>> knockouts = new SortedList<string, Dictionary<string, Knockouts>>();
 			string query = string.Format( "select j.nombre, elim.nombre as eliminado, sum(e.eliminaciones) as eliminaciones from knockouts e, jugadores j, jugadores elim"
 					+ " where torneo_id = '{0}' and e.jugador_id = j.id and e.eliminado_id = elim.id group by j.nombre, elim.nombre", torneoId );
 
-			joserrasQuery.ExecuteQuery( query, reader =>
+			joserrasQuery.ExecuteQuery( conn, query, reader =>
 			{
 				while( reader.Read() )
 				{
