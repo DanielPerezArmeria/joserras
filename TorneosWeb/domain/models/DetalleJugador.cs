@@ -27,12 +27,26 @@ namespace TorneosWeb.domain.models
 		}
 
 		[NoMap]
+		public decimal ProfitTorneosNumber
+		{
+			get { return PremiosNumber - CostosNumber; }
+		}
+
+		[NoMap]
+		[Display( Name = "Profit Torneos" )]
+		public string ProfitTorneos
+		{
+			get { return ProfitTorneosNumber != 0 ? ProfitTorneosNumber.ToString( Constants.CURRENCY_FORMAT ) : "$0"; }
+		}
+
+		[NoMap]
 		public List<Knockouts> Knockouts { get; set; }
 		public int Torneos { get; set; }
 		public int Rebuys { get; set; }
 		public int Podios { get; set; }
 		public int Burbujas { get; set; }
 		public int Victorias { get; set; }
+
 		[NoMap]
 		public string Premios
 		{
