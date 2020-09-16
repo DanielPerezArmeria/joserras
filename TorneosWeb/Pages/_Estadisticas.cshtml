@@ -18,12 +18,15 @@
 				<th>
 					@Html.DisplayNameFor( model => model.Detalles[ 0 ].Profit )
 				</th>
-				<th style="font-size:small;text-decoration: overline dashed darkgray;color:darkgray">
-					@Html.DisplayNameFor( model => model.Detalles[ 0 ].ProfitTorneos )
-				</th>
-				<th style="font-size:small;text-decoration: overline dashed darkgray;color:darkgray">
-					@Html.DisplayNameFor( model => model.Detalles[ 0 ].PremiosLiga )
-				</th>
+				@if( !"Liga".Equals( ViewData[ "Listado" ] ) )
+				{
+					<th style="font-size:small;text-decoration: overline dashed darkgray;color:darkgray">
+						@Html.DisplayNameFor( model => model.Detalles[ 0 ].ProfitTorneos )
+					</th>
+					<th style="font-size:small;text-decoration: overline dashed darkgray;color:darkgray">
+						@Html.DisplayNameFor( model => model.Detalles[ 0 ].PremiosLiga )
+					</th>
+				}
 				<th>
 					@Html.DisplayNameFor( model => model.Detalles[ 0 ].ROI )
 				</th>
@@ -57,12 +60,15 @@
 				<td style="text-align:right;margin-right:10em;color:@(detalle.ProfitNumber < 0 ? "red" : "black")">
 					@Html.DisplayFor( modelItem => detalle.Profit )
 				</td>
-				<td style="font-size:small;text-align:right;margin-right:10em;color:@(detalle.ProfitTorneosNumber < 0 ? "red" : "black")">
-					@Html.DisplayFor( modelItem => detalle.ProfitTorneos )
-				</td>
-				<td style="font-size:small;text-align:right;margin-right:10em;color:@(detalle.PremiosLigaNumber < 0 ? "red" : "black")">
-					@Html.DisplayFor( modelItem => detalle.PremiosLiga )
-				</td>
+				@if( !"Liga".Equals( ViewData[ "Listado" ] ) )
+				{
+					<td style="font-size:small;text-align:right;margin-right:10em;color:@(detalle.ProfitTorneosNumber < 0 ? "red" : "black")">
+						@Html.DisplayFor( modelItem => detalle.ProfitTorneos )
+					</td>
+					<td style="font-size:small;text-align:right;margin-right:10em;color:@(detalle.PremiosLigaNumber < 0 ? "red" : "black")">
+						@Html.DisplayFor( modelItem => detalle.PremiosLiga )
+					</td>
+				}
 				<td style="text-align:right;margin-right:10em;color:@(detalle.ROINumber < 0 ? "red" : "black")">
 					@Html.DisplayFor( modelItem => detalle.ROI )
 				</td>
