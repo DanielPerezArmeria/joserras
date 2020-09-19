@@ -61,6 +61,18 @@ namespace TorneosWeb.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select top 1 t.fecha
+        ///from torneos t, jugadores j, resultados r
+        ///where r.torneo_id = t.id and r.jugador_id = j.id and j.id = &apos;{0}&apos;
+        ///order by fecha desc.
+        /// </summary>
+        internal static string FindLastPlayedTournament {
+            get {
+                return ResourceManager.GetString("FindLastPlayedTournament", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select j.nombre, elim.nombre as eliminado, sum(e.eliminaciones) as kos
         ///from knockouts e, jugadores j, jugadores elim, torneos t
         ///where e.jugador_id = j.id and e.eliminado_id = elim.id and t.id = e.torneo_id {0} group by j.nombre, elim.nombre order by kos desc.

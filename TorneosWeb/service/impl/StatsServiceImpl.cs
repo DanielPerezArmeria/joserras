@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using TorneosWeb.domain.models;
 using TorneosWeb.domain.models.ligas;
+using TorneosWeb.Properties;
 using TorneosWeb.util;
 
 namespace TorneosWeb.service.impl
@@ -30,6 +31,9 @@ namespace TorneosWeb.service.impl
 				conn.Open();
 				estadisticas.Knockouts = readService.GetAllKnockouts();
 				estadisticas.Detalles = readService.GetAllDetalleJugador();
+
+				RemoveInactivePlayers( DateTime.Now, estadisticas, conn );
+
 				return GetStats( estadisticas, string.Empty, conn );
 			}
 		}
@@ -42,6 +46,9 @@ namespace TorneosWeb.service.impl
 				conn.Open();
 				estadisticas.Knockouts = readService.GetAllKnockouts( start, end );
 				estadisticas.Detalles = readService.GetAllDetalleJugador( start, end );
+
+				RemoveInactivePlayers( end, estadisticas, conn );
+
 				return GetStats( estadisticas, QueryUtils.FormatTorneoBetween( start, end ), conn );
 			}
 		}
@@ -54,15 +61,39 @@ namespace TorneosWeb.service.impl
 				conn.Open();
 				estadisticas.Knockouts = readService.GetAllKnockouts( liga );
 				estadisticas.Detalles = readService.GetAllDetalleJugador( liga );
+
+				RemoveInactivePlayers( liga.Torneos[0].FechaDate, estadisticas, conn );
+
 				return GetStats( estadisticas, QueryUtils.FormatTorneoIdIn( liga ), conn );
+			}
+		}
+
+		private void RemoveInactivePlayers(DateTime lastDate, Estadisticas estadisticas, SqlConnection conn)
+		{
+			// Quita los jugadores q han jugado menos del 10% de los juegos
+			int maxTorneos = estadisticas.Detalles.Max( d => d.Torneos );
+			estadisticas.Detalles = estadisticas.Detalles.Where( d => d.Torneos >= maxTorneos / 10 ).ToList();
+
+			// Quita los jugadores q no han jugado en 2 meses
+			foreach( DetalleJugador det in estadisticas.Detalles.ToList() )
+			{
+				string qu = string.Format( Queries.FindLastPlayedTournament, det.Id );
+				joserrasQuery.ExecuteQuery( conn, qu, reader =>
+				{
+					while( reader.Read() )
+					{
+						DateTime lastTourney = (DateTime)reader[ "fecha" ];
+						if( (lastDate - lastTourney).TotalDays > 60 )
+						{
+							estadisticas.Detalles.Remove( det );
+						}
+					}
+				} );
 			}
 		}
 
 		private Estadisticas GetStats(Estadisticas estadisticas, string q, SqlConnection conn)
 		{
-			int maxTorneos = estadisticas.Detalles.Max( d => d.Torneos );
-			estadisticas.Detalles = estadisticas.Detalles.Where( d => d.Torneos >= maxTorneos / 10 ).ToList();
-
 			estadisticas.Jugadores = new SortedSet<string>( from e in estadisticas.Detalles orderby e.Nombre ascending select e.Nombre );
 
 			estadisticas.Stats = new List<Stat>();

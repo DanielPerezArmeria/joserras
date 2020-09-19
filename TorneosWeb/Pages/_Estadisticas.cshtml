@@ -15,16 +15,26 @@
 				<th>
 					@Html.DisplayNameFor( model => model.Detalles[ 0 ].Torneos )
 				</th>
-				<th>
-					@Html.DisplayNameFor( model => model.Detalles[ 0 ].Profit )
-				</th>
+				@if( "Liga".Equals( ViewData[ "Listado" ] ) )
+				{
+					<th>
+						@Html.DisplayNameFor( model => model.Detalles[ 0 ].Profit )
+					</th>
+				}
+				else
+				{
+					<th>
+						Profit Total
+					</th>
+				}
+
 				@if( !"Liga".Equals( ViewData[ "Listado" ] ) )
 				{
 					<th style="font-size:small;text-decoration: overline dashed darkgray;color:darkgray">
 						@Html.DisplayNameFor( model => model.Detalles[ 0 ].ProfitTorneos )
 					</th>
 					<th style="font-size:small;text-decoration: overline dashed darkgray;color:darkgray">
-						@Html.DisplayNameFor( model => model.Detalles[ 0 ].PremiosLiga )
+						Profit Ligas
 					</th>
 				}
 				<th>
