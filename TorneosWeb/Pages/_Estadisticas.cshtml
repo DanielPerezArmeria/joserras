@@ -142,12 +142,15 @@
 	@foreach( var stat in Model.Stats )
 	{
 		<div class="card statCard">
-			<h3 class="card-title statTitle">@stat.Titulo</h3>
+			<div class="statTitle">
+				<h3 class="statTitle">@stat.Titulo</h3>
+				<i>@stat.Descripcion</i>
+			</div>
 			<div style="background-color:white;text-align:center;width:100%">
 				<img src="~/images/@stat.Imagen" style="max-height:220px;max-width:90%;width:auto;align-self:center;margin-top:2px" class="card-img-top">
 			</div>
 			<div class="card-body" style="text-align:center;border-top:1px solid black;overflow:auto;background-color:white">
-				<h6 style="vertical-align:text-top;margin-bottom:20px"><i>@stat.Descripcion</i></h6>
+				
 				@foreach( var p in stat.Participantes )
 				{
 					<p class="card-text" style="margin:2px">

@@ -8,6 +8,8 @@ namespace TorneosWeb.service
 	public interface IReadService
 	{
 		List<Torneo> GetAllTorneos();
+		Torneo FindTorneoByFecha(DateTime fecha);
+		Torneo FindTorneoById(Guid id);
 
 		List<Jugador> GetAllJugadores();
 
@@ -28,8 +30,6 @@ namespace TorneosWeb.service
 		SortedList<string, Dictionary<string, Knockouts>> GetAllKnockouts();
 		SortedList<string, Dictionary<string, Knockouts>> GetAllKnockouts(DateTime start, DateTime end);
 		SortedList<string, Dictionary<string, Knockouts>> GetAllKnockouts(Liga liga);
-
-		Torneo FindTorneoByFecha(DateTime fecha);
 
 	}
 
