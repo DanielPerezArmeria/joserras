@@ -78,6 +78,11 @@ namespace TorneosWeb.service.impl
 					log.LogError( e, "Index out of bounds:{0}", i );
 					throw e;
 				}
+				catch(InvalidOperationException ioe )
+				{
+					log.LogError( ioe, "Invalid operation for index:{0}", i );
+					throw ioe;
+				}
 			}
 		}
 

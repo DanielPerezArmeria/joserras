@@ -42,7 +42,8 @@ namespace TorneosWeb.Pages
 			}
 			catch( JoserrasException )
 			{
-				throw;
+				Result = "No se pudo agregar el torneo. Inténtelo de nuevo.";
+				Page();
 			}
 
 			return RedirectToPage( "./Torneos" );
