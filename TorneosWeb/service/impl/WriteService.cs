@@ -70,6 +70,10 @@ namespace TorneosWeb.service.impl
 					cacheService.Clear();
 				}
 			}
+			catch( JoserrasException )
+			{
+				throw;
+			}
 			catch(Exception e )
 			{
 				log.LogError( e, e.Message );
@@ -81,7 +85,7 @@ namespace TorneosWeb.service.impl
 				{
 					log.LogError( xe, xe.Message );
 				}
-				throw new JoserrasException( e );
+				throw new JoserrasException( e.Message, e );
 			}
 
 			if( torneo.Liga )
@@ -153,7 +157,7 @@ namespace TorneosWeb.service.impl
 				catch( Exception e )
 				{
 					log.LogError( e, e.Message );
-					throw;
+					throw new JoserrasException( e.Message, e );
 				}
 			}
 		}
@@ -177,8 +181,9 @@ namespace TorneosWeb.service.impl
 				}
 				catch( Exception e )
 				{
-					log.LogError( e, e.Message );
-					throw;
+					string msg = string.Format( "Error al insertar el KO de '{0}' a '{1}' en la tabla de Knockouts", dto.Jugador, dto.Eliminado );
+					log.LogError( e, msg );
+					throw new JoserrasException( msg );
 				}
 			}
 
@@ -203,8 +208,9 @@ namespace TorneosWeb.service.impl
 				}
 				catch( Exception e )
 				{
-					log.LogError( e, e.Message );
-					throw;
+					string msg = string.Format( "Error al actualizar la tabla de Resultados con los kos de: '{0}'", t.Item1 );
+					log.LogError( e, msg );
+					throw new JoserrasException( msg, e );
 				}
 			}
 		}

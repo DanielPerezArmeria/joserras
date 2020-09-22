@@ -40,10 +40,10 @@ namespace TorneosWeb.Pages
 			{
 				writeService.uploadTournament( TorneoUpload.FormFiles );
 			}
-			catch( JoserrasException )
+			catch( JoserrasException je)
 			{
-				Result = "No se pudo agregar el torneo. Inténtelo de nuevo.";
-				Page();
+				Result = je.Message;
+				return Page();
 			}
 
 			return RedirectToPage( "./Torneos" );
