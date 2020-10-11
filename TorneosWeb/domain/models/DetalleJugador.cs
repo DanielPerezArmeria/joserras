@@ -67,7 +67,7 @@ namespace TorneosWeb.domain.models
 		{
 			get
 			{
-				return ROINumber != 0 ? ((float)ProfitNumber / CostosNumber).ToString( "%###,###.#" ) : "%0.0";
+				return ROINumber != 0 ? ((float)ProfitNumber / CostosNumber).ToString( Constants.ROI_FORMAT ) : "%0.0";
 			}
 		}
 
