@@ -38,8 +38,8 @@ namespace TorneosWeb.service.impl
 			LigaDTO liga = ligaDataReader.GetFormFileItems<LigaDTO>( file ).First();
 			using( TorneoUnitOfWork uow = new TorneoUnitOfWork( config.GetConnectionString( Properties.Resources.joserrasDb ) ) )
 			{
-				string query = @"insert into ligas (nombre, abierta, puntaje, fee, premiacion) values ('{0}', {1}, '{2}', {3}, '{4}')";
-				uow.ExecuteNonQuery( query, liga.Nombre, 1, liga.Puntaje, liga.Fee, liga.Premiacion );
+				string query = @"insert into ligas (nombre, abierta, puntaje, fee, premiacion, desempate) values ('{0}', {1}, '{2}', {3}, '{4}', '{5}')";
+				uow.ExecuteNonQuery( query, liga.Nombre, 1, liga.Puntaje, liga.Fee, liga.Premiacion, liga.Desempate );
 
 				uow.Commit();
 			}

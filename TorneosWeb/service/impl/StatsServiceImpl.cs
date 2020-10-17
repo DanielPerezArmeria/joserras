@@ -56,6 +56,12 @@ namespace TorneosWeb.service.impl
 		public Estadisticas GetStats(Liga liga)
 		{
 			Estadisticas estadisticas = new Estadisticas();
+
+			if(liga.Torneos.Count < 1 )
+			{
+				return estadisticas;
+			}
+
 			using( SqlConnection conn = new SqlConnection( connString ) )
 			{
 				conn.Open();

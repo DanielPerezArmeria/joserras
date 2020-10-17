@@ -4,6 +4,14 @@ namespace TorneosWeb.domain.models
 {
 	public class Estadisticas
 	{
+		public Estadisticas()
+		{
+			Knockouts = new SortedList<string, Dictionary<string, Knockouts>>();
+			Stats = new List<Stat>();
+			Detalles = new List<DetalleJugador>();
+			Jugadores = new SortedSet<string>();
+		}
+
 		public SortedList<string, Dictionary<string, Knockouts>> Knockouts { get; set; }
 		public List<Stat> Stats { get; set; }
 		public SortedSet<string> Jugadores { get; set; }
