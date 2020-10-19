@@ -7,6 +7,7 @@ using System.Linq;
 using TorneosWeb.domain.dto.ligas;
 using TorneosWeb.domain.models;
 using TorneosWeb.domain.models.ligas;
+using TorneosWeb.exception;
 using TorneosWeb.util;
 
 namespace TorneosWeb.service.impl
@@ -37,8 +38,8 @@ namespace TorneosWeb.service.impl
 			LigaDTO liga = ligaDataReader.GetFormFileItems<LigaDTO>( file ).First();
 			using( TorneoUnitOfWork uow = new TorneoUnitOfWork( config.GetConnectionString( Properties.Resources.joserrasDb ) ) )
 			{
-				string query = @"insert into ligas (nombre, abierta, puntaje, fee, premiacion) values ('{0}', {1}, '{2}', {3}, '{4}')";
-				uow.ExecuteNonQuery( query, liga.Nombre, 1, liga.Puntaje, liga.Fee, liga.Premiacion );
+				string query = @"insert into ligas (nombre, abierta, puntaje, fee, premiacion, desempate) values ('{0}', {1}, '{2}', {3}, '{4}', '{5}')";
+				uow.ExecuteNonQuery( query, liga.Nombre, 1, liga.Puntaje, liga.Fee, liga.Premiacion, liga.Desempate );
 
 				uow.Commit();
 			}
@@ -98,11 +99,30 @@ namespace TorneosWeb.service.impl
 				string query = "insert into puntos_torneo_liga values ('{0}', '{1}', {2}, {3})";
 				foreach(Standing standing in standings )
 				{
-					uow.ExecuteNonQuery( query, liga.Id, standing.JugadorId, standing.Total, standing.PremioNumber );
+					string q = string.Format( query, liga.Id, standing.JugadorId, standing.Total, standing.PremioNumber );
+					try
+					{
+						log.LogInformation( "Guardando: {0}", q );
+						uow.ExecuteNonQuery( q );
+					}
+					catch( Exception e)
+					{
+						string msg = string.Format( "Error al guardar el Standing: {0}", q );
+						log.LogError( e,  msg);
+						throw new JoserrasException( msg, e );
+					}
 				}
 
 				string updateLigaQuery = "update ligas set Abierta = {0}, fecha_cierre = '{1}' where id = '{2}'";
-				uow.ExecuteNonQuery( updateLigaQuery, 0, liga.Torneos.First().FechaDate.ToString( "yyyy-MM-dd" ), liga.Id );
+				try
+				{
+					uow.ExecuteNonQuery( updateLigaQuery, 0, liga.Torneos.First().FechaDate.ToString( "yyyy-MM-dd" ), liga.Id );
+				}
+				catch( Exception e )
+				{
+					log.LogError( e, "Error al cerrar la liga" );
+					throw;
+				}
 
 				uow.Commit();
 				cacheService.Clear();

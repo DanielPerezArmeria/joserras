@@ -40,9 +40,10 @@ namespace TorneosWeb.Pages
 			{
 				writeService.uploadTournament( TorneoUpload.FormFiles );
 			}
-			catch( JoserrasException )
+			catch( JoserrasException je)
 			{
-				throw;
+				Result = je.Message;
+				return Page();
 			}
 
 			return RedirectToPage( "./Torneos" );

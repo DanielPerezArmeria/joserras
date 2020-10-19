@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TorneosWeb.domain.dto;
 using TorneosWeb.domain.models.ligas;
+using TorneosWeb.exception;
 using TorneosWeb.util;
 
 namespace TorneosWeb.service.impl
@@ -75,8 +76,20 @@ namespace TorneosWeb.service.impl
 				}
 				catch( ArgumentOutOfRangeException e )
 				{
-					log.LogError( e, "Index out of bounds:{0}", i );
-					throw e;
+					string msg = string.Format( "No se pudieron asignaron los premios. Index out of bounds: {0}", i );
+					log.LogError( e, msg );
+					throw new JoserrasException( msg );
+				}
+				catch(InvalidOperationException ioe )
+				{
+					string msg = string.Format( "No se pudieron asignaron los premios. Faltó de registrar la Posición: {0}", i );
+					log.LogError( ioe, msg );
+					throw new JoserrasException( msg );
+				}
+				catch(Exception e )
+				{
+					log.LogError( e, e.Message );
+					throw new JoserrasException( "Error desconocido", e );
 				}
 			}
 		}

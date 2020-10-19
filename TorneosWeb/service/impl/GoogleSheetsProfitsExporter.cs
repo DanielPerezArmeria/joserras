@@ -36,7 +36,7 @@ namespace TorneosWeb.service.impl
 			try
 			{
 				GoogleCredential credential =
-							GoogleCredential.FromStream( new FileStream( CredentialFileName, FileMode.Open ) ).CreateScoped( Scopes );
+					GoogleCredential.FromStream( new FileStream( CredentialFileName, FileMode.Open ) ).CreateScoped( Scopes );
 
 				sheetsService = new SheetsService( new BaseClientService.Initializer()
 				{
@@ -56,7 +56,7 @@ namespace TorneosWeb.service.impl
 		public void ExportProfits(List<Torneo> torneos)
 		{
 			torneos.Reverse();
-			cleanRows();
+			CleanRows();
 			InsertProfitData( torneos );
 			log.LogDebug( "Profits Exported successfully!" );
 		}
@@ -148,7 +148,7 @@ namespace TorneosWeb.service.impl
 			return datesRow;
 		}
 
-		private void cleanRows()
+		private void CleanRows()
 		{
 			int rowsToClean = readService.GetAllJugadores().Count + 1;
 
@@ -158,7 +158,7 @@ namespace TorneosWeb.service.impl
 			for(int i = 1; i <= rowsToClean;  i++ )
 			{
 				cellValues = new List<object>();
-				for(int c = 0; c < 2; c++ )
+				for(int c = 0; c < 7; c++ )
 				{
 					cellValues.Add( string.Empty );
 				}

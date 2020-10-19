@@ -171,7 +171,7 @@ table.paleBlueRows tfoot td {
 .statTitle {
 	color: white;
 	text-align:center;
-	padding:10px;
+	padding:5px;
 }
 
 .statCard {
@@ -180,7 +180,7 @@ table.paleBlueRows tfoot td {
 	border-width: 3px;
 	border-color: black;
 	border-radius: 10px 10px 0px 0px;
-	height: 453px;
+	height: 455px;
 	width: 285px;
 	background-color: cornflowerblue;
 }

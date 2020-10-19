@@ -118,7 +118,7 @@ namespace TorneosWeb.service.impl
 
 		public List<Standing> GetStandings(Liga liga)
 		{
-			if(liga == null )
+			if(liga == null || liga.Torneos.Count < 1 )
 			{
 				return new List<Standing>();
 			}

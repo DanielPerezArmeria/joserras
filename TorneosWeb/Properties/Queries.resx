@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="FindLastPlayedTournament" xml:space="preserve">
+    <value>select top 1 t.fecha
+from torneos t, jugadores j, resultados r
+where r.torneo_id = t.id and r.jugador_id = j.id and j.id = '{0}'
+order by fecha desc</value>
+  </data>
   <data name="GetAllKOs" xml:space="preserve">
     <value>select j.nombre, elim.nombre as eliminado, sum(e.eliminaciones) as kos
 from knockouts e, jugadores j, jugadores elim, torneos t
