@@ -17,7 +17,7 @@ namespace TorneosWeb.util.PointRules
 		public override int GetPuntaje(Guid jugadorId, Liga liga, Resultados resultados)
 		{
 			Posicion posicion = resultados.Posiciones.Where( p => p.JugadorId == jugadorId ).First();
-			return points * posicion.Knockouts;
+			return points * posicion.KnockoutsNumber;
 		}
 
 	}

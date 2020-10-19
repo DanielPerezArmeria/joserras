@@ -12,14 +12,14 @@ namespace TorneosWeb.util.tiebreakers
 			int kosXtoY = 0;
 			try
 			{
-				kosXtoY = x.Liga.Estadisticas.Knockouts[ x.Jugador ][ y.Jugador ].Eliminaciones;
+				kosXtoY = x.Liga.Estadisticas.Knockouts[ x.Jugador ][ y.Jugador ].EliminacionesNumber;
 			}
 			catch( Exception ) { }
 
 			int kosYtoX = 0;
 			try
 			{
-				kosYtoX = y.Liga.Estadisticas.Knockouts[ y.Jugador ][ x.Jugador ].Eliminaciones;
+				kosYtoX = y.Liga.Estadisticas.Knockouts[ y.Jugador ][ x.Jugador ].EliminacionesNumber;
 			}
 			catch( Exception ) { }
 

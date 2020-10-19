@@ -137,9 +137,9 @@ namespace TorneosWeb.service.impl
 			ribeyes.Participantes.AddRange( from d in dets where d.Rebuys == mayor select new StatProps( d.Nombre, d.Rebuys.ToString() ) );
 
 			Stat kos = new Stat( "Tyson", "Más KO's", "tyson_t.png" );
-			dets = estadisticas.Detalles.OrderByDescending( p => p.Kos );
-			mayor = dets.First().Kos;
-			kos.Participantes.AddRange( from d in dets where d.Kos == mayor select new StatProps( d.Nombre, d.Kos.ToString() ) );
+			dets = estadisticas.Detalles.OrderByDescending( p => p.KosNumber );
+			mayor = dets.First().KosNumber;
+			kos.Participantes.AddRange( from d in dets where d.KosNumber == mayor select new StatProps( d.Nombre, d.KosNumber.ToString() ) );
 
 			Stat bundy = new Stat( "Al Bundy", "Más últimos lugares", "albundy_t.jpg" );
 			string query = string.Format( Properties.Queries.GetBundy, q );
