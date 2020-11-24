@@ -13,6 +13,7 @@ namespace TorneosWeb.Pages
 		private ILigaReader ligaReader;
 		private ILigaWriter ligaWriter;
 
+		[ViewData]
 		public Liga Liga { get; set; }
 		public string Result { get; private set; }
 
@@ -27,7 +28,6 @@ namespace TorneosWeb.Pages
 		{
 			this.ligaReader = ligaReader;
 			this.ligaWriter = ligaWriter;
-			Liga = ligaReader.GetCurrentLiga();
 		}
 
 		public void OnGet()
