@@ -10,20 +10,28 @@
 </head>
 <body>
 
-	<form enctype="multipart/form-data" method="post">
-		<dl>
-			<dt>
-				<label asp-for="TorneoUpload.FormFiles"></label>
-			</dt>
-			<dd>
-				<input asp-for="TorneoUpload.FormFiles" type="file" multiple />
-				<span asp-validation-for="TorneoUpload.FormFiles"></span>
-			</dd>
-		</dl>
-		<input type="submit" value="Upload" asp-page-handler="Torneo"/>
-	</form>
+	<div style="display:grid">
+		<div style="grid-column:1/span 2">
+			<form enctype="multipart/form-data" method="post">
+				<dl>
+					<dt>
+						<label asp-for="TorneoUpload.FormFiles"></label>
+					</dt>
+					<dd>
+						<input asp-for="TorneoUpload.FormFiles" type="file" multiple />
+						<span asp-validation-for="TorneoUpload.FormFiles"></span>
+					</dd>
+				</dl>
+				<input type="submit" value="Upload" asp-page-handler="Torneo" />
+			</form>
 
-	<p>@Model.Result</p>
+			<p>@Model.Result</p>
+		</div>
+		
+		<form style="grid-column:3" method="post">
+			<button type="submit" asp-page-handler="GenerateBalance">Generar Balance</button>
+		</form>
+	</div>
 
 </body>
 </html>
