@@ -1,16 +1,22 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using TorneosWeb.domain.models;
 using TorneosWeb.exception;
 using TorneosWeb.service;
+using TorneosWeb.util;
 
 namespace TorneosWeb.Pages
 {
 	public class AgregarTorneoModel : PageModel
 	{
 		private IWriteService writeService;
+		private IReadService readService;
+		private IProfitsExporter profitsExporter;
 
 		public string Result { get; private set; }
 
@@ -18,9 +24,11 @@ namespace TorneosWeb.Pages
 		public BufferedMultipleFileUploadPhysical TorneoUpload { get; set; }
 
 
-		public AgregarTorneoModel(IWriteService service)
+		public AgregarTorneoModel(IWriteService service, IReadService readService, IProfitsExporter profitsExporter)
 		{
 			writeService = service;
+			this.readService = readService;
+			this.profitsExporter = profitsExporter;
 		}
 
 		public void OnGet()
@@ -49,7 +57,19 @@ namespace TorneosWeb.Pages
 			return RedirectToPage( "./Torneos" );
 		}
 
+		public IActionResult OnPostGenerateBalance()
+		{
+			DayOfWeek dayOfWeek = DateTime.Now.DayOfWeek;
+			DateTime monday = DateTime.Now.LastWeekMonday();
+			DateTime sunday = DateTime.Now.LastWeekSunday();
+			List<Torneo> torneos = readService.GetAllTorneos().Where( t => monday <= t.FechaDate && t.FechaDate <= sunday ).ToList();
+			profitsExporter.ExportProfits( torneos );
+
+			return Page();
+		}
+
 	}
+
 
 	public class BufferedMultipleFileUploadPhysical
 	{
