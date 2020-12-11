@@ -51,6 +51,7 @@ namespace TorneosWeb.Pages
 
 		public IActionResult OnPostCerrarLiga()
 		{
+			Liga = ligaReader.GetCurrentLiga();
 			string ligaNombre = Liga.Nombre;
 			ligaWriter.CerrarLiga();
 			return RedirectToPage( "./Liga", "Liga", new { nombre = ligaNombre } );
