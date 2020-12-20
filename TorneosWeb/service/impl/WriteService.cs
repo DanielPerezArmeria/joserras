@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using TorneosWeb.domain.dto;
 using TorneosWeb.domain.models;
@@ -45,7 +46,19 @@ namespace TorneosWeb.service.impl
 
 			if(torneo == null || resultados == null || resultados.Count == 0 )
 			{
-				string msg = "Datos incompletos. No se puede agregar el torneo";
+				string msg = string.Empty;
+				if(torneo == null )
+				{
+					msg = "No hay archivo cuyo nombre contenga la palabra 'torneo'";
+				}
+				else if(resultados == null )
+				{
+					msg = "No hay archivo cuyo nombre contenga la palabra 'resultados'";
+				}
+				else
+				{
+					msg = "Los resultados están vacíos";
+				}
 				log.LogError( msg );
 				throw new JoserrasException( msg );
 			}
@@ -70,9 +83,18 @@ namespace TorneosWeb.service.impl
 					cacheService.Clear();
 				}
 			}
-			catch( JoserrasException )
+			catch( JoserrasException je )
 			{
-				throw;
+				log.LogError( je, je.Message );
+				try
+				{
+					uow.Rollback();
+				}
+				catch( Exception xe )
+				{
+					log.LogError( xe, xe.Message );
+				}
+				throw new JoserrasException( je.Message, je );
 			}
 			catch(Exception e )
 			{
@@ -104,23 +126,9 @@ namespace TorneosWeb.service.impl
 
 		private void InsertarNuevosJugadores(List<ResultadosDTO> resultados, TorneoUnitOfWork uow)
 		{
-			List<Jugador> jugadores = readService.GetAllJugadores();
-			List<ResultadosDTO> newPlayers = new List<ResultadosDTO>();
-			string query = "insert into jugadores (nombre) values ('{0}');";
-			foreach( ResultadosDTO dto in resultados )
+			foreach( ResultadosDTO dto in resultados.Where( r => r.Nuevo ) )
 			{
-				if( jugadores.Find( d => d.Nombre == dto.Jugador ) == null )
-				{
-					try
-					{
-						uow.ExecuteNonQuery( query, dto.Jugador );
-					}
-					catch( Exception e )
-					{
-						log.LogError( e, e.Message );
-						throw;
-					}
-				}
+				AddPlayer( dto.Jugador, uow );
 			}
 		}
 
@@ -212,6 +220,48 @@ namespace TorneosWeb.service.impl
 					log.LogError( e, msg );
 					throw new JoserrasException( msg, e );
 				}
+			}
+		}
+
+		private void AddPlayer(string nombre, TorneoUnitOfWork uow)
+		{
+			string query = "insert into jugadores (nombre) values ('{0}')";
+
+			try
+			{
+				uow.ExecuteNonQuery( query, nombre );
+				uow.Commit();
+				cacheService.Clear();
+			}
+			catch( SqlException sqle )
+			{
+				string msg = "";
+				if( sqle.Number == 2627 )
+				{
+					msg = string.Format( "El jugador '{0}' ya existe", nombre );
+					log.LogError( sqle, msg );
+					throw new JoserrasException( msg, sqle );
+				}
+				else
+				{
+					msg = string.Format( "No se pudo agregar el jugador: '{0}'", nombre );
+					log.LogError( sqle, msg );
+					throw new JoserrasException( msg, sqle );
+				}
+			}
+			catch( Exception e )
+			{
+				string msg = string.Format( "No se pudo agregar el jugador: '{0}'", nombre );
+				log.LogError( e, msg );
+				throw new JoserrasException( msg, e );
+			}
+		}
+
+		public void AddPlayer(string nombre)
+		{
+			using(TorneoUnitOfWork uow = new TorneoUnitOfWork( connString ) )
+			{
+				AddPlayer( nombre, uow );
 			}
 		}
 
