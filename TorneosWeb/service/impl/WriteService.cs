@@ -162,10 +162,26 @@ namespace TorneosWeb.service.impl
 					uow.ExecuteNonQuery( query, torneo.Id, dto.Jugador, dto.Rebuys, dto.Posicion,
 							dto.Premio > 0 ? true.ToString() : false.ToString(), dto.Premio, dto.Burbuja.ToString(), dto.Puntualidad.ToString() );
 				}
+				catch(SqlException sqle )
+				{
+					if(sqle.Number == 515 )
+					{
+						string msg = string.Format( "El Jugador '{0}' no existe. No se agregó el torneo.", dto.Jugador );
+						log.LogError( sqle, sqle.Message );
+						throw new JoserrasException( msg, sqle );
+					}
+					else
+					{
+						string msg = string.Format( "No se pudo agregar el resultado del Jugador '{0}'. No se agregó el torneo.", dto.Jugador );
+						log.LogError( sqle, sqle.Message );
+						throw new JoserrasException( msg, sqle );
+					}
+				}
 				catch( Exception e )
 				{
+					string msg = string.Format( "No se pudo agregar el resultado del Jugador '{0}'. No se agregó el torneo.", dto.Jugador );
 					log.LogError( e, e.Message );
-					throw new JoserrasException( e.Message, e );
+					throw new JoserrasException( msg, e );
 				}
 			}
 		}
@@ -189,7 +205,7 @@ namespace TorneosWeb.service.impl
 				}
 				catch( Exception e )
 				{
-					string msg = string.Format( "Error al insertar el KO de '{0}' a '{1}' en la tabla de Knockouts", dto.Jugador, dto.Eliminado );
+					string msg = string.Format( "Error al insertar el KO de '{0}' a '{1}' en la tabla de Knockouts. No se agregó el torneo.", dto.Jugador, dto.Eliminado );
 					log.LogError( e, msg );
 					throw new JoserrasException( msg );
 				}
@@ -216,7 +232,7 @@ namespace TorneosWeb.service.impl
 				}
 				catch( Exception e )
 				{
-					string msg = string.Format( "Error al actualizar la tabla de Resultados con los kos de: '{0}'", t.Item1 );
+					string msg = string.Format( "Error al actualizar la tabla de Resultados con los kos de: '{0}'. No se agregó el torneo", t.Item1 );
 					log.LogError( e, msg );
 					throw new JoserrasException( msg, e );
 				}
