@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Collections.Generic;
 using TorneosWeb.domain.models.ligas;
 using TorneosWeb.service;
@@ -9,6 +10,9 @@ namespace TorneosWeb.Pages
 	{
 		private ILigaReader ligaReader;
 
+		[ViewData]
+		public Liga LigaAbierta { get; set; }
+
 		public List<Liga> Ligas { get; set; }
 
 		public LigasModel(ILigaReader ligaReader)
@@ -18,6 +22,7 @@ namespace TorneosWeb.Pages
 
 		public void OnGet()
 		{
+			LigaAbierta = ligaReader.GetCurrentLiga();
 			Ligas = ligaReader.GetAllLigas();
 		}
 

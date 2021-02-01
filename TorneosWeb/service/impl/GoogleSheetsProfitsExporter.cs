@@ -158,7 +158,7 @@ namespace TorneosWeb.service.impl
 			for(int i = 1; i <= rowsToClean;  i++ )
 			{
 				cellValues = new List<object>();
-				for(int c = 0; c < 7; c++ )
+				for(int c = 0; c < 8; c++ )
 				{
 					cellValues.Add( string.Empty );
 				}

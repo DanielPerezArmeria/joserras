@@ -44,8 +44,18 @@
 						<li class="nav-item">
 							<a class="nav-link text-dark" asp-area="" asp-page="/Torneos">Torneos</a>
 						</li>
+						<li class="nav-item">
+							<a class="nav-link text-dark" asp-area="" asp-page="/AgregarTorneo">Agregar Torneo</a>
+						</li>
+						@if( ViewData[ "LigaAbierta" ] == null )
+						{
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-page="/AgregarLiga">Agregar Liga</a>
+							</li>
+						}
 					</ul>
 				</div>
+
 			</div>
 		</nav>
 	</header>
