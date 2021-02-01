@@ -235,9 +235,18 @@ namespace TorneosWeb.service.impl
 				string query = string.Format( Properties.Queries.GetDetalleJugador, playerId );
 				joserrasQuery.ExecuteQuery( conn, query, reader =>
 				{
-					reader.Read();
-					detalle = mapper.Map<DetalleJugador>( reader );
+					if( reader.HasRows )
+					{
+						reader.Read();
+						detalle = mapper.Map<DetalleJugador>( reader );
+					}
 				} );
+
+				// Si el Detalle es nulo, es que el jugador no ha jugado ningún torneo
+				if(detalle == null )
+				{
+					query = "select * from jugadores where id = '{0}'";
+				}
 
 				//Encontrar profits de ligas
 				query = string.Format("select sum(premio) as premio_liga from puntos_torneo_liga where jugador_id = '{0}'", playerId.ToString());

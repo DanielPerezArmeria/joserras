@@ -6,6 +6,8 @@ namespace TorneosWeb.service
 	public interface IWriteService
 	{
 		void uploadTournament(List<IFormFile> torneos);
+
+		void AddPlayer(string nombre);
 	}
 
 }
