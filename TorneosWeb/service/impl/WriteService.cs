@@ -44,6 +44,11 @@ namespace TorneosWeb.service.impl
 			List<ResultadosDTO> resultados = tourneyReader.GetFormFileItems<ResultadosDTO>( files.Find( t => t.FileName.Contains( "resultados" ) ) ).ToList();
 			List<KnockoutsDTO> kos = tourneyReader.GetFormFileItems<KnockoutsDTO>( files.Find( t => t.FileName.Contains( "knockouts" ) ) ).ToList();
 
+			kos =
+				(from ko in kos group ko by new { ko.Jugador, ko.Eliminado }
+				into grp select new KnockoutsDTO( grp.Key.Jugador, grp.Key.Eliminado, grp.Sum( k => k.Eliminaciones ) )
+				).ToList();
+			
 			if(torneo == null || resultados == null || resultados.Count == 0 )
 			{
 				string msg = string.Empty;
