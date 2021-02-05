@@ -39,6 +39,11 @@ namespace TorneosWeb.util
 			return sunday;
 		}
 
+		public static decimal ToDecimal(this string str)
+		{
+			return decimal.Parse( str );
+		}
+
 	}
 
 }

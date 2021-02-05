@@ -30,7 +30,7 @@ namespace TorneosWeb.service.impl
 
 		public void SetPremiosTorneo(TorneoDTO torneo, List<ResultadosDTO> resultados)
 		{
-			if( resultados.Any( r => r.Premio > 0 ) )
+			if( resultados.Any( r => r.Premio.ToDecimal() > 0 ) )
 			{
 				return;
 			}
@@ -66,12 +66,12 @@ namespace TorneosWeb.service.impl
 					if( premio.Contains( '%' ) )
 					{
 						decimal factor = decimal.Parse( premio.Replace( "%", "" ) ) / 100;
-						res.Premio = bolsa * factor;
+						res.Premio = (bolsa * factor).ToString();
 					}
 					else
 					{
-						res.Premio = decimal.Parse( premio );
-						bolsa -= res.Premio;
+						res.Premio = premio;
+						bolsa -= res.Premio.ToDecimal();
 					}
 				}
 				catch( ArgumentOutOfRangeException e )
