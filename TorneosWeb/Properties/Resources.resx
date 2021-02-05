@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="BALANCE_SHEET" xml:space="preserve">
+    <value>https://docs.google.com/spreadsheets/d/1fWhxbneW19urTN7RFMaTRtycIB32X6C4LPM9QGzDY-w/edit?usp=sharing</value>
+  </data>
   <data name="joserrasDb" xml:space="preserve">
     <value>joserrasDb</value>
   </data>

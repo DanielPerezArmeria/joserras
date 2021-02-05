@@ -19,6 +19,7 @@ namespace TorneosWeb.Pages
 		private IProfitsExporter profitsExporter;
 
 		public string Result { get; private set; }
+		public string BalanceSheet { get; set; }
 
 		[BindProperty]
 		public BufferedMultipleFileUploadPhysical TorneoUpload { get; set; }
@@ -29,6 +30,8 @@ namespace TorneosWeb.Pages
 			writeService = service;
 			this.readService = readService;
 			this.profitsExporter = profitsExporter;
+
+			BalanceSheet = Properties.Resources.BALANCE_SHEET;
 		}
 
 		public void OnGet()

@@ -22,7 +22,7 @@ namespace TorneosWeb.service.impl
 		private IProfitsExporter profitsExporter;
 		private IPrizeService prizeService;
 
-		private string connString;
+		private readonly string connString;
 
 
 		public WriteService(IReadService service, ICacheService cacheService, IConfiguration config, IProfitsExporter profitsExporter,

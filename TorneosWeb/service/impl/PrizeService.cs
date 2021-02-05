@@ -12,7 +12,7 @@ namespace TorneosWeb.service.impl
 {
 	public class PrizeService : IPrizeService
 	{
-		private string ConnString;
+		private readonly string ConnString;
 		private JoserrasQuery joserrasQuery;
 		private ILigaReader ligaReader;
 		private ILogger<PrizeService> log;
