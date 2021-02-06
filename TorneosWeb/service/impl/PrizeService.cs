@@ -59,14 +59,27 @@ namespace TorneosWeb.service.impl
 				try
 				{
 					ResultadosDTO res = resultados.First( r => r.Posicion == i );
-					string premio = string.IsNullOrEmpty(res.Premio) ? premios.ElementAt( i - 1 ) : res.Premio;
+					string premio = res.Premio.IsNullEmptyOrZero() ? premios.ElementAt( i - 1 ) : res.Premio;
 					if( premio.Contains( '%' ) )
 					{
 						decimal factor = decimal.Parse( premio.Replace( "%", "" ) ) / 100;
 						res.Premio = (bolsa * factor).ToString();
 					}
+					else if( premio.Contains( 'x' ) )
+					{
+						decimal factor = decimal.Parse( premio.Replace( "x", "" ) );
+						res.Premio = (torneo.PrecioBuyin * factor).ToString();
+						bolsa -= res.Premio.ToDecimal();
+					}
+					else if( premio.Contains( 'p' ) )
+					{
+						decimal factor = decimal.Parse( premio.Replace( "p", "" ) ) / 100;
+						res.Premio = (bolsa * factor).ToString();
+						bolsa -= res.Premio.ToDecimal();
+					}
 					else
 					{
+						res.Premio = premio;
 						bolsa -= res.Premio.ToDecimal();
 					}
 				}

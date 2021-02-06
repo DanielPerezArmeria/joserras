@@ -44,6 +44,15 @@ namespace TorneosWeb.util
 			return decimal.Parse( str );
 		}
 
+		public static bool IsNullEmptyOrZero(this string str)
+		{
+			if( string.IsNullOrEmpty( str ) || str.Equals("0") )
+			{
+				return true;
+			}
+			return false;
+		}
+
 	}
 
 }
