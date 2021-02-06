@@ -78,7 +78,7 @@ namespace TorneosWeb.service.impl
 		{
 			// Quita los jugadores q han jugado menos del 10% de los juegos
 			int maxTorneos = estadisticas.Detalles.Max( d => d.Torneos );
-			List<Guid> jugadoresMenosDiezPorCiento = estadisticas.Detalles.Where( d => d.Torneos >= maxTorneos / 10 ).Select( d => d.Id ).ToList();
+			List<Guid> jugadoresMenosDiezPorCiento = estadisticas.Detalles.Where( d => d.Torneos < maxTorneos / 10 ).Select( d => d.Id ).ToList();
 
 			// Quita los jugadores q no han jugado en 2 meses
 			List<Guid> jugadoresInactividad = new List<Guid>();
