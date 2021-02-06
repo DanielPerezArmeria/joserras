@@ -10,14 +10,14 @@ namespace TorneosWeb.domain.dto
 		public string Jugador { get; set; }
 		public int Posicion { get; set; }
 
-		[Default( 0)]
+		[Default( 0 )]
 		public int Rebuys { get; set; }
 
 		[Default( false )]
 		public bool Podio { get; set; }
 
-		[Default( 0 )]
-		public decimal Premio { get; set; }
+		[Default( "0" )]
+		public string Premio { get; set; }
 
 		[Default( false )]
 		public bool Burbuja { get; set; }

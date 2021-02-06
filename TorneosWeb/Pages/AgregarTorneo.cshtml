@@ -28,9 +28,13 @@
 			<p>@Model.Result</p>
 		</div>
 		
-		<form style="grid-column:3" method="post">
-			<button type="submit" asp-page-handler="GenerateBalance">Generar Balance</button>
-		</form>
+		<div style="grid-column:3">
+			<form method="post">
+				<button type="submit" asp-page-handler="GenerateBalance">Generar Balance</button>
+			</form>
+			<a href="@Model.BalanceSheet" target="_blank">Hoja de Balance</a>
+		</div>
+		
 	</div>
 
 </body>

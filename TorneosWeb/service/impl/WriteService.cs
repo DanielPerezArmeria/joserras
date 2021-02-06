@@ -22,7 +22,7 @@ namespace TorneosWeb.service.impl
 		private IProfitsExporter profitsExporter;
 		private IPrizeService prizeService;
 
-		private string connString;
+		private readonly string connString;
 
 
 		public WriteService(IReadService service, ICacheService cacheService, IConfiguration config, IProfitsExporter profitsExporter,
@@ -165,7 +165,7 @@ namespace TorneosWeb.service.impl
 				try
 				{
 					uow.ExecuteNonQuery( query, torneo.Id, dto.Jugador, dto.Rebuys, dto.Posicion,
-							dto.Premio > 0 ? true.ToString() : false.ToString(), dto.Premio, dto.Burbuja.ToString(), dto.Puntualidad.ToString() );
+							dto.Premio.ToDecimal() > 0 ? true.ToString() : false.ToString(), dto.Premio.ToDecimal(), dto.Burbuja.ToString(), dto.Puntualidad.ToString() );
 				}
 				catch(SqlException sqle )
 				{
@@ -193,7 +193,7 @@ namespace TorneosWeb.service.impl
 
 		private void SetBurbuja(List<ResultadosDTO> resultados)
 		{
-			int bubblePosition = resultados.Where( r => r.Premio > 0 ).Max( r => r.Posicion ) + 1;
+			int bubblePosition = resultados.Where( r => r.Premio.ToDecimal() > 0 ).Max( r => r.Posicion ) + 1;
 			resultados.First( r => r.Posicion == bubblePosition ).Burbuja = true;
 		}
 

@@ -78,9 +78,10 @@ namespace TorneosWeb.service.impl
 		{
 			// Quita los jugadores q han jugado menos del 10% de los juegos
 			int maxTorneos = estadisticas.Detalles.Max( d => d.Torneos );
-			estadisticas.Detalles = estadisticas.Detalles.Where( d => d.Torneos >= maxTorneos / 10 ).ToList();
+			List<Guid> jugadoresMenosDiezPorCiento = estadisticas.Detalles.Where( d => d.Torneos >= maxTorneos / 10 ).Select( d => d.Id ).ToList();
 
 			// Quita los jugadores q no han jugado en 2 meses
+			List<Guid> jugadoresInactividad = new List<Guid>();
 			foreach( DetalleJugador det in estadisticas.Detalles.ToList() )
 			{
 				string qu = string.Format( Queries.FindLastPlayedTournament, det.Id );
@@ -91,11 +92,13 @@ namespace TorneosWeb.service.impl
 						DateTime lastTourney = (DateTime)reader[ "fecha" ];
 						if( (lastDate - lastTourney).TotalDays > 60 )
 						{
-							estadisticas.Detalles.Remove( det );
+							jugadoresInactividad.Add( det.Id );
 						}
 					}
 				} );
 			}
+
+			estadisticas.Detalles.RemoveAll( d => jugadoresMenosDiezPorCiento.Contains( d.Id ) && jugadoresInactividad.Contains( d.Id ) );
 		}
 
 		private Estadisticas GetStats(Estadisticas estadisticas, string q, SqlConnection conn)
@@ -103,6 +106,10 @@ namespace TorneosWeb.service.impl
 			estadisticas.Jugadores = new SortedSet<string>( from e in estadisticas.Detalles orderby e.Nombre ascending select e.Nombre );
 
 			estadisticas.Stats = new List<Stat>();
+			if(estadisticas.Detalles.Count < 1 )
+			{
+				return estadisticas;
+			}
 
 			Stat joserramon = new Stat( "Joserramón", "Más Profit", "joseramon_t.png" );
 			joserramon.Participantes.Add( new StatProps( estadisticas.Detalles[ 0 ].Nombre, estadisticas.Detalles[ 0 ].Profit,
