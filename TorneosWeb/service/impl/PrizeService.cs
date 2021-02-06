@@ -30,11 +30,6 @@ namespace TorneosWeb.service.impl
 
 		public void SetPremiosTorneo(TorneoDTO torneo, List<ResultadosDTO> resultados)
 		{
-			if( resultados.Any( r => r.Premio.ToDecimal() > 0 ) )
-			{
-				return;
-			}
-
 			if(PrizeRanges.Count == 0 )
 			{
 				FillPrizeRanges();
@@ -50,19 +45,21 @@ namespace TorneosWeb.service.impl
 				bolsa = bolsa - ( liga.Fee * entradas );
 			}
 
-			FillPrizes( resultados, selectedRange, bolsa );
+			FillPrizes( torneo, resultados, selectedRange, bolsa );
 		}
 
-		private void FillPrizes(List<ResultadosDTO> resultados, PrizeRangeDto selectedRange, decimal bolsa)
+		private void FillPrizes(TorneoDTO torneo, List<ResultadosDTO> resultados, PrizeRangeDto selectedRange, decimal bolsa)
 		{
-			IEnumerable<string> premios = selectedRange.Premiacion.Split( "-" );
+			IEnumerable<string> premios = string.IsNullOrEmpty( torneo.Premiacion ) ?
+					selectedRange.Premiacion.Split( "-" ) : torneo.Premiacion.Split( "-" );
+
 			int placesAwarded = premios.Count();
 			for( int i = placesAwarded; i > 0; i-- )
 			{
 				try
 				{
-					string premio = premios.ElementAt( i - 1 );
 					ResultadosDTO res = resultados.First( r => r.Posicion == i );
+					string premio = string.IsNullOrEmpty(res.Premio) ? premios.ElementAt( i - 1 ) : res.Premio;
 					if( premio.Contains( '%' ) )
 					{
 						decimal factor = decimal.Parse( premio.Replace( "%", "" ) ) / 100;
@@ -70,7 +67,6 @@ namespace TorneosWeb.service.impl
 					}
 					else
 					{
-						res.Premio = premio;
 						bolsa -= res.Premio.ToDecimal();
 					}
 				}
