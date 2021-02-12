@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using TorneosWeb.domain.models.ligas;
 using TorneosWeb.service;
 
@@ -10,7 +11,10 @@ namespace TorneosWeb.Pages
 		private IReadService readService;
 		private IStatsService statsService;
 
-		public Liga Liga { get; set; }
+		public Liga CurrentLiga { get; set; }
+
+		[ViewData]
+		public Liga LigaAbierta { get; set; }
 
 		public LigaModel(ILigaReader ligaReader, IReadService readService, IStatsService statsService)
 		{
@@ -21,8 +25,9 @@ namespace TorneosWeb.Pages
 
 		public void OnGetLiga(string nombre)
 		{
-			Liga = ligaReader.FindLigaByNombre( nombre );
-			if( Liga == null )
+			CurrentLiga = ligaReader.FindLigaByNombre( nombre );
+			LigaAbierta = ligaReader.GetCurrentLiga();
+			if( CurrentLiga == null )
 			{
 				RedirectToPage( "/Ligas" );
 			}
@@ -30,8 +35,9 @@ namespace TorneosWeb.Pages
 
 		public void OnGetCurrent()
 		{
-			Liga = ligaReader.GetCurrentLiga();
-			if(Liga == null )
+			CurrentLiga = ligaReader.GetCurrentLiga();
+			LigaAbierta = CurrentLiga;
+			if(CurrentLiga == null )
 			{
 				RedirectToPage( "/Ligas" );
 			}

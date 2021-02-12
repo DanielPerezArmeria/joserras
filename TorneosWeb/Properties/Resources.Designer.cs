@@ -61,6 +61,15 @@ namespace TorneosWeb.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://docs.google.com/spreadsheets/d/1fWhxbneW19urTN7RFMaTRtycIB32X6C4LPM9QGzDY-w/edit?usp=sharing.
+        /// </summary>
+        internal static string BALANCE_SHEET {
+            get {
+                return ResourceManager.GetString("BALANCE_SHEET", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to joserrasDb.
         /// </summary>
         internal static string joserrasDb {

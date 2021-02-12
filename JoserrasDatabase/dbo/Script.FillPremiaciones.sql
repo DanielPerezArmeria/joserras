@@ -13,4 +13,4 @@ Post-Deployment Script Template
 insert into premiaciones (rango_entradas, premiacion) values ('1-4', '100%');
 insert into premiaciones (rango_entradas, premiacion) values ('5-9', '70%-30%');
 insert into premiaciones (rango_entradas, premiacion) values ('10-26', '55%-30%-15%');
-insert into premiaciones (rango_entradas, premiacion) values ('27', '55%-30%-15%-1100');
+insert into premiaciones (rango_entradas, premiacion) values ('27', '55%-30%-15%-2x');

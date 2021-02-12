@@ -13,7 +13,7 @@ namespace TorneosWeb.service.impl
 {
 	public class ReadServiceImpl : IReadService
 	{
-		private string connString;
+		private readonly string connString;
 		private IMapper mapper;
 		private JoserrasQuery joserrasQuery;
 
@@ -32,9 +32,11 @@ namespace TorneosWeb.service.impl
 			{
 				while( reader.Read() )
 				{
-					Jugador jugador = new Jugador();
-					jugador.Id = reader.GetGuid( 0 );
-					jugador.Nombre = reader.GetString( 1 );
+					Jugador jugador = new Jugador
+					{
+						Id = reader.GetGuid( 0 ),
+						Nombre = reader.GetString( 1 )
+					};
 					jugadores.Add( jugador );
 				}
 			} );
@@ -235,9 +237,18 @@ namespace TorneosWeb.service.impl
 				string query = string.Format( Properties.Queries.GetDetalleJugador, playerId );
 				joserrasQuery.ExecuteQuery( conn, query, reader =>
 				{
-					reader.Read();
-					detalle = mapper.Map<DetalleJugador>( reader );
+					if( reader.HasRows )
+					{
+						reader.Read();
+						detalle = mapper.Map<DetalleJugador>( reader );
+					}
 				} );
+
+				// Si el Detalle es nulo, es que el jugador no ha jugado ningún torneo
+				if(detalle == null )
+				{
+					detalle = new DetalleJugador();
+				}
 
 				//Encontrar profits de ligas
 				query = string.Format("select sum(premio) as premio_liga from puntos_torneo_liga where jugador_id = '{0}'", playerId.ToString());

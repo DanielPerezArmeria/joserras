@@ -1,0 +1,11 @@
+﻿@page
+@model TorneosWeb.Pages.AgregarJugadorModel
+
+<h1>Agregar Jugador</h1>
+
+<form method="post">
+	<input type="text" asp-for="Nombre" />
+	<input type="submit" value="Agregar"/>
+</form>
+
+<p>@Model.Result</p>
