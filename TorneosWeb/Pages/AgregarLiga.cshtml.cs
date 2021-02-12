@@ -46,7 +46,7 @@ namespace TorneosWeb.Pages
 			ligaWriter.AgregarNuevaLiga( LigaUpload.FormFile );
 
 			Result = null;
-			return RedirectToPage( "./AgregarLiga" );
+			return RedirectToPage( "/Liga", "Current" );
 		}
 
 		public IActionResult OnPostCerrarLiga()
