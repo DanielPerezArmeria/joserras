@@ -220,11 +220,11 @@ namespace TorneosWeb.service.impl
 
 			// Insertar kos y bounties
 			query = @"update resultados set premio_bounties = {0}, kos = {1} where torneo_id = '{2}' and jugador_id = (select id from jugadores where nombre = '{3}')";
-			IEnumerable<Tuple<string, int>> tuples =
-				kos.GroupBy( k => k.Jugador ).Select( s => new Tuple<string, int>( s.First().Jugador, s.Sum( c => c.Eliminaciones ) ) );
-			foreach( Tuple<string, int> t in tuples )
+			IEnumerable<Tuple<string, decimal>> tuples =
+				kos.GroupBy( k => k.Jugador ).Select( s => new Tuple<string, decimal>( s.First().Jugador, s.Sum( c => c.Eliminaciones ) ) );
+			foreach( Tuple<string, decimal> t in tuples )
 			{
-				int bountyPrice = t.Item2 * torneo.PrecioBounty;
+				decimal bountyPrice = t.Item2 * torneo.PrecioBounty;
 				if(torneo.Tipo == TournamentType.BOUNTY && t.Item1 == firstPlace.Jugador )
 				{
 					bountyPrice += torneo.PrecioBounty;

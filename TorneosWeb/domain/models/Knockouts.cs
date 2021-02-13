@@ -10,7 +10,7 @@ namespace TorneosWeb.domain.models
 		public decimal EliminacionesNumber { get; set; }
 		public string Eliminaciones
 		{
-			get { return decimal.Ceiling(EliminacionesNumber).ToString( Constants.KOS_FORMAT ); }
+			get { return EliminacionesNumber.ToString( Constants.KOS_FORMAT ); }
 		}
 
 	}

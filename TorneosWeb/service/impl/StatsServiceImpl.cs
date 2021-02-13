@@ -146,10 +146,12 @@ namespace TorneosWeb.service.impl
 			Stat kos = new Stat( "Tyson", "Más KO's", "tyson_t.png" );
 			dets = estadisticas.Detalles.OrderByDescending( p => p.KosNumber );
 			mayor = dets.First().KosNumber;
-			kos.Participantes.AddRange( from d in dets where d.KosNumber == mayor select new StatProps( d.Nombre, d.KosNumber.ToString() ) );
+			kos.Participantes.AddRange( from d in dets
+																	where d.KosNumber == mayor
+																	select new StatProps( d.Nombre, d.KosNumber.ToString( Constants.KOS_FORMAT ) ) );
 
 			Stat bundy = new Stat( "Al Bundy", "Más últimos lugares", "albundy_t.jpg" );
-			string query = string.Format( Properties.Queries.GetBundy, q );
+			string query = string.Format( Queries.GetBundy, q );
 			Dictionary<string, int> bundies = new Dictionary<string, int>();
 			joserrasQuery.ExecuteQuery( conn, query, reader =>
 			{
@@ -162,7 +164,7 @@ namespace TorneosWeb.service.impl
 			bundy.Participantes.AddRange( from p in bundies where p.Value == mayor select new StatProps( p.Key, p.Value.ToString() ) );
 
 			Stat bubbleBoy = new Stat( "Eterno 4to", "Más burbujas", "bubbleboy_t.png" );
-			query = string.Format( Properties.Queries.GetBurbuja, q );
+			query = string.Format( Queries.GetBurbuja, q );
 			Dictionary<string, int> burbujas = new Dictionary<string, int>();
 			joserrasQuery.ExecuteQuery( conn, query, reader =>
 			{
@@ -175,20 +177,22 @@ namespace TorneosWeb.service.impl
 			bubbleBoy.Participantes.AddRange( from b in burbujas where b.Value == mayor select new StatProps( b.Key, b.Value.ToString() ) );
 
 			Stat sniper = new Stat( "Sniper", "Más KO's a un jugador", "sniper_t.png" );
-			query = string.Format( Properties.Queries.GetAllKOs, q );
-			List<Tuple<string, string, int>> tuples = new List<Tuple<string, string, int>>();
+			query = string.Format( Queries.GetAllKOs, q );
+			List<Tuple<string, string, decimal>> tuples = new List<Tuple<string, string, decimal>>();
 			joserrasQuery.ExecuteQuery( conn, query, reader =>
 			{
 				while( reader.Read() )
 				{
-					tuples.Add( new Tuple<string, string, int>( reader.GetString( 0 ), reader.GetString( 1 ), reader.GetInt32( 2 ) ) );
+					tuples.Add( new Tuple<string, string, decimal>( reader.GetString( 0 ), reader.GetString( 1 ), reader.GetDecimal( 2 ) ) );
 				}
 			} );
 			mayor = tuples.Aggregate( (pair1, pair2) => pair1.Item3 > pair2.Item3 ? pair1 : pair2 ).Item3;
-			sniper.Participantes.AddRange( from t in tuples where t.Item3 == mayor select new StatProps( t.Item1 + " a " + t.Item2, t.Item3.ToString() ) );
+			sniper.Participantes.AddRange( from t in tuples
+																		 where t.Item3 == mayor
+																		 select new StatProps( t.Item1 + " a " + t.Item2, t.Item3.ToString( Constants.KOS_FORMAT ) ) );
 
 			Stat piedra = new Stat( "Piedra de la Victoria", "Más podios negativos", "piedra_t.png" );
-			query = string.Format( Properties.Queries.GetPodiosNegativos, q );
+			query = string.Format( Queries.GetPodiosNegativos, q );
 			Dictionary<string, int> props = new Dictionary<string, int>();
 			joserrasQuery.ExecuteQuery( conn, query, reader =>
 			{

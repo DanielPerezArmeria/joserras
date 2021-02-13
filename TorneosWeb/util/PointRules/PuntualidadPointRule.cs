@@ -9,12 +9,12 @@ namespace TorneosWeb.util.PointRules
 	{
 		public PuntualidadPointRule(string Params)
 		{
-			points = int.Parse( Params );
+			points = decimal.Parse( Params );
 		}
 
 		public override PointRuleType Type => PointRuleType.PUNTUALIDAD;
 
-		public override int GetPuntaje(Guid jugadorId, Liga liga, Resultados resultados)
+		public override decimal GetPuntaje(Guid jugadorId, Liga liga, Resultados resultados)
 		{
 			Posicion posicion = resultados.Posiciones.Where( p => p.JugadorId == jugadorId ).First();
 			if( posicion.Puntualidad )

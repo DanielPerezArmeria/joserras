@@ -10,17 +10,17 @@ namespace TorneosWeb.util.PointRules
 	{
 		public abstract PointRuleType Type { get; }
 
-		protected int points;
+		protected decimal points;
 
-		public int Puntos => points;
+		public decimal Puntos => points;
 
-		public abstract int GetPuntaje(Guid jugadorId, Liga liga, Resultados resultados);
+		public abstract decimal GetPuntaje(Guid jugadorId, Liga liga, Resultados resultados);
 
 		public virtual string Descripcion
 		{
 			get
 			{
-				return Type.ToString() + ": " + "punto".ToQuantity(Puntos);
+				return Type.ToString() + ": " + "punto".ToQuantity( Convert.ToInt32( decimal.Ceiling( Puntos ) ) );
 			}
 		}
 

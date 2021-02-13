@@ -14,11 +14,11 @@ namespace TorneosWeb.service.impl
 {
 	public class LigaReader : ILigaReader
 	{
-		private IConfiguration conf;
+		private readonly IConfiguration conf;
 		private IMapper mapper;
 		private JoserrasQuery joserrasQuery;
-		private ILogger<LigaReader> Log;
-		private string ConnString;
+		private readonly ILogger<LigaReader> Log;
+		private readonly string ConnString;
 		private IReadService readService;
 		private IStatsService statsService;
 
@@ -136,17 +136,24 @@ namespace TorneosWeb.service.impl
 					}
 					else
 					{
-						standing = new Standing();
-						standing.Liga = liga;
-						standing.Jugador = pos.Nombre;
-						standing.JugadorId = pos.JugadorId;
+						standing = new Standing
+						{
+							Liga = liga,
+							Jugador = pos.Nombre,
+							JugadorId = pos.JugadorId
+						};
 						standings.Add( pos.Nombre, standing );
 					}
 					
 					foreach(KeyValuePair<string,PointRule> rule in liga.PointRules )
 					{
-						standing.Puntos.TryGetValue(rule.Value.Type, out int p );
-						standing.Puntos[ rule.Value.Type ] = rule.Value.GetPuntaje( pos.JugadorId, liga, results ) + p;
+						standing.Puntos.TryGetValue(rule.Value.Type, out KODecimal p );
+						if(p == null )
+						{
+							p = new KODecimal();
+							standing.Puntos[ rule.Value.Type ] = p;
+						}
+						p.Value += rule.Value.GetPuntaje( pos.JugadorId, liga, results );
 					}
 				}
 			}
@@ -189,14 +196,16 @@ namespace TorneosWeb.service.impl
 			Resultados results = readService.FindResultadosTorneo( torneo.Id );
 			foreach( Posicion pos in results.Posiciones )
 			{
-				Standing standing = new Standing();
-				standing.Liga = liga;
-				standing.Jugador = pos.Nombre;
-				standing.JugadorId = pos.JugadorId;
+				Standing standing = new Standing
+				{
+					Liga = liga,
+					Jugador = pos.Nombre,
+					JugadorId = pos.JugadorId
+				};
 
 				foreach( KeyValuePair<string, PointRule> rule in liga.PointRules )
 				{
-					standing.Puntos.TryGetValue( rule.Value.Type, out int p );
+					standing.Puntos.TryGetValue( rule.Value.Type, out KODecimal p );
 					standing.Puntos[ rule.Value.Type ] = rule.Value.GetPuntaje( pos.JugadorId, liga, results ) + p;
 				}
 

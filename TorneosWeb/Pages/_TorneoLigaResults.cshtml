@@ -1,4 +1,5 @@
 ﻿@model List<TorneosWeb.domain.models.ligas.Standing>
+@using TorneosWeb.util
 @*
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 *@
@@ -40,12 +41,12 @@
 					@Html.DisplayFor( item => standing.Jugador )
 				</td>
 				<td style="font-weight:bold;text-align:center;font-size:larger">
-					@Html.DisplayFor( item => standing.Total )
+					@Html.DisplayFor( item => standing.TotalString )
 				</td>
 				@foreach( var rule in standing.Puntos )
 				{
 					<td style="text-align:center">
-						@Html.DisplayFor( item => rule.Value )
+						@Html.DisplayFor( item => rule.Value.Valor )
 					</td>
 				}
 				<td class="profit" style="text-align:right;margin-right:10em;color:@(standing.ProfitNumber < 0 ? "red" : "black")">

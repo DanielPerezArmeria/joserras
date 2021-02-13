@@ -6,7 +6,7 @@ namespace TorneosWeb.domain.dto
 	{
 		public KnockoutsDTO() { }
 
-		public KnockoutsDTO(string jugador, string eliminado, int kos)
+		public KnockoutsDTO(string jugador, string eliminado, decimal kos)
 		{
 			Jugador = jugador;
 			Eliminado = eliminado;
