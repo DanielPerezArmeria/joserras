@@ -21,7 +21,13 @@ namespace TorneosWeb.domain.models
 		public int Rebuys { get; set; }
 		public string Burbuja { get; set; }
 
-		public int Knockouts { get; set; }
+		public decimal KnockoutsNumber { get; set; }
+
+		[NoMap]
+		public string Knockouts
+		{
+			get { return KnockoutsNumber.ToString( Constants.KOS_FORMAT ); }
+		}
 
 		[NoMap]
 		public string Profit { get { return ProfitNumber != 0 ? ProfitNumber.ToString( Constants.CURRENCY_FORMAT ) : "$0"; } }

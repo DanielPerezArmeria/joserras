@@ -11,7 +11,6 @@
 			IsPositive = true;
 		}
 
-
 		public StatProps(string nombre, string valor)
 		{
 			Nombre = nombre;

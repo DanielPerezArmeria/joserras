@@ -23,7 +23,7 @@ namespace TorneosWeb.util.PointRules
 
 		public override PointRuleType Type => PointRuleType.POSICION;
 
-		public override int GetPuntaje(Guid jugadorId, Liga liga, Resultados resultados)
+		public override decimal GetPuntaje(Guid jugadorId, Liga liga, Resultados resultados)
 		{
 			Posicion posicion = resultados.Posiciones.Where( p => p.JugadorId == jugadorId ).First();
 			if( puntos.ContainsKey( posicion.Lugar ) )

@@ -9,15 +9,15 @@ namespace TorneosWeb.util.PointRules
 	{
 		public KosPointRule(string Params)
 		{
-			points = int.Parse( Params );
+			points = decimal.Parse( Params );
 		}
 
 		public override PointRuleType Type => PointRuleType.KO;
 
-		public override int GetPuntaje(Guid jugadorId, Liga liga, Resultados resultados)
+		public override decimal GetPuntaje(Guid jugadorId, Liga liga, Resultados resultados)
 		{
 			Posicion posicion = resultados.Posiciones.Where( p => p.JugadorId == jugadorId ).First();
-			return points * posicion.Knockouts;
+			return points * posicion.KnockoutsNumber;
 		}
 
 	}

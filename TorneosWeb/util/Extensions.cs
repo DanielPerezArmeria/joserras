@@ -53,6 +53,11 @@ namespace TorneosWeb.util
 			return false;
 		}
 
+		public static string ToPoints(this decimal dec)
+		{
+			return dec.ToString( Constants.POINTS_FORMAT );
+		}
+
 	}
 
 }

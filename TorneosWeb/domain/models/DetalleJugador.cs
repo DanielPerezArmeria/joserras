@@ -59,8 +59,15 @@ namespace TorneosWeb.domain.models
 			get { return CostosNumber.ToString( Constants.CURRENCY_FORMAT ); }
 		}
 		public int CostosNumber { get; set; }
-		[Display(Name = "KO's")]
-		public int Kos { get; set; }
+
+		public decimal KosNumber { get; set; }
+
+		[Display( Name = "KO's" )]
+		[NoMap]
+		public string Kos
+		{
+			get { return  KosNumber.ToString( Constants.KOS_FORMAT ); }
+		}
 
 		[NoMap]
 		public string ROI

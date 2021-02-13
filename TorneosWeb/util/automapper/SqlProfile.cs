@@ -30,14 +30,14 @@ namespace TorneosWeb.util.automapper
 				.ForMember( dest => dest.Burbuja, opt => opt.MapFrom( src => (bool)src[ "burbuja" ] ? "Burbuja" : "-" ) )
 				.ForMember( dest => dest.Nombre, opt => opt.MapFrom( src => src.GetFieldValue<string>( src.GetOrdinal( "nombre" ) ) ) )
 				.ForMember( dest => dest.PremioBountiesNumber, opt => opt.MapFrom( src => src.GetFieldValue<int>( src.GetOrdinal( "premio_bounties" ) ) ) )
-				.ForMember( dest => dest.Knockouts, opt => opt.MapFrom( src => src.GetFieldValue<int>( src.GetOrdinal( "kos" ) ) ) )
+				.ForMember( dest => dest.KnockoutsNumber, opt => opt.MapFrom( src => src.GetFieldValue<decimal>( src.GetOrdinal( "kos" ) ) ) )
 				.ForMember( dest => dest.Puntualidad, opt => opt.MapFrom( src => src.GetFieldValue<bool>( src.GetOrdinal( "puntualidad" ) ) ) )
 				.IgnoreNoMap();
 
 			CreateMap<SqlDataReader, Knockouts>()
 				.ForMember( dest => dest.Nombre, opt => opt.MapFrom( src => src.GetString( 0 ) ) )
 				.ForMember( dest => dest.Eliminado, opt => opt.MapFrom( src => src.GetString( 1 ) ) )
-				.ForMember( dest => dest.Eliminaciones, opt => opt.MapFrom( src => src.GetInt32( 2 ) ) );
+				.ForMember( dest => dest.EliminacionesNumber, opt => opt.MapFrom( src => src.GetDecimal( 2 ) ) );
 
 			CreateMap<SqlDataReader, DetalleJugador>()
 				.ForMember( dest => dest.Id, opt => opt.MapFrom( src => src.GetGuid( 0 ) ) )
@@ -47,7 +47,7 @@ namespace TorneosWeb.util.automapper
 				.ForMember( dest => dest.Podios, opt => opt.MapFrom( src => src.GetInt32( 4 ) ) )
 				.ForMember( dest => dest.Victorias, opt => opt.MapFrom( src => src.GetInt32( 5 ) ) )
 				.ForMember( dest => dest.Burbujas, opt => opt.MapFrom( src => src.GetInt32( 6 ) ) )
-				.ForMember( dest => dest.Kos, opt => opt.MapFrom( src => src.GetInt32( 7 ) ) )
+				.ForMember( dest => dest.KosNumber, opt => opt.MapFrom( src => src.GetDecimal( 7 ) ) )
 				.ForMember( dest => dest.Torneos, opt => opt.MapFrom( src => src.GetInt32( 8 ) ) )
 				.ForMember( dest => dest.Rebuys, opt => opt.MapFrom( src => src.GetInt32( 9 ) ) )
 				.IgnoreNoMap();

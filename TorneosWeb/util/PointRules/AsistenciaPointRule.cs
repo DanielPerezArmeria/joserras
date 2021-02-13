@@ -8,12 +8,12 @@ namespace TorneosWeb.util.PointRules
 	{
 		public AsistenciaPointRule(string Params)
 		{
-			points = int.Parse( Params );
+			points = decimal.Parse( Params );
 		}
 
 		public override PointRuleType Type => PointRuleType.ASISTENCIA;
 
-		public override int GetPuntaje(Guid jugadorId, Liga liga, Resultados resultados)
+		public override decimal GetPuntaje(Guid jugadorId, Liga liga, Resultados resultados)
 		{
 			return points;
 		}

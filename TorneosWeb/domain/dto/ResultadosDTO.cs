@@ -25,7 +25,7 @@ namespace TorneosWeb.domain.dto
 		[Default(true)]
 		public bool Puntualidad { get; set; }
 
-		public int Kos { get; set; }
+		public decimal Kos { get; set; }
 
 		[Default(false)]
 		public bool Nuevo { get; set; }

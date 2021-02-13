@@ -16,7 +16,7 @@ namespace TorneosWebTesting.service.impl
 		private Mock<ILogger<GoogleSheetsProfitsExporter>> logger;
 		private Mock<IReadService> readService;
 
-		[ Fact]
+		[Fact]
 		public void ExportProfitsTest()
 		{
 			logger = new Mock<ILogger<GoogleSheetsProfitsExporter>>();
