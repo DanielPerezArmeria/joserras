@@ -16,7 +16,7 @@ namespace TorneosWeb.util.automapper
 				.ForMember( dest => dest.PrecioRebuyNumber, opt => opt.MapFrom( src => src.GetFieldValue<int>( src.GetOrdinal( "precio_rebuy" ) ) ) )
 				.ForMember( dest => dest.Entradas, opt => opt.MapFrom( src => src.GetFieldValue<int>( src.GetOrdinal( "entradas" ) ) ) )
 				.ForMember( dest => dest.Rebuys, opt => opt.MapFrom( src => src.GetFieldValue<int>( src.GetOrdinal( "rebuys" ) ) ) )
-				.ForMember( dest => dest.Bolsa, opt => opt.MapFrom( src => src.GetFieldValue<int>( src.GetOrdinal( "bolsa" ) ).ToString( Constants.CURRENCY_FORMAT ) ) )
+				.ForMember( dest => dest.BolsaNumber, opt => opt.MapFrom( src => src.GetFieldValue<decimal>( src.GetOrdinal( "bolsa" ) ) ) )
 				.ForMember( dest => dest.PremioBountyNumber, opt => opt.MapFrom( src => src.GetFieldValue<int>( src.GetOrdinal( "premio_x_bounty" ) ) ) )
 				.ForMember( dest => dest.Tipo, opt => opt.MapFrom( src => src.GetFieldValue<string>( src.GetOrdinal( "tipo" ) ) ) )
 				.IgnoreNoMap();

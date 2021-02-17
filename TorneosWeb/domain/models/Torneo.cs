@@ -46,7 +46,13 @@ namespace TorneosWeb.domain.models
 
 		public int Entradas { get; set; }
 		public int Rebuys { get; set; }
-		public string Bolsa { get; set; }
+
+		public decimal BolsaNumber { get; set; }
+		[NoMap]
+		public string Bolsa
+		{
+			get { return BolsaNumber.ToString( Constants.CURRENCY_FORMAT ); }
+		}
 
 		public string Ganador
 		{
