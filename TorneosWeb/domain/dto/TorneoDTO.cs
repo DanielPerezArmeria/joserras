@@ -12,6 +12,7 @@ namespace TorneosWeb.domain.dto
 		public int PrecioRebuy { get; set; }
 		public int Entradas { get; set; }
 		public int Rebuys { get; set; }
+		public decimal Bolsa { get; set; }
 
 		[Default( 0 )]
 		public int PrecioBounty { get; set; }

@@ -7,6 +7,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using TorneosWeb.domain.dto;
 using TorneosWeb.domain.models;
+using TorneosWeb.domain.models.ligas;
 using TorneosWeb.exception;
 using TorneosWeb.util;
 
@@ -19,6 +20,7 @@ namespace TorneosWeb.service.impl
 		private ILogger<WriteService> log;
 		private IFileService tourneyReader;
 		private ILigaWriter ligaWriter;
+		private ILigaReader ligaReader;
 		private IProfitsExporter profitsExporter;
 		private IPrizeService prizeService;
 
@@ -26,7 +28,7 @@ namespace TorneosWeb.service.impl
 
 
 		public WriteService(IReadService service, ICacheService cacheService, IConfiguration config, IProfitsExporter profitsExporter,
-			IFileService tourneyReader, ILigaWriter ligaWriter, IPrizeService prizeService, ILogger<WriteService> logger)
+			IFileService tourneyReader, ILigaWriter ligaWriter, ILigaReader ligaReader, IPrizeService prizeService, ILogger<WriteService> logger)
 		{
 			readService = service;
 			this.cacheService = cacheService;
@@ -34,6 +36,7 @@ namespace TorneosWeb.service.impl
 			connString = config.GetConnectionString( Properties.Resources.joserrasDb );
 			this.tourneyReader = tourneyReader;
 			this.ligaWriter = ligaWriter;
+			this.ligaReader = ligaReader;
 			this.profitsExporter = profitsExporter;
 			this.prizeService = prizeService;
 		}
@@ -48,15 +51,15 @@ namespace TorneosWeb.service.impl
 				(from ko in kos group ko by new { ko.Jugador, ko.Eliminado }
 				into grp select new KnockoutsDTO( grp.Key.Jugador, grp.Key.Eliminado, grp.Sum( k => k.Eliminaciones ) )
 				).ToList();
-			
-			if(torneo == null || resultados == null || resultados.Count == 0 )
+
+			if( torneo == null || resultados == null || resultados.Count == 0 )
 			{
 				string msg = string.Empty;
-				if(torneo == null )
+				if( torneo == null )
 				{
 					msg = "No hay archivo cuyo nombre contenga la palabra 'torneo'";
 				}
-				else if(resultados == null )
+				else if( resultados == null )
 				{
 					msg = "No hay archivo cuyo nombre contenga la palabra 'resultados'";
 				}
@@ -68,10 +71,9 @@ namespace TorneosWeb.service.impl
 				throw new JoserrasException( msg );
 			}
 
-			TorneoUnitOfWork uow = null;
-			try
+			using( TorneoUnitOfWork uow = new TorneoUnitOfWork( connString ) )
 			{
-				using( uow = new TorneoUnitOfWork( connString ) )
+				try
 				{
 					InsertarNuevosJugadores( resultados, uow );
 
@@ -79,7 +81,7 @@ namespace TorneosWeb.service.impl
 
 					InsertarResultados( torneo, resultados, uow );
 
-					if(kos != null && kos.Count > 0 )
+					if( kos != null && kos.Count > 0 )
 					{
 						InsertarKos( torneo, resultados, kos, uow );
 					}
@@ -87,37 +89,18 @@ namespace TorneosWeb.service.impl
 					uow.Commit();
 					cacheService.Clear();
 				}
-			}
-			catch( JoserrasException je )
-			{
-				log.LogError( je, je.Message );
-				try
+				catch( JoserrasException je )
 				{
+					log.LogError( je, je.Message );
 					uow.Rollback();
+					throw new JoserrasException( je.Message, je );
 				}
-				catch( Exception xe )
+				catch( Exception e )
 				{
-					log.LogError( xe, xe.Message );
-				}
-				throw new JoserrasException( je.Message, je );
-			}
-			catch(Exception e )
-			{
-				log.LogError( e, e.Message );
-				try
-				{
+					log.LogError( e, e.Message );
 					uow.Rollback();
+					throw new JoserrasException( e.Message, e );
 				}
-				catch( Exception xe )
-				{
-					log.LogError( xe, xe.Message );
-				}
-				throw new JoserrasException( e.Message, e );
-			}
-
-			if( torneo.Liga )
-			{
-				ligaWriter.AsociarTorneo( torneo.Id );
 			}
 
 			DayOfWeek dayOfWeek = torneo.Fecha.DayOfWeek;
@@ -139,14 +122,26 @@ namespace TorneosWeb.service.impl
 
 		private Guid InsertarTorneo(TorneoDTO torneo, List<ResultadosDTO> resultados, TorneoUnitOfWork uow)
 		{
-			int rebuys = resultados.Sum( d => d.Rebuys );
-			int bolsa = (torneo.PrecioBuyin * resultados.Count) + (torneo.PrecioRebuy * rebuys);
-			torneo.Rebuys = rebuys;
-			torneo.Bolsa = bolsa;
+			Liga liga = ligaReader.GetCurrentLiga();
+
+			if(torneo.PrecioRebuy == 0  && torneo.Tipo != TournamentType.FREEZEOUT)
+			{
+				torneo.PrecioRebuy = torneo.PrecioBuyin;
+			}
+
+			torneo.Entradas = resultados.Count;
+			torneo.Rebuys = resultados.Sum( d => d.Rebuys );
+			torneo.Bolsa = prizeService.GetBolsaTorneo( torneo.Entradas + torneo.Rebuys, torneo.PrecioBuyin,
+					(torneo.Liga && liga != null) ? liga.Fee : 0 );
 
 			Guid torneoId = Guid.Parse( uow.ExecuteScalar( Properties.Queries.InsertTorneo, torneo.Fecha.ToString( "yyyy-MM-dd" ),
-					torneo.PrecioBuyin, torneo.PrecioRebuy, resultados.Count, rebuys, bolsa, torneo.Tipo.ToString(), torneo.PrecioBounty )
+					torneo.PrecioBuyin, torneo.PrecioRebuy, torneo.Entradas, torneo.Rebuys, torneo.Bolsa, torneo.Tipo.ToString(), torneo.PrecioBounty )
 					.ToString() );
+
+			if( torneo.Liga )
+			{
+				ligaWriter.AsociarTorneo( torneo.Id, uow );
+			}
 
 			return torneoId;
 		}
@@ -172,20 +167,17 @@ namespace TorneosWeb.service.impl
 					if(sqle.Number == 515 )
 					{
 						string msg = string.Format( "El Jugador '{0}' no existe. No se agregó el torneo.", dto.Jugador );
-						log.LogError( sqle, sqle.Message );
 						throw new JoserrasException( msg, sqle );
 					}
 					else
 					{
 						string msg = string.Format( "No se pudo agregar el resultado del Jugador '{0}'. No se agregó el torneo.", dto.Jugador );
-						log.LogError( sqle, sqle.Message );
 						throw new JoserrasException( msg, sqle );
 					}
 				}
 				catch( Exception e )
 				{
 					string msg = string.Format( "No se pudo agregar el resultado del Jugador '{0}'. No se agregó el torneo.", dto.Jugador );
-					log.LogError( e, e.Message );
 					throw new JoserrasException( msg, e );
 				}
 			}
@@ -211,8 +203,7 @@ namespace TorneosWeb.service.impl
 				catch( Exception e )
 				{
 					string msg = string.Format( "Error al insertar el KO de '{0}' a '{1}' en la tabla de Knockouts. No se agregó el torneo.", dto.Jugador, dto.Eliminado );
-					log.LogError( e, msg );
-					throw new JoserrasException( msg );
+					throw new JoserrasException( msg, e );
 				}
 			}
 
@@ -238,7 +229,6 @@ namespace TorneosWeb.service.impl
 				catch( Exception e )
 				{
 					string msg = string.Format( "Error al actualizar la tabla de Resultados con los kos de: '{0}'. No se agregó el torneo", t.Item1 );
-					log.LogError( e, msg );
 					throw new JoserrasException( msg, e );
 				}
 			}
@@ -260,20 +250,17 @@ namespace TorneosWeb.service.impl
 				if( sqle.Number == 2627 )
 				{
 					msg = string.Format( "El jugador '{0}' ya existe", nombre );
-					log.LogError( sqle, msg );
 					throw new JoserrasException( msg, sqle );
 				}
 				else
 				{
 					msg = string.Format( "No se pudo agregar el jugador: '{0}'", nombre );
-					log.LogError( sqle, msg );
 					throw new JoserrasException( msg, sqle );
 				}
 			}
 			catch( Exception e )
 			{
 				string msg = string.Format( "No se pudo agregar el jugador: '{0}'", nombre );
-				log.LogError( e, msg );
 				throw new JoserrasException( msg, e );
 			}
 		}
