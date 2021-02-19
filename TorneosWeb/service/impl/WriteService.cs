@@ -43,14 +43,28 @@ namespace TorneosWeb.service.impl
 
 		public void uploadTournament(List<IFormFile> files)
 		{
-			TorneoDTO torneo = tourneyReader.GetFormFileItems<TorneoDTO>( files.Find( t => t.FileName.Contains( "torneo" ) ) ).First();
-			List<ResultadosDTO> resultados = tourneyReader.GetFormFileItems<ResultadosDTO>( files.Find( t => t.FileName.Contains( "resultados" ) ) ).ToList();
-			List<KnockoutsDTO> kos = tourneyReader.GetFormFileItems<KnockoutsDTO>( files.Find( t => t.FileName.Contains( "knockouts" ) ) ).ToList();
+			TorneoDTO torneo;
+			List<ResultadosDTO> resultados;
+			List<KnockoutsDTO> kos;
 
-			kos =
-				(from ko in kos group ko by new { ko.Jugador, ko.Eliminado }
-				into grp select new KnockoutsDTO( grp.Key.Jugador, grp.Key.Eliminado, grp.Sum( k => k.Eliminaciones ) )
-				).ToList();
+			try
+			{
+				torneo = tourneyReader.GetFormFileItems<TorneoDTO>( files.Find( t => t.FileName.Contains( "torneo" ) ) ).First();
+				resultados = tourneyReader.GetFormFileItems<ResultadosDTO>( files.Find( t => t.FileName.Contains( "resultados" ) ) ).ToList();
+				kos = tourneyReader.GetFormFileItems<KnockoutsDTO>( files.Find( t => t.FileName.Contains( "knockouts" ) ) ).ToList();
+
+				kos =
+					(from ko in kos
+					 group ko by new { ko.Jugador, ko.Eliminado }
+					into grp
+					 select new KnockoutsDTO( grp.Key.Jugador, grp.Key.Eliminado, grp.Sum( k => k.Eliminaciones ) )
+					).ToList();
+			}
+			catch( Exception e )
+			{
+				log.LogError( e, e.Message );
+				throw new JoserrasException(e.Message, e);
+			}
 
 			if( torneo == null || resultados == null || resultados.Count == 0 )
 			{

@@ -50,8 +50,8 @@ namespace TorneosWeb.service.impl
 				}
 				catch( Exception e )
 				{
-					log.LogError( "Unable to read file " + file.FileName, e );
-					throw;
+					string msg = "No se pudo leer el archivo '" + file.FileName + "'. Revisa que esté correcto.";
+					throw new Exception( msg, e );
 				}
 			}
 
