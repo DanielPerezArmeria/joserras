@@ -1,6 +1,7 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -13,10 +14,12 @@ namespace TorneosWeb.service.impl
 	public class FileService : IFileService
 	{
 		private IReadService readService;
+		private ILogger<FileService> log;
 
-		public FileService(IReadService readService)
+		public FileService(IReadService readService, ILogger<FileService> logger)
 		{
 			this.readService = readService;
+			this.log = logger;
 		}
 
 		public void ExportProfits(DateTime start, DateTime end)
@@ -30,6 +33,8 @@ namespace TorneosWeb.service.impl
 			{
 				return new List<T>();
 			}
+
+			log.LogDebug( "Procesando archivo: {0}", file.FileName );
 			
 			List<T> items = null;
 
@@ -39,7 +44,15 @@ namespace TorneosWeb.service.impl
 			using( StreamReader streamReader = new StreamReader( file.OpenReadStream() ) )
 			{
 				CsvReader csv = new CsvReader( streamReader, config );
-				items = csv.GetRecords<T>().ToList();
+				try
+				{
+					items = csv.GetRecords<T>().ToList();
+				}
+				catch( Exception e )
+				{
+					log.LogError( "Unable to read file " + file.FileName, e );
+					throw;
+				}
 			}
 
 			return items;
