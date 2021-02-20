@@ -11,7 +11,15 @@
 .ligaRules {
 	margin-top: 20px;
 	width:100%;
-	display:grid;
+	display:inline-grid;
+}
+
+.puntaje{
+
+}
+
+.premiacion{
+
 }
 
 @media screen and ( orientation: landscape ) {
@@ -25,6 +33,19 @@
 		margin-right: 10px;
 	}
 
+	.ligaRules{
+		grid-template-columns:auto auto;
+	}
+
+	.puntaje{
+		float:left;
+	}
+
+	.premiacion {
+		float:right;
+		text-align:right;
+	}
+
 }
 
 @media screen and ( orientation: portrait ) {
@@ -36,6 +57,18 @@
 	.moneyBag {
 		height: 1.7rem;
 		margin-right: 6px;
+	}
+
+	.ligaRules {
+		grid-template-rows: auto auto;
+	}
+
+	.puntaje {
+		float: left;
+	}
+
+	.premiacion {
+		float: left;
 	}
 
 }
