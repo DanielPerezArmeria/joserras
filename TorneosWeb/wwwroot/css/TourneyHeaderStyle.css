@@ -14,8 +14,8 @@
 	display:inline-grid;
 }
 
-.puntaje{
-
+.puntaje {
+	float: left;
 }
 
 .premiacion{
@@ -35,10 +35,6 @@
 
 	.ligaRules{
 		grid-template-columns:auto auto;
-	}
-
-	.puntaje{
-		float:left;
 	}
 
 	.premiacion {
@@ -61,10 +57,6 @@
 
 	.ligaRules {
 		grid-template-rows: auto auto;
-	}
-
-	.puntaje {
-		float: left;
 	}
 
 	.premiacion {
