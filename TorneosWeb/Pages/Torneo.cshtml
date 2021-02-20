@@ -8,14 +8,25 @@
 <head>
 	<meta name="viewport" content="width=device-width" />
 	<link rel="stylesheet" type="text/css" href="~/css/detalleTorneosStyle.css" />
-	<title>Torneo de @Html.DisplayFor(model => model.Resultados.Torneo.Fecha)</title>
+	<link rel="stylesheet" type="text/css" href="~/css/TourneyHeaderStyle.css" />
+	<title>Torneo de @Html.DisplayFor( model => model.Resultados.Torneo.Fecha )</title>
 </head>
+
 <body>
 
 	<div id="contenedor">
 
 		<div style="overflow:auto;width:100%">
-			<h1>@Html.DisplayFor( model => model.Resultados.Torneo.Fecha )</h1>
+			<div class="tourneyHeader">
+				<span style="float:left">@Html.DisplayFor( model => model.Resultados.Torneo.Fecha )</span>
+				<span style="float:right;text-align:right">
+					<div style="display:grid;grid-template-columns:auto auto;text-align:center;align-items:center">
+						<img src="~/images/money-symbol-saving.png" class="moneyBag" />
+						@Html.DisplayFor( model => model.Resultados.Torneo.Bolsa )
+					</div>
+				</span>
+			</div>
+			
 			<table id="ranking" class="table">
 				<thead>
 					<tr style="text-align:center">

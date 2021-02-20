@@ -1,0 +1,41 @@
+﻿.tourneyHeader {
+	display: inline-block;
+	width: 100%;
+	font-weight: bold;
+}
+
+.moneyBag {
+	object-fit: contain;
+}
+
+.ligaRules {
+	margin-top: 20px;
+	width:100%;
+	display:grid;
+}
+
+@media screen and ( orientation: landscape ) {
+
+	.tourneyHeader{
+		font-size:33pt;
+	}
+
+	.moneyBag {
+		height: 3rem;
+		margin-right: 10px;
+	}
+
+}
+
+@media screen and ( orientation: portrait ) {
+
+	.tourneyHeader {
+		font-size: 18pt;
+	}
+
+	.moneyBag {
+		height: 1.7rem;
+		margin-right: 6px;
+	}
+
+}
