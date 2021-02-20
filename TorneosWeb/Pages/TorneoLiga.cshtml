@@ -5,6 +5,6 @@
     Layout = "~/Pages/Shared/_LayoutLigas.cshtml";
 }
 
-<h1>Torneo - @Html.DisplayFor( model => model.Fecha )</h1>
+<h1>@Html.DisplayFor( model => model.Fecha )</h1>
 
 <partial name="_TorneoLigaResults" model="Model.Standings" />
