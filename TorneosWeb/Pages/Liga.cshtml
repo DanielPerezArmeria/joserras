@@ -23,20 +23,18 @@
 	</div>
 
 	<div class="ligaRules">
-		<div class="puntaje">
-			<h2>Puntaje:</h2>
-			<ul>
-				@foreach( var rule in Model.CurrentLiga.RulesList )
-				{
-					<li>@Html.DisplayFor( item => rule.Descripcion )</li>
-				}
-				<li>DESEMPATE: @Model.CurrentLiga.Tiebreakers.Description</li>
-			</ul>
-		</div>
-		<div class="premiacion">
-			<h2>Premiación:</h2>
-			@Model.CurrentLiga.Premiacion
-		</div>
+		<div class="item1">Puntaje:</div>
+		<div class="item2">Premiación:</div>
+		<ul class="item3">
+			@foreach( var rule in Model.CurrentLiga.RulesList )
+			{
+				<li>@Html.DisplayFor( item => rule.Descripcion )</li>
+			}
+			<li>DESEMPATE: @Model.CurrentLiga.Tiebreakers.Description</li>
+		</ul>
+		<ul class="item4">
+			<li>@Model.CurrentLiga.Premiacion</li>
+		</ul>
 	</div>
 
 	<hr style="margin-top:2em;margin-bottom:2em;border: 2px solid black;width:100%;background-color:black" />

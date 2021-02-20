@@ -14,11 +14,23 @@
 	display:inline-grid;
 }
 
-.puntaje {
-	float: left;
+.item1 {
+	display: block;
+	margin-left: 0;
+	margin-right: 0;
+	font-weight: bold;
+	margin-bottom: 0.2em;
 }
 
-.premiacion{
+.item2 {
+	display: block;
+	margin-left: 0;
+	margin-right: 0;
+	font-weight: bold;
+	margin-bottom: 0.2em;
+}
+
+.item4{
 
 }
 
@@ -35,11 +47,23 @@
 
 	.ligaRules{
 		grid-template-columns:auto auto;
+		grid-template-rows:auto auto;
 	}
 
-	.premiacion {
-		float:right;
-		text-align:right;
+	.item1 {
+		font-size: 1.9em;
+	}
+
+	.item2 {
+		font-size: 1.9em;
+		float: right;
+		text-align: right;
+	}
+
+	.item4 {
+		float: right;
+		text-align: right;
+		list-style-position: inside;
 	}
 
 }
@@ -56,11 +80,24 @@
 	}
 
 	.ligaRules {
-		grid-template-rows: auto auto;
+		grid-template-columns: auto;
 	}
 
-	.premiacion {
-		float: left;
+	.item1 {
+		font-size: 1.2em;
+	}
+
+	.item2 {
+		font-size: 1.2em;
+		grid-row:3;
+	}
+
+	.item3 {
+		grid-row: 2;
+	}
+
+	.item4 {
+		grid-row: 4;
 	}
 
 }
