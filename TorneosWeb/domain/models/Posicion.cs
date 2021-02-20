@@ -26,7 +26,7 @@ namespace TorneosWeb.domain.models
 		[NoMap]
 		public string Knockouts
 		{
-			get { return KnockoutsNumber.ToString( Constants.KOS_FORMAT ); }
+			get { return KnockoutsNumber.ToString( Constants.POINTS_FORMAT ); }
 		}
 
 		[NoMap]

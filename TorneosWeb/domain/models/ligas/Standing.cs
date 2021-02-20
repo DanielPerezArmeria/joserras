@@ -10,14 +10,14 @@ namespace TorneosWeb.domain.models.ligas
 	{
 		public Standing()
 		{
-			Puntos = new SortedDictionary<PointRuleType, KODecimal>();
+			Puntos = new SortedDictionary<PointRuleType, FDecimal>();
 		}
 
 		public Liga Liga { get; set; }
 
 		public string Jugador { get; set; }
 		public Guid JugadorId { get; set; }
-		public SortedDictionary<PointRuleType, KODecimal> Puntos { get; set; }
+		public SortedDictionary<PointRuleType, FDecimal> Puntos { get; set; }
 		public decimal Total
 		{
 			get

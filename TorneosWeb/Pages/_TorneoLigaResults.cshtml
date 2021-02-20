@@ -46,7 +46,7 @@
 				@foreach( var rule in standing.Puntos )
 				{
 					<td style="text-align:center">
-						@Html.DisplayFor( item => rule.Value.Valor )
+						@Html.DisplayFor( item => rule.Value.ValorString )
 					</td>
 				}
 				<td class="profit" style="text-align:right;margin-right:10em;color:@(standing.ProfitNumber < 0 ? "red" : "black")">
