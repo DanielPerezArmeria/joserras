@@ -10,7 +10,7 @@ namespace TorneosWebTesting.util
 		[InlineData( 5.5 )]
 		public void ToStringTest(decimal value)
 		{
-			KODecimal kod = new KODecimal(value);
+			FDecimal kod = new FDecimal(value);
 			Assert.Equal( kod.ToString(), $"{value}" );
 		}
 

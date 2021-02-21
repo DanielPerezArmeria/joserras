@@ -66,7 +66,7 @@ namespace TorneosWeb.domain.models
 		[NoMap]
 		public string Kos
 		{
-			get { return  KosNumber.ToString( Constants.KOS_FORMAT ); }
+			get { return  KosNumber.ToString( Constants.POINTS_FORMAT ); }
 		}
 
 		[NoMap]

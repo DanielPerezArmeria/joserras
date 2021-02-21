@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Humanizer;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -46,7 +47,13 @@ namespace TorneosWeb.domain.models
 
 		public int Entradas { get; set; }
 		public int Rebuys { get; set; }
-		public string Bolsa { get; set; }
+
+		public decimal BolsaNumber { get; set; }
+		[NoMap]
+		public string Bolsa
+		{
+			get { return BolsaNumber.ToString( Constants.CURRENCY_FORMAT ); }
+		}
 
 		public string Ganador
 		{
@@ -59,6 +66,14 @@ namespace TorneosWeb.domain.models
 		}
 
 		public TournamentType Tipo { get; set; }
+		public string TipoString
+		{
+			get
+			{
+				return Tipo.Humanize().Transform( To.LowerCase ).Transform( To.TitleCase );
+			}
+		}
+
 		public int PremioBountyNumber { get; set; }
 
 		[NoMap]

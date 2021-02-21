@@ -12,7 +12,7 @@ namespace TorneosWeb.service.impl
 {
 	public class StatsServiceImpl : IStatsService
 	{
-		private string connString;
+		private readonly string connString;
 		private JoserrasQuery joserrasQuery;
 		private IReadService readService;
 
@@ -148,7 +148,7 @@ namespace TorneosWeb.service.impl
 			mayor = dets.First().KosNumber;
 			kos.Participantes.AddRange( from d in dets
 																	where d.KosNumber == mayor
-																	select new StatProps( d.Nombre, d.KosNumber.ToString( Constants.KOS_FORMAT ) ) );
+																	select new StatProps( d.Nombre, d.KosNumber.ToString( Constants.POINTS_FORMAT ) ) );
 
 			Stat bundy = new Stat( "Al Bundy", "Más últimos lugares", "albundy_t.jpg" );
 			string query = string.Format( Queries.GetBundy, q );
@@ -189,7 +189,7 @@ namespace TorneosWeb.service.impl
 			mayor = tuples.Aggregate( (pair1, pair2) => pair1.Item3 > pair2.Item3 ? pair1 : pair2 ).Item3;
 			sniper.Participantes.AddRange( from t in tuples
 																		 where t.Item3 == mayor
-																		 select new StatProps( t.Item1 + " a " + t.Item2, t.Item3.ToString( Constants.KOS_FORMAT ) ) );
+																		 select new StatProps( t.Item1 + " a " + t.Item2, t.Item3.ToString( Constants.POINTS_FORMAT ) ) );
 
 			Stat piedra = new Stat( "Piedra de la Victoria", "Más podios negativos", "piedra_t.png" );
 			query = string.Format( Queries.GetPodiosNegativos, q );

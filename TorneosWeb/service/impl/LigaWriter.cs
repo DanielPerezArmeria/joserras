@@ -21,13 +21,15 @@ namespace TorneosWeb.service.impl
 		private ILigaReader ligaReader;
 		private IConfiguration config;
 		private ICacheService cacheService;
+		private IPrizeService prizeService;
 
-		public LigaWriter(IReadService readService, IFileService dataReader, ILigaReader ligaReader,
+		public LigaWriter(IReadService readService, IFileService dataReader, ILigaReader ligaReader, IPrizeService prizeService,
 				IConfiguration config, ICacheService cacheService, ILogger<LigaWriter> log)
 		{
 			this.readService = readService;
 			ligaDataReader = dataReader;
 			this.ligaReader = ligaReader;
+			this.prizeService = prizeService;
 			this.config = config;
 			this.log = log;
 			this.cacheService = cacheService;
@@ -47,7 +49,7 @@ namespace TorneosWeb.service.impl
 			cacheService.Clear();
 		}
 
-		public int AsociarTorneo(Guid torneoId)
+		public int AsociarTorneo(Guid torneoId, TorneoUnitOfWork uow)
 		{
 			if( ligaReader.GetCurrentLiga() == null )
 			{
@@ -55,27 +57,21 @@ namespace TorneosWeb.service.impl
 				return 0;
 			}
 
-			using( TorneoUnitOfWork uow = new TorneoUnitOfWork( config.GetConnectionString( Properties.Resources.joserrasDb ) ) )
+			int rowsAffected = 0;
+
+			Liga liga = ligaReader.GetCurrentLiga();
+			log.LogDebug( "Asociando torneo con id'{0}' en Liga '{1}'", torneoId, liga.Nombre );
+			string query = "insert into torneos_liga (liga_id, torneo_id) values ('{0}', '{1}')";
+			try
 			{
-				int rowsAffected = 0;
-
-				Liga liga = ligaReader.GetCurrentLiga();
-				log.LogDebug( "Asociando torneo con id'{0}' en Liga '{1}'", torneoId, liga.Nombre );
-				string query = "insert into torneos_liga (liga_id, torneo_id) values ('{0}', '{1}')";
-				try
-				{
-					rowsAffected = uow.ExecuteNonQuery( query, liga.Id, torneoId );
-				}
-				catch( Exception )
-				{
-					throw;
-				}
-
-				uow.Commit();
-				cacheService.Clear();
-
-				return rowsAffected; 
+				rowsAffected = uow.ExecuteNonQuery( query, liga.Id, torneoId );
 			}
+			catch( Exception )
+			{
+				throw;
+			}
+
+			return rowsAffected;
 		}
 
 		public int AsociarTorneoEnFecha(DateTime date)
@@ -83,10 +79,32 @@ namespace TorneosWeb.service.impl
 			Torneo torneo = readService.FindTorneoByFecha( date );
 			if(torneo == null )
 			{
+				log.LogError( "No existe torneo con fecha: {0}", date );
 				return 0;
 			}
 
-			return AsociarTorneo( torneo.Id );
+			using( TorneoUnitOfWork uow = new TorneoUnitOfWork( config.GetConnectionString( Properties.Resources.joserrasDb ) ) )
+			{
+				try
+				{
+					int asociar = AsociarTorneo( torneo.Id, uow );
+					decimal bolsa = prizeService.GetBolsaTorneo( torneo.Entradas + torneo.Rebuys, torneo.PrecioBuyinNumber, ligaReader.GetCurrentLiga().Fee );
+					string query = "update torneos set bolsa = {0} where id = '{1}'";
+					uow.ExecuteNonQuery( query, bolsa, torneo.Id );
+					uow.Commit();
+					cacheService.Clear();
+
+					return asociar;
+				}
+				catch( Exception e )
+				{
+					log.LogError( e, e.Message );
+					uow.Rollback();
+					string msg = string.Format( "No se pudo asociar el torneo con fecha: {0}", date );
+					throw new JoserrasException( msg, e );
+				}
+			}
+			
 		}
 
 		public void CerrarLiga()
@@ -96,36 +114,43 @@ namespace TorneosWeb.service.impl
 			SetPremiosLiga( liga, standings );
 			using( TorneoUnitOfWork uow = new TorneoUnitOfWork( config.GetConnectionString( Properties.Resources.joserrasDb ) ) )
 			{
-				string query = "insert into puntos_torneo_liga values ('{0}', '{1}', {2}, {3})";
-				foreach(Standing standing in standings )
-				{
-					string q = string.Format( query, liga.Id, standing.JugadorId, standing.Total, standing.PremioNumber );
-					try
-					{
-						log.LogInformation( "Guardando: {0}", q );
-						uow.ExecuteNonQuery( q );
-					}
-					catch( Exception e)
-					{
-						string msg = string.Format( "Error al guardar el Standing: {0}", q );
-						log.LogError( e,  msg);
-						throw new JoserrasException( msg, e );
-					}
-				}
-
-				string updateLigaQuery = "update ligas set Abierta = {0}, fecha_cierre = '{1}' where id = '{2}'";
 				try
 				{
-					uow.ExecuteNonQuery( updateLigaQuery, 0, liga.Torneos.First().FechaDate.ToString( "yyyy-MM-dd" ), liga.Id );
-				}
-				catch( Exception e )
-				{
-					log.LogError( e, "Error al cerrar la liga" );
-					throw;
-				}
+					string query = "insert into puntos_torneo_liga values ('{0}', '{1}', {2}, {3})";
+					foreach( Standing standing in standings )
+					{
+						string q = string.Format( query, liga.Id, standing.JugadorId, standing.Total, standing.PremioNumber );
+						try
+						{
+							log.LogInformation( "Guardando: {0}", q );
+							uow.ExecuteNonQuery( q );
+						}
+						catch( Exception e )
+						{
+							string msg = string.Format( "Error al guardar el Standing: {0}", q );
+							throw new JoserrasException( msg, e );
+						}
+					}
 
-				uow.Commit();
-				cacheService.Clear();
+					string updateLigaQuery = "update ligas set Abierta = {0}, fecha_cierre = '{1}' where id = '{2}'";
+					try
+					{
+						uow.ExecuteNonQuery( updateLigaQuery, 0, liga.Torneos.First().FechaDate.ToString( "yyyy-MM-dd" ), liga.Id );
+					}
+					catch( Exception e )
+					{
+						throw new JoserrasException( "Error al cerrar la liga", e );
+					}
+
+					uow.Commit();
+					cacheService.Clear();
+				}
+				catch( Exception e)
+				{
+					log.LogError( e, e.Message );
+					uow.Rollback();
+					throw e;
+				}
 			}
 		}
 

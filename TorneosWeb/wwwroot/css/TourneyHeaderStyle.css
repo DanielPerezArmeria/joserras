@@ -1,0 +1,103 @@
+﻿.tourneyHeader {
+	display: inline-block;
+	width: 100%;
+	font-weight: bold;
+}
+
+.moneyBag {
+	object-fit: contain;
+}
+
+.ligaRules {
+	margin-top: 20px;
+	width:100%;
+	display:inline-grid;
+}
+
+.item1 {
+	display: block;
+	margin-left: 0;
+	margin-right: 0;
+	font-weight: bold;
+	margin-bottom: 0.2em;
+}
+
+.item2 {
+	display: block;
+	margin-left: 0;
+	margin-right: 0;
+	font-weight: bold;
+	margin-bottom: 0.2em;
+}
+
+.item4{
+
+}
+
+@media screen and ( orientation: landscape ) {
+
+	.tourneyHeader{
+		font-size:33pt;
+	}
+
+	.moneyBag {
+		height: 3rem;
+		margin-right: 10px;
+	}
+
+	.ligaRules{
+		grid-template-columns:auto auto;
+		grid-template-rows:auto auto;
+	}
+
+	.item1 {
+		font-size: 1.9em;
+	}
+
+	.item2 {
+		font-size: 1.9em;
+		float: right;
+		text-align: right;
+	}
+
+	.item4 {
+		float: right;
+		text-align: right;
+		list-style-position: inside;
+	}
+
+}
+
+@media screen and ( orientation: portrait ) {
+
+	.tourneyHeader {
+		font-size: 18pt;
+	}
+
+	.moneyBag {
+		height: 1.7rem;
+		margin-right: 6px;
+	}
+
+	.ligaRules {
+		grid-template-columns: auto;
+	}
+
+	.item1 {
+		font-size: 1.2em;
+	}
+
+	.item2 {
+		font-size: 1.2em;
+		grid-row:3;
+	}
+
+	.item3 {
+		grid-row: 2;
+	}
+
+	.item4 {
+		grid-row: 4;
+	}
+
+}

@@ -147,13 +147,13 @@ namespace TorneosWeb.service.impl
 					
 					foreach(KeyValuePair<string,PointRule> rule in liga.PointRules )
 					{
-						standing.Puntos.TryGetValue(rule.Value.Type, out KODecimal p );
+						standing.Puntos.TryGetValue(rule.Value.Type, out FDecimal p );
 						if(p == null )
 						{
-							p = new KODecimal();
+							p = new FDecimal();
 							standing.Puntos[ rule.Value.Type ] = p;
 						}
-						p.Value += rule.Value.GetPuntaje( pos.JugadorId, liga, results );
+						p.Valor += rule.Value.GetPuntaje( pos.JugadorId, liga, results );
 					}
 				}
 			}
@@ -205,7 +205,7 @@ namespace TorneosWeb.service.impl
 
 				foreach( KeyValuePair<string, PointRule> rule in liga.PointRules )
 				{
-					standing.Puntos.TryGetValue( rule.Value.Type, out KODecimal p );
+					standing.Puntos.TryGetValue( rule.Value.Type, out FDecimal p );
 					standing.Puntos[ rule.Value.Type ] = rule.Value.GetPuntaje( pos.JugadorId, liga, results ) + p;
 				}
 

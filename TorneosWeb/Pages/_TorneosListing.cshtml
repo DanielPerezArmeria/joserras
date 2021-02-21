@@ -57,7 +57,7 @@
 						@Html.DisplayFor( modelItem => torneo.Fecha )
 					</td>
 					<td>
-						@Html.DisplayFor( modelItem => torneo.Tipo )
+						@Html.DisplayFor( modelItem => torneo.TipoString )
 					</td>
 					<td>
 						<a asp-page="./Jugador" asp-route-id="@torneo.GanadorId">@Html.DisplayFor( modelItem => torneo.Ganador )</a>

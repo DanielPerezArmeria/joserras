@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TorneosWeb.domain.dto;
-using TorneosWeb.domain.models.ligas;
 using TorneosWeb.exception;
 using TorneosWeb.util;
 
@@ -14,16 +13,14 @@ namespace TorneosWeb.service.impl
 	{
 		private readonly string ConnString;
 		private JoserrasQuery joserrasQuery;
-		private ILigaReader ligaReader;
 		private ILogger<PrizeService> log;
 
 		private List<PrizeRangeDto> PrizeRanges { get; set; }
 
-		public PrizeService(IConfiguration conf, ILigaReader ligaReader, JoserrasQuery joserrasQuery, ILogger<PrizeService> logger)
+		public PrizeService(IConfiguration conf, JoserrasQuery joserrasQuery, ILogger<PrizeService> logger)
 		{
 			ConnString = conf.GetConnectionString( Properties.Resources.joserrasDb );
 			this.joserrasQuery = joserrasQuery;
-			this.ligaReader = ligaReader;
 			log = logger;
 			PrizeRanges = new List<PrizeRangeDto>();
 		}
@@ -35,15 +32,10 @@ namespace TorneosWeb.service.impl
 				FillPrizeRanges();
 			}
 
-			int entradas = resultados.Count + resultados.Sum( r => r.Rebuys );
+			int entradas = torneo.Entradas + torneo.Rebuys;
 			PrizeRangeDto selectedRange = PrizeRanges.First( r => r.IsBetween( entradas ) );
 
 			decimal bolsa = torneo.Bolsa;
-			if( torneo.Liga )
-			{
-				Liga liga = ligaReader.GetCurrentLiga();
-				bolsa = bolsa - ( liga.Fee * entradas );
-			}
 
 			FillPrizes( torneo, resultados, selectedRange, bolsa );
 		}
@@ -124,6 +116,12 @@ namespace TorneosWeb.service.impl
 				}
 			} );
 		}
+
+		public decimal GetBolsaTorneo(int entradas, int buyin, int ligaFee = 0)
+		{
+			return (entradas * buyin) - (entradas * ligaFee);
+		}
+
 
 		private class PrizeRangeDto : IEquatable<PrizeRangeDto>
 		{
