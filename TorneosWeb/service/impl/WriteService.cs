@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Humanizer;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
@@ -138,7 +139,7 @@ namespace TorneosWeb.service.impl
 		{
 			Liga liga = ligaReader.GetCurrentLiga();
 
-			if(torneo.PrecioRebuy == 0  && torneo.Tipo != TournamentType.FREEZEOUT)
+			if(torneo.PrecioRebuy == 0  && torneo.Tipo != TournamentType.FREEZE_OUT)
 			{
 				torneo.PrecioRebuy = torneo.PrecioBuyin;
 			}
@@ -149,7 +150,8 @@ namespace TorneosWeb.service.impl
 					(torneo.Liga && liga != null) ? liga.Fee : 0 );
 
 			Guid torneoId = Guid.Parse( uow.ExecuteScalar( Properties.Queries.InsertTorneo, torneo.Fecha.ToString( "yyyy-MM-dd" ),
-					torneo.PrecioBuyin, torneo.PrecioRebuy, torneo.Entradas, torneo.Rebuys, torneo.Bolsa, torneo.Tipo.ToString(), torneo.PrecioBounty )
+					torneo.PrecioBuyin, torneo.PrecioRebuy, torneo.Entradas, torneo.Rebuys, torneo.Bolsa,
+					torneo.Tipo.Humanize().Transform( To.UpperCase ), torneo.PrecioBounty )
 					.ToString() );
 
 			if( torneo.Liga )
