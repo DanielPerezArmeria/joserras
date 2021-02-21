@@ -1,6 +1,5 @@
 ﻿using CronScheduler.Extensions.Scheduler;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,20 +24,21 @@ namespace TorneosWeb.util.schedule
 			this.options = options;
 			this.readService = readService;
 			exporter = profitsExporter;
+			log.LogInformation( "CreateBalanceJob scheduled" );
 		}
 
 		public string Name => nameof( CreateBalanceJob );
 
 		public Task ExecuteAsync(CancellationToken cancellationToken)
 		{
-			log.LogDebug( "CreateBalanceJob executing..." );
+			log.LogInformation( "CreateBalanceJob executing..." );
 			try
 			{
 				DateTime monday = DateTime.Now.LastWeekMonday();
 				DateTime sunday = DateTime.Now.LastWeekSunday();
 				List<Torneo> torneos = readService.GetAllTorneos().Where( t => monday <= t.FechaDate && t.FechaDate <= sunday ).ToList();
 				exporter.ExportProfits( torneos );
-				log.LogDebug( "CreateBalanceJob finished" );
+				log.LogInformation( "CreateBalanceJob finished" );
 			}
 			catch(Exception e )
 			{
