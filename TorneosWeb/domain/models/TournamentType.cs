@@ -1,11 +1,15 @@
-﻿namespace TorneosWeb.domain.models
+﻿using System.ComponentModel;
+
+namespace TorneosWeb.domain.models
 {
 	public enum TournamentType
 	{
 		NORMAL = 1,
-		FREEZE_OUT = 2,
+		FREEZEOUT = 2,
 		BOUNTY = 3,
-		ADD_ON = 4
+
+		[Description("ADD ON")]
+		ADDON = 4
 	}
 
 }

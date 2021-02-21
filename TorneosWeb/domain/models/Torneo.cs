@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Humanizer;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -65,6 +66,14 @@ namespace TorneosWeb.domain.models
 		}
 
 		public TournamentType Tipo { get; set; }
+		public string TipoString
+		{
+			get
+			{
+				return Tipo.Humanize().Transform( To.LowerCase ).Transform( To.TitleCase );
+			}
+		}
+
 		public int PremioBountyNumber { get; set; }
 
 		[NoMap]
