@@ -58,7 +58,7 @@ namespace TorneosWeb.service.impl
 			torneos.Reverse();
 			CleanRows();
 			InsertProfitData( torneos );
-			log.LogDebug( "Profits Exported successfully!" );
+			log.LogInformation( "Profits Exported successfully!" );
 		}
 
 		private void InsertProfitData(List<Torneo> torneos)

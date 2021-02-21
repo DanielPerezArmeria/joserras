@@ -31,14 +31,14 @@ namespace TorneosWeb.util.schedule
 
 		public Task ExecuteAsync(CancellationToken cancellationToken)
 		{
-			log.LogDebug( "Creating Balance..." );
+			log.LogDebug( "CreateBalanceJob executing..." );
 			try
 			{
 				DateTime monday = DateTime.Now.LastWeekMonday();
 				DateTime sunday = DateTime.Now.LastWeekSunday();
 				List<Torneo> torneos = readService.GetAllTorneos().Where( t => monday <= t.FechaDate && t.FechaDate <= sunday ).ToList();
 				exporter.ExportProfits( torneos );
-				log.LogDebug( "Balance creado!" );
+				log.LogDebug( "CreateBalanceJob finished" );
 			}
 			catch(Exception e )
 			{
