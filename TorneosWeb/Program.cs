@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
-using Serilog.Events;
 
 namespace TorneosWeb
 {
@@ -10,12 +9,6 @@ namespace TorneosWeb
 	{
 		public static void Main(string[] args)
 		{
-			Log.Logger = new LoggerConfiguration()
-				.MinimumLevel.Debug()
-				.WriteTo.Console()
-				.WriteTo.File( "joserras-.log", rollingInterval: RollingInterval.Month )
-				.MinimumLevel.Override( "Microsoft.AspNetCore", LogEventLevel.Warning )
-				.CreateLogger();
 			CreateWebHostBuilder( args ).Build().Run();
 		}
 

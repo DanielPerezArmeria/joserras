@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Serilog;
 using SimpleInjector;
 using System;
@@ -27,15 +26,18 @@ namespace TorneosWeb
 	{
 		private Container container = new SimpleInjector.Container();
 		private string contentRoot;
-		private ILogger<Startup> log;
 
-		public Startup(IConfiguration configuration, ILogger<Startup> logger)
+		public Startup(IConfiguration configuration)
 		{
 			container.Options.ResolveUnregisteredConcreteTypes = false;
 			Configuration = configuration;
 			contentRoot = configuration.GetValue<string>( WebHostDefaults.ContentRootKey );
-			log = logger;
-			log.LogDebug( "********  STARTING APP  ********" );
+
+			Log.Logger = new LoggerConfiguration()
+				.ReadFrom.Configuration( Configuration )
+				.CreateLogger();
+
+			Log.Logger.Information( "********  STARTING APP  ********" );
 		}
 
 		public IConfiguration Configuration { get; }
@@ -69,7 +71,7 @@ namespace TorneosWeb
 			InitializeContainer();
 
 			bool autoCreateBalance = Configuration.GetValue<bool>( "CreateBalance" );
-			log.LogInformation( "Auto-create balance sheet: {0}", autoCreateBalance );
+			Log.Logger.Information( "Auto-create balance sheet: {0}", autoCreateBalance );
 			if( autoCreateBalance )
 			{
 				services.AddScheduler( builder =>
