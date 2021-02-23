@@ -26,18 +26,15 @@ namespace TorneosWeb
 	{
 		private Container container = new SimpleInjector.Container();
 		private string contentRoot;
+		private ILogger<Startup> log;
 
-		public Startup(IConfiguration configuration)
+		public Startup(IConfiguration configuration, ILogger<Startup> logger)
 		{
 			container.Options.ResolveUnregisteredConcreteTypes = false;
 			Configuration = configuration;
 			contentRoot = configuration.GetValue<string>( WebHostDefaults.ContentRootKey );
-
-			Log.Logger = new LoggerConfiguration()
-				.ReadFrom.Configuration( Configuration )
-				.CreateLogger();
-
-			Log.Logger.Information( "********  STARTING APP  ********" );
+			log = logger;
+			log.LogInformation( "********  STARTING APP  ********" );
 		}
 
 		public IConfiguration Configuration { get; }
@@ -71,7 +68,7 @@ namespace TorneosWeb
 			InitializeContainer();
 
 			bool autoCreateBalance = Configuration.GetValue<bool>( "CreateBalance" );
-			Log.Logger.Information( "Auto-create balance sheet: {0}", autoCreateBalance );
+			log.LogInformation( "Auto-create balance sheet: {0}", autoCreateBalance );
 			if( autoCreateBalance )
 			{
 				services.AddScheduler( builder =>
