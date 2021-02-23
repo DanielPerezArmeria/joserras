@@ -16,6 +16,7 @@ namespace TorneosWeb
 				.WriteTo.File( "joserras-.log", rollingInterval: RollingInterval.Month )
 				.MinimumLevel.Override( "Microsoft.AspNetCore", LogEventLevel.Warning )
 				.CreateLogger();
+
 			CreateWebHostBuilder( args ).Build().Run();
 		}
 

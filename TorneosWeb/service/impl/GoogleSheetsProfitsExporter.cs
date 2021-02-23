@@ -44,7 +44,7 @@ namespace TorneosWeb.service.impl
 					ApplicationName = "TorneosJoserras",
 				} );
 
-				log.LogDebug( "Google sheets service succesfully created!" );
+				log.LogInformation( "Google sheets service succesfully created!" );
 			}
 			catch( Exception e )
 			{
@@ -58,7 +58,7 @@ namespace TorneosWeb.service.impl
 			torneos.Reverse();
 			CleanRows();
 			InsertProfitData( torneos );
-			log.LogDebug( "Profits Exported successfully!" );
+			log.LogInformation( "Profits Exported successfully!" );
 		}
 
 		private void InsertProfitData(List<Torneo> torneos)

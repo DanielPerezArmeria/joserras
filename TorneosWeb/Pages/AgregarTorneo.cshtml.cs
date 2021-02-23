@@ -62,11 +62,12 @@ namespace TorneosWeb.Pages
 
 		public IActionResult OnPostGenerateBalance()
 		{
-			DayOfWeek dayOfWeek = DateTime.Now.DayOfWeek;
 			DateTime monday = DateTime.Now.LastWeekMonday();
 			DateTime sunday = DateTime.Now.LastWeekSunday();
 			List<Torneo> torneos = readService.GetAllTorneos().Where( t => monday <= t.FechaDate && t.FechaDate <= sunday ).ToList();
 			profitsExporter.ExportProfits( torneos );
+
+			Result = "El Balance ha sido creado exitosamente";
 
 			return Page();
 		}

@@ -18,6 +18,7 @@ using TorneosWeb.service.decorators;
 using TorneosWeb.service.impl;
 using TorneosWeb.util;
 using TorneosWeb.util.automapper;
+using TorneosWeb.util.schedule;
 
 namespace TorneosWeb
 {
@@ -25,13 +26,15 @@ namespace TorneosWeb
 	{
 		private Container container = new SimpleInjector.Container();
 		private string contentRoot;
+		private ILogger<Startup> log;
 
 		public Startup(IConfiguration configuration, ILogger<Startup> logger)
 		{
 			container.Options.ResolveUnregisteredConcreteTypes = false;
 			Configuration = configuration;
 			contentRoot = configuration.GetValue<string>( WebHostDefaults.ContentRootKey );
-			logger.LogDebug( "********  STARTING APP  ********" );
+			log = logger;
+			log.LogInformation( "********  STARTING APP  ********" );
 		}
 
 		public IConfiguration Configuration { get; }
@@ -63,6 +66,18 @@ namespace TorneosWeb
 			} );
 
 			InitializeContainer();
+
+			bool autoCreateBalance = Configuration.GetValue<bool>( "CreateBalance" );
+			log.LogInformation( "Auto-create balance sheet: {0}", autoCreateBalance );
+			if( autoCreateBalance )
+			{
+				services.AddScheduler( builder =>
+				 {
+					 builder.Services.AddSingleton( s => container.GetInstance<IReadService>() );
+					 builder.Services.AddSingleton( s => container.GetInstance<IProfitsExporter>() );
+					 builder.Services.AddSchedulerJob<CreateBalanceJob, CreateBalanceJobOptions>();
+				 } );
+			}
 		}
 
 		private void InitializeContainer()
