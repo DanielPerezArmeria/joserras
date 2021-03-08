@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TorneosWeb.domain.dto.ligas;
 using TorneosWeb.domain.models;
+using TorneosWeb.domain.models.dto;
 using TorneosWeb.domain.models.ligas;
 using TorneosWeb.exception;
 using TorneosWeb.util;
@@ -88,9 +89,9 @@ namespace TorneosWeb.service.impl
 				try
 				{
 					int asociar = AsociarTorneo( torneo.Id, uow );
-					decimal bolsa = prizeService.GetBolsaTorneo( torneo.Entradas + torneo.Rebuys, torneo.PrecioBuyinNumber, ligaReader.GetCurrentLiga().Fee );
+					Bolsa bolsa = prizeService.GetBolsaTorneo( torneo.Entradas + torneo.Rebuys, torneo.PrecioBuyinNumber, ligaReader.GetCurrentLiga().Fee );
 					string query = "update torneos set bolsa = {0} where id = '{1}'";
-					uow.ExecuteNonQuery( query, bolsa, torneo.Id );
+					uow.ExecuteNonQuery( query, bolsa.Total, torneo.Id );
 					uow.Commit();
 					cacheService.Clear();
 

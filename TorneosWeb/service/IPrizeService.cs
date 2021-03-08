@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using TorneosWeb.domain.dto;
-using TorneosWeb.domain.models.ligas;
+using TorneosWeb.domain.models.dto;
 
 namespace TorneosWeb.service
 {
@@ -8,7 +8,7 @@ namespace TorneosWeb.service
 	{
 		void SetPremiosTorneo(TorneoDTO torneo, List<ResultadosDTO> resultados);
 
-		decimal GetBolsaTorneo(int entradas, int buyin, int ligaFee = 0);
+		Bolsa GetBolsaTorneo(int entradas, int buyin, int ligaFee = 0);
 	}
 
 }

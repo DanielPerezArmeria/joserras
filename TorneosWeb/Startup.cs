@@ -18,6 +18,7 @@ using TorneosWeb.service.decorators;
 using TorneosWeb.service.impl;
 using TorneosWeb.util;
 using TorneosWeb.util.automapper;
+using TorneosWeb.util.prize;
 using TorneosWeb.util.schedule;
 
 namespace TorneosWeb
@@ -95,15 +96,19 @@ namespace TorneosWeb
 			ignoreClasses.Add( Type.GetType( "TorneosWeb.service.IProfitsExporter" ) );
 
 			RegisterNamespace( "TorneosWeb.service.impl", ignoreClasses );
+			RegisterNamespace( "TorneosWeb.dao.impl" );
 
 			container.RegisterDecorator<IReadService, TransactionWrapperReadService>( Lifestyle.Singleton );
 			container.RegisterDecorator<IStatsService, TransactionWrapperStatsService>( Lifestyle.Singleton );
 			container.RegisterDecorator<ILigaReader, TxWrapperLigaReader>( Lifestyle.Singleton );
 
+			;
+			container.Collection.Register<IPrizeFiller>( new[] { typeof( IPrizeFiller ).Assembly }, Lifestyle.Singleton );
+
 			container.RegisterSingleton<JoserrasQuery>();
 		}
 
-		private void RegisterNamespace(string nameSpace, List<Type> ignoreServiceClasses)
+		private void RegisterNamespace(string nameSpace, IEnumerable<Type> ignoreServiceClasses)
 		{
 			var registrations =
 				from type in Assembly.GetExecutingAssembly().GetExportedTypes()
@@ -119,6 +124,11 @@ namespace TorneosWeb
 				}
 				container.Register( reg.service, reg.implementation, Lifestyle.Singleton );
 			}
+		}
+
+		private void RegisterNamespace(string nameSpace)
+		{
+			RegisterNamespace( nameSpace, new List<Type>() );
 		}
 
 		private IMapper GetMapper(Container container)

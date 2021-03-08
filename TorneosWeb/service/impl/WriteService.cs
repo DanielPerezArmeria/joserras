@@ -93,6 +93,11 @@ namespace TorneosWeb.service.impl
 
 					torneo.Id = InsertarTorneo( torneo, resultados, uow );
 
+					if( torneo.Liga )
+					{
+						ligaWriter.AsociarTorneo( torneo.Id, uow );
+					}
+
 					InsertarResultados( torneo, resultados, uow );
 
 					if( kos != null && kos.Count > 0 )
@@ -107,7 +112,7 @@ namespace TorneosWeb.service.impl
 				{
 					log.LogError( je, je.Message );
 					uow.Rollback();
-					throw new JoserrasException( je.Message, je );
+					throw;
 				}
 				catch( Exception e )
 				{
@@ -149,14 +154,9 @@ namespace TorneosWeb.service.impl
 					(torneo.Liga && liga != null) ? liga.Fee : 0 );
 
 			Guid torneoId = Guid.Parse( uow.ExecuteScalar( Properties.Queries.InsertTorneo, torneo.Fecha.ToString( "yyyy-MM-dd" ),
-					torneo.PrecioBuyin, torneo.PrecioRebuy, torneo.Entradas, torneo.Rebuys, torneo.Bolsa,
+					torneo.PrecioBuyin, torneo.PrecioRebuy, torneo.Entradas, torneo.Rebuys, torneo.Bolsa.Total,
 					torneo.Tipo.ToString(), torneo.PrecioBounty )
 					.ToString() );
-
-			if( torneo.Liga )
-			{
-				ligaWriter.AsociarTorneo( torneo.Id, uow );
-			}
 
 			return torneoId;
 		}
@@ -256,8 +256,6 @@ namespace TorneosWeb.service.impl
 			try
 			{
 				uow.ExecuteNonQuery( query, nombre );
-				uow.Commit();
-				cacheService.Clear();
 			}
 			catch( SqlException sqle )
 			{
