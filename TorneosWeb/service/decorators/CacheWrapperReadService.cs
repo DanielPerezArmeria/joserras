@@ -7,13 +7,13 @@ using TorneosWeb.exception;
 
 namespace TorneosWeb.service.decorators
 {
-	public class TransactionWrapperReadService : IReadService
+	public class CacheWrapperReadService : IReadService
 	{
 		private IReadService wrapped;
 		private ICacheService cacheService;
-		private ILogger<TransactionWrapperReadService> log;
+		private ILogger<CacheWrapperReadService> log;
 
-		public TransactionWrapperReadService(IReadService readService, ICacheService cacheService, ILogger<TransactionWrapperReadService> logger)
+		public CacheWrapperReadService(IReadService readService, ICacheService cacheService, ILogger<CacheWrapperReadService> logger)
 		{
 			wrapped = readService;
 			this.cacheService = cacheService;

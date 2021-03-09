@@ -6,13 +6,13 @@ using TorneosWeb.exception;
 
 namespace TorneosWeb.service.decorators
 {
-	public class TransactionWrapperStatsService : IStatsService
+	public class CacheWrapperStatsService : IStatsService
 	{
 		private IStatsService wrapped;
 		private ICacheService cacheService;
-		private ILogger<TransactionWrapperStatsService> log;
+		private ILogger<CacheWrapperStatsService> log;
 
-		public TransactionWrapperStatsService(IStatsService statsService, ICacheService cacheService, ILogger<TransactionWrapperStatsService> logger)
+		public CacheWrapperStatsService(IStatsService statsService, ICacheService cacheService, ILogger<CacheWrapperStatsService> logger)
 		{
 			wrapped = statsService;
 			this.cacheService = cacheService;

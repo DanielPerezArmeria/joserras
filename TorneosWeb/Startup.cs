@@ -98,9 +98,9 @@ namespace TorneosWeb
 			RegisterNamespace( "TorneosWeb.service.impl", ignoreClasses );
 			RegisterNamespace( "TorneosWeb.dao.impl" );
 
-			container.RegisterDecorator<IReadService, TransactionWrapperReadService>( Lifestyle.Singleton );
-			container.RegisterDecorator<IStatsService, TransactionWrapperStatsService>( Lifestyle.Singleton );
-			container.RegisterDecorator<ILigaReader, TxWrapperLigaReader>( Lifestyle.Singleton );
+			container.RegisterDecorator<IReadService, CacheWrapperReadService>( Lifestyle.Singleton );
+			container.RegisterDecorator<IStatsService, CacheWrapperStatsService>( Lifestyle.Singleton );
+			container.RegisterDecorator<ILigaReader, CacheWrapperLigaReader>( Lifestyle.Singleton );
 
 			;
 			container.Collection.Register<IPrizeFiller>( new[] { typeof( IPrizeFiller ).Assembly }, Lifestyle.Singleton );
