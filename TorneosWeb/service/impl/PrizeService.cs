@@ -33,10 +33,10 @@ namespace TorneosWeb.service.impl
 		private string SetPremiacionString(TorneoDTO torneo, IEnumerable<ResultadosDTO> resultados)
 		{
 			int entradas = torneo.Entradas + torneo.Rebuys;
-			if( resultados.Any( r => !string.IsNullOrEmpty( r.Premio ) ) ) {
-				List<string> list = resultados.Where( r => !string.IsNullOrEmpty( r.Premio ) )
+			if( resultados.Any( r => !r.Premio.IsNullEmptyOrZero() ) ) {
+				List<string> list = resultados.Where( r => !r.Premio.IsNullEmptyOrZero() )
 						.OrderBy( r => r.Posicion ).Select( r => r.Premio ).ToList();
-				return string.Join( '-', list );
+				return string.Join( PrizeFill.SEPARATOR, list );
 			}
 			else if( !string.IsNullOrEmpty( torneo.Premiacion ) )
 			{

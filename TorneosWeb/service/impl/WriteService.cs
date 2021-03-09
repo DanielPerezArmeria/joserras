@@ -283,6 +283,8 @@ namespace TorneosWeb.service.impl
 			using(TorneoUnitOfWork uow = new TorneoUnitOfWork( connString ) )
 			{
 				AddPlayer( nombre, uow );
+				uow.Commit();
+				cacheService.Clear();
 			}
 		}
 
