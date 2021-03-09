@@ -13,6 +13,7 @@
 		public static string PERCENT_CHAR = "%";
 		public static string FIXED_PERCENT = "p";
 		public static string FACTOR = "x";
+		public static string SEPARATOR = "-";
 	}
 
 }

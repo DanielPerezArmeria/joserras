@@ -6,7 +6,7 @@ namespace TorneosWeb.service
 {
 	public interface IPrizeService
 	{
-		void SetPremiosTorneo(TorneoDTO torneo, List<ResultadosDTO> resultados);
+		void SetPremiosTorneo(TorneoDTO torneo, IEnumerable<ResultadosDTO> resultados);
 
 		Bolsa GetBolsaTorneo(int entradas, int buyin, int ligaFee = 0);
 	}

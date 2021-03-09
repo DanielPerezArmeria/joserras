@@ -6,9 +6,9 @@ namespace TorneosWeb.util.prize
 {
 	public interface IPrizeFiller
 	{
-		bool CanHandle(TorneoDTO torneo, List<ResultadosDTO> resultados, Bolsa bolsa, string premio);
+		bool CanHandle(TorneoDTO torneo, IEnumerable<ResultadosDTO> resultados, Bolsa bolsa, string premio);
 
-		string AssignPrize(TorneoDTO torneo, List<ResultadosDTO> resultados, Bolsa bolsa, string premio);
+		string AssignPrize(TorneoDTO torneo, IEnumerable<ResultadosDTO> resultados, Bolsa bolsa, string premio);
 	}
 
 }

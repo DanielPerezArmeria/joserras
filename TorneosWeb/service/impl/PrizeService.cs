@@ -24,20 +24,36 @@ namespace TorneosWeb.service.impl
 			this.fillers = fillers;
 		}
 
-		public void SetPremiosTorneo(TorneoDTO torneo, List<ResultadosDTO> resultados)
+		public void SetPremiosTorneo(TorneoDTO torneo, IEnumerable<ResultadosDTO> resultados)
 		{
-			int entradas = torneo.Entradas + torneo.Rebuys;
-			IEnumerable<PrizeRange> PrizeRanges = prizeDao.GetPrizeRanges();
-			PrizeRange selectedRange = PrizeRanges.First( r => r.IsBetween( entradas ) );
-			log.LogDebug( "Selected prize range: {0}", selectedRange.ToString() );
-
-			FillPrizes( torneo, resultados, selectedRange, torneo.Bolsa );
+			torneo.Premiacion = SetPremiacionString( torneo, resultados );
+			FillPrizes( torneo, resultados );
 		}
 
-		private void FillPrizes(TorneoDTO torneo, List<ResultadosDTO> resultados, PrizeRange selectedRange, Bolsa bolsa)
+		private string SetPremiacionString(TorneoDTO torneo, IEnumerable<ResultadosDTO> resultados)
 		{
-			IEnumerable<string> premios = string.IsNullOrEmpty( torneo.Premiacion ) ?
-					selectedRange.Premiacion.Split( "-" ) : torneo.Premiacion.Split( "-" );
+			int entradas = torneo.Entradas + torneo.Rebuys;
+			if( resultados.Any( r => !string.IsNullOrEmpty( r.Premio ) ) ) {
+				List<string> list = resultados.Where( r => !string.IsNullOrEmpty( r.Premio ) )
+						.OrderBy( r => r.Posicion ).Select( r => r.Premio ).ToList();
+				return string.Join( '-', list );
+			}
+			else if( !string.IsNullOrEmpty( torneo.Premiacion ) )
+			{
+				return torneo.Premiacion;
+			}
+			else
+			{
+				IEnumerable<PrizeRange> PrizeRanges = prizeDao.GetPrizeRanges();
+				PrizeRange selectedRange = PrizeRanges.First( r => r.IsBetween( entradas ) );
+				log.LogDebug( "Selected prize range: {0}", selectedRange.ToString() );
+				return selectedRange.Premiacion;
+			}
+		}
+
+		private void FillPrizes(TorneoDTO torneo, IEnumerable<ResultadosDTO> resultados)
+		{
+			IEnumerable<string> premios = torneo.Premiacion.Split( PrizeFill.SEPARATOR );
 
 			int placesAwarded = premios.Count();
 			for( int i = placesAwarded; i > 0; i-- )
@@ -45,37 +61,20 @@ namespace TorneosWeb.service.impl
 				try
 				{
 					ResultadosDTO res = resultados.First( r => r.Posicion == i );
-					string premio = res.Premio.IsNullEmptyOrZero() ? premios.ElementAt( i - 1 ) : res.Premio;
-					decimal otorgado = 0;
-					if( premio.Contains( '%' ) )
+					string premio = premios.ElementAt( i - 1 );
+
+					IPrizeFiller selectedFiller = fillers.SingleOrDefault( f => f.CanHandle( torneo, resultados, torneo.Bolsa, premio ) );
+					if(selectedFiller == null )
 					{
-						decimal factor = decimal.Parse( premio.Replace( "%", "" ) ) / 100;
-						otorgado = bolsa.Total * factor;
-					}
-					else if( premio.Contains( '&' ) )
-					{
-						decimal factor = decimal.Parse( premio.Replace( "&", "" ) ) / 100;
-						otorgado = bolsa.Remanente * factor;
-					}
-					else if( premio.Contains( 'p' ) )
-					{
-						decimal factor = decimal.Parse( premio.Replace( "p", "" ) ) / 100;
-						otorgado = bolsa.Remanente * factor;
-						bolsa.Remanente -= otorgado;
-					}
-					else if( premio.Contains( 'x' ) )
-					{
-						decimal factor = decimal.Parse( premio.Replace( "x", "" ) );
-						otorgado = torneo.PrecioBuyin * factor;
-						bolsa.Remanente -= otorgado;
-					}
-					else
-					{
-						otorgado = premio.ToDecimal();
-						bolsa.Remanente -= otorgado;
+						throw new JoserrasException( "No se pudo seleccionar un Prize Filler para la posición: " + i );
 					}
 
-					res.Premio = otorgado.ToString();
+					res.Premio = selectedFiller.AssignPrize( torneo, resultados, torneo.Bolsa, premio );
+				}
+				catch(JoserrasException je )
+				{
+					log.LogError( je, je.Message );
+					throw;
 				}
 				catch( ArgumentOutOfRangeException e )
 				{
