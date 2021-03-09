@@ -7,13 +7,13 @@ using TorneosWeb.exception;
 
 namespace TorneosWeb.service.decorators
 {
-	public class TxWrapperLigaReader : ILigaReader
+	public class CacheWrapperLigaReader : ILigaReader
 	{
 		private ICacheService cacheService;
 		private ILigaReader wrapped;
-		private ILogger<TxWrapperLigaReader> log;
+		private ILogger<CacheWrapperLigaReader> log;
 
-		public TxWrapperLigaReader(ILigaReader reader, ICacheService cache, ILogger<TxWrapperLigaReader> logger)
+		public CacheWrapperLigaReader(ILigaReader reader, ICacheService cache, ILogger<CacheWrapperLigaReader> logger)
 		{
 			cacheService = cache;
 			wrapped = reader;
