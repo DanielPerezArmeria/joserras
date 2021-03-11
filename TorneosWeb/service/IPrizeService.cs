@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using TorneosWeb.domain.dto;
-using TorneosWeb.domain.models.ligas;
+using TorneosWeb.domain.models.dto;
 
 namespace TorneosWeb.service
 {
 	public interface IPrizeService
 	{
-		void SetPremiosTorneo(TorneoDTO torneo, List<ResultadosDTO> resultados);
+		void SetPremiosTorneo(TorneoDTO torneo, IEnumerable<ResultadosDTO> resultados);
 
-		decimal GetBolsaTorneo(int entradas, int buyin, int ligaFee = 0);
+		Bolsa GetBolsaTorneo(int entradas, int buyin, int ligaFee = 0);
 	}
 
 }
