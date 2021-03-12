@@ -9,7 +9,10 @@ namespace TorneosWeb.domain.models
 		BOUNTY = 3,
 
 		[Description("ADD ON")]
-		ADDON = 4
+		ADDON = 4,
+
+		[Description("SIT & GO")]
+		SITGO = 5
 	}
 
 }
