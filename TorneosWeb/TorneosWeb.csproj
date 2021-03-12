@@ -28,6 +28,11 @@
 
 
   <ItemGroup>
+    <Compile Update="Properties\ChartQueries.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ChartQueries.resx</DependentUpon>
+    </Compile>
     <Compile Update="Properties\Queries.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -49,6 +54,10 @@
 
 
   <ItemGroup>
+    <EmbeddedResource Update="Properties\ChartQueries.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ChartQueries.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="Properties\Queries.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Queries.Designer.cs</LastGenOutput>
