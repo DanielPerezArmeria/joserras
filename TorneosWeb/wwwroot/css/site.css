@@ -220,3 +220,11 @@ table.paleBlueRows tfoot td {
 		grid-template-columns: auto auto auto auto;
 	}
 }
+
+
+/* CHART
+####################################################*/
+.chartCanvas{
+	width:100%;
+	height:400px
+}
