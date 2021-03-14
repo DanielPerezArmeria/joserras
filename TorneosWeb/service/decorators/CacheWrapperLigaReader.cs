@@ -96,6 +96,25 @@ namespace TorneosWeb.service.decorators
 			return cacheService.Get<List<Standing>>( key );
 		}
 
+		public Liga GetLigaByTorneoId(Guid torneoId)
+		{
+			string key = nameof( GetLigaByTorneoId ) + ":" + torneoId;
+			if( !cacheService.Contains( key ) )
+			{
+				try
+				{
+					cacheService.Add( key, wrapped.GetLigaByTorneoId( torneoId ) );
+				}
+				catch( Exception e )
+				{
+					log.LogWarning( e, e.Message );
+					throw new JoserrasException( e );
+				}
+			}
+
+			return cacheService.Get<Liga>( key );
+		}
+
 	}
 
 }

@@ -16,12 +16,14 @@ namespace TorneosWeb.service.impl
 		private readonly string connString;
 		private IMapper mapper;
 		private JoserrasQuery joserrasQuery;
+		private ILigaReader ligaReader;
 
-		public ReadServiceImpl(IConfiguration conf, IMapper mapper, JoserrasQuery joserrasQuery)
+		public ReadServiceImpl(IConfiguration conf, IMapper mapper, JoserrasQuery joserrasQuery, ILigaReader ligaReader)
 		{
 			connString = conf.GetConnectionString( Properties.Resources.joserrasDb );
 			this.mapper = mapper;
 			this.joserrasQuery = joserrasQuery;
+			this.ligaReader = ligaReader;
 		}
 
 		public List<Jugador> GetAllJugadores()
@@ -121,16 +123,6 @@ namespace TorneosWeb.service.impl
 			{
 				// Obtener Resultados
 				t.Resultados = FindResultadosTorneo( conn, t.Id );
-
-				// Obtener Liga
-				string query = string.Format( "select * from ligas where id = (select liga_id from torneos_liga where torneo_id = '{0}')", t.Id );
-				joserrasQuery.ExecuteQuery( conn, query, reader =>
-				{
-					while( reader.Read() )
-					{
-						t.Liga = mapper.Map<SqlDataReader, Liga>( reader );
-					}
-				} );
 			}
 		}
 
@@ -197,6 +189,8 @@ namespace TorneosWeb.service.impl
 				return mapper.Map<SqlDataReader, Torneo>( reader );
 			} );
 			resultados.Torneo = torneo;
+
+			resultados.Torneo.Liga = ligaReader.GetLigaByTorneoId( torneoId );
 
 			query = string.Format( "select dt.*, j.nombre from resultados dt, jugadores j "
 					+ "where dt.torneo_id = '{0}' and dt.jugador_id = j.id order by dt.posicion", torneoId );

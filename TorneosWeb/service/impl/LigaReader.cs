@@ -217,6 +217,21 @@ namespace TorneosWeb.service.impl
 			return standings.OrderByDescending( s => s.Total ).ToList();
 		}
 
+		public Liga GetLigaByTorneoId(Guid torneoId)
+		{
+			string query = string.Format( "select * from ligas where id = (select liga_id from torneos_liga where torneo_id = '{0}')", torneoId );
+			Liga liga = null;
+			joserrasQuery.ExecuteQuery( query, reader =>
+			{
+				while( reader.Read() )
+				{
+					liga = mapper.Map<SqlDataReader, Liga>( reader );
+				}
+			} );
+
+			return liga;
+		}
+
 	}
 
 }
