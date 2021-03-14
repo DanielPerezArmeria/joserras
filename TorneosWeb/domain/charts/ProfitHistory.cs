@@ -1,22 +1,49 @@
-﻿namespace TorneosWeb.domain.charts
+﻿using System;
+
+namespace TorneosWeb.domain.charts
 {
-	public class ProfitHistory
+	public class ProfitChartItem
 	{
-		public ProfitEntry[] TournamentProfitHistory { get; set; }
-		public ProfitEntry[] LigaProfitHistory { get; set; }
+		public string[] Labels { get; set; }
+		public decimal[] Tournaments { get; set; }
+		public decimal[] Liga { get; set; }
 
-		public class ProfitEntry
+	}
+
+	public class DateDecimalPoint
+	{
+		public DateTime Date { get; set; }
+		public decimal Total { get; set; }
+	}
+
+	public class ChartDatePoint : IComparable<ChartDatePoint>, IEquatable<ChartDatePoint>
+	{
+		public int Year { get; set; }
+		public int Month { get; set; }
+		public decimal Total { get; set; }
+
+		public ChartDatePoint(int year, int month, decimal total)
 		{
-			public string Fecha { get; set; }
-			public decimal Profit { get; set; }
+			Year = year;
+			Month = month;
+			Total = total;
+		}
 
-			public ProfitEntry() { }
-
-			public ProfitEntry(string fecha, decimal profit)
+		public int CompareTo(ChartDatePoint other)
+		{
+			if( Year == other.Year )
 			{
-				Fecha = fecha;
-				Profit = profit;
+				if(Month == other.Month ) { return 0; }
+				else if(Month < other.Month ) { return -1; }
+				else { return 1; }
 			}
+			else if(Year < other.Year ) { return -1; }
+			else { return 1; }
+		}
+
+		public bool Equals(ChartDatePoint other)
+		{
+			return Year == other.Year && Month == other.Month;
 		}
 
 	}

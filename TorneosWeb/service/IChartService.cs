@@ -5,7 +5,7 @@ namespace TorneosWeb.service
 {
 	public interface IChartService
 	{
-		ProfitHistory GetProfitHistoryByPlayerId(Guid playerId);
+		ProfitChartItem GetProfitHistoryByPlayerId(Guid playerId);
 	}
 
 }

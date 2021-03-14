@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Humanizer;
+using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 using TorneosWeb.domain.charts;
 using TorneosWeb.util;
-using static TorneosWeb.domain.charts.ProfitHistory;
 
 namespace TorneosWeb.service.impl
 {
@@ -17,46 +17,93 @@ namespace TorneosWeb.service.impl
 			this.joserrasQuery = joserrasQuery;
 		}
 
-		public ProfitHistory GetProfitHistoryByPlayerId(Guid playerId)
+		public ProfitChartItem GetProfitHistoryByPlayerId(Guid playerId)
 		{
-			ProfitEntry[] tourneyProfitHistory = joserrasQuery.ExecuteQuery( Properties.ChartQueries.PROFIT_HISTORY, BuildTourneyProfit,
-				new SqlParameter( "playerId", playerId ) );
-			
-			ProfitEntry[] ligaProfitHistory = joserrasQuery.ExecuteQuery( Properties.ChartQueries.LIGA_PROFIT_HISTORY, BuildLigaProfit,
+			List<ChartDatePoint> tourneyProfitHistory = joserrasQuery.ExecuteQuery( Properties.ChartQueries.PROFIT_HISTORY, BuildTourneyProfit,
 				new SqlParameter( "playerId", playerId ) );
 
-			ProfitHistory profitHistory = new ProfitHistory();
-			profitHistory.TournamentProfitHistory = tourneyProfitHistory;
-			profitHistory.LigaProfitHistory = ligaProfitHistory;
+			List<ChartDatePoint> ligaProfitHistory = joserrasQuery.ExecuteQuery( Properties.ChartQueries.LIGA_PROFIT_HISTORY, BuildLigaProfit,
+				new SqlParameter( "playerId", playerId ) );
+
+			ProfitChartItem profitHistory = new ProfitChartItem();
+
+			List<ChartDatePoint> consolidatedDates = new List<ChartDatePoint>( tourneyProfitHistory );
+			foreach(ChartDatePoint point in tourneyProfitHistory )
+			{
+				if( !ligaProfitHistory.Contains( point ) )
+				{
+					ligaProfitHistory.Add( new ChartDatePoint( point.Year, point.Month, 0 ) );
+				}
+			}
+
+			ligaProfitHistory.Sort();
+			AcumularTotales( ligaProfitHistory );
+
+			profitHistory.Tournaments = tourneyProfitHistory.Select( t => t.Total ).ToArray();
+			profitHistory.Liga = ligaProfitHistory.Select( t => t.Total ).ToArray();
+			profitHistory.Labels = ( from t in tourneyProfitHistory
+															select new DateTime( t.Year, t.Month, 1 ).ToString( "MMM/yyyy" ).Titleize()
+														).ToArray();
 
 			return profitHistory;
 		}
 
-		private ProfitEntry[] BuildLigaProfit(SqlDataReader reader)
+		private List<ChartDatePoint> BuildLigaProfit(SqlDataReader reader)
 		{
-			List<ProfitEntry> history = new List<ProfitEntry>();
+			List<DateDecimalPoint> tuples = new List<DateDecimalPoint>();
+
 			while( reader.Read() )
 			{
-				ProfitEntry hist = new ProfitEntry();
-				hist.Fecha = reader.GetFieldValue<DateTime>( reader.GetOrdinal( "fecha_cierre" ) ).ToShortDateString();
-				hist.Profit = reader.GetFieldValue<decimal>( reader.GetOrdinal( "premio" ) );
-				history.Add( hist );
+				decimal total = reader.GetFieldValue<decimal>( reader.GetOrdinal( "premio" ) );
+				tuples.Add( new DateDecimalPoint() { Date = reader.GetFieldValue<DateTime>( reader.GetOrdinal( "fecha_cierre" ) ), Total = total } );
 			}
-			return history.ToArray();
+
+			List<ChartDatePoint> dividedDatePoints = AgruparPorMeses( tuples );
+
+			return dividedDatePoints;
 		}
 
-		private ProfitEntry[] BuildTourneyProfit(SqlDataReader reader)
+		private List<ChartDatePoint> BuildTourneyProfit(SqlDataReader reader)
 		{
-			List<ProfitEntry> history = new List<ProfitEntry>();
+			List<DateDecimalPoint> tuples = new List<DateDecimalPoint>();
+
 			while( reader.Read() )
 			{
-				ProfitEntry hist = new ProfitEntry();
-				hist.Fecha = reader.GetFieldValue<DateTime>( reader.GetOrdinal( "fecha" ) ).ToShortDateString();
-				hist.Profit = reader.GetFieldValue<decimal>( reader.GetOrdinal( "premio" ) ) -
-						reader.GetFieldValue<int>( reader.GetOrdinal( "costo_total" ) );
-				history.Add( hist );
+				decimal total = reader.GetFieldValue<decimal>( reader.GetOrdinal( "premio" ) )
+						- reader.GetFieldValue<int>( reader.GetOrdinal( "costo_total" ) );
+
+				tuples.Add( new DateDecimalPoint() { Date = reader.GetFieldValue<DateTime>( reader.GetOrdinal( "fecha" ) ), Total = total } );
 			}
-			return history.ToArray();
+
+			// Agrupar por mes
+			List<ChartDatePoint> dividedDatePoints = AgruparPorMeses( tuples );
+			AcumularTotales( dividedDatePoints );
+
+			return dividedDatePoints;
+		}
+
+		private List<ChartDatePoint> AgruparPorMeses(List<DateDecimalPoint> tuples)
+		{
+			List<ChartDatePoint> dividedDatePoints = tuples.Select( t => new ChartDatePoint( t.Date.Year, t.Date.Month, t.Total ) )
+				.GroupBy( x => new { x.Year, x.Month }, (key, group) => new ChartDatePoint
+				(
+					key.Year,
+					key.Month,
+					group.Sum( k => k.Total )
+				) ).ToList();
+
+			return dividedDatePoints;
+		}
+
+		private void AcumularTotales(List<ChartDatePoint> points)
+		{
+			decimal profitSum = 0;
+			for( int i = 0; i < points.Count; i++ )
+			{
+				;
+				points[ i ].Total = points[ i ].Total + profitSum;
+				profitSum = points[ i ].Total;
+			}
 		}
 
 	}

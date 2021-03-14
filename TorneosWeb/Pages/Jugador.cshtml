@@ -1,14 +1,19 @@
 ﻿@page
 @model TorneosWeb.Pages.JugadorModel
+@using TorneosWeb.util
 
 <!DOCTYPE html>
 
 <html>
-	<link rel="stylesheet" type="text/css" href="~/css/site.css"/>
+
 <head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Jugador</title>
+	<link rel="stylesheet" type="text/css" href="~/css/site.css" />
+	<link rel="stylesheet" type="text/css" href="~/charts_js/Chart.css" />
+	<script src="~/charts_js/Chart.bundle.js"></script>
+	<meta name="viewport" content="width=device-width" />
+	<title>Jugador</title>
 </head>
+
 <body>
 	<div style="display:inline-flex; vertical-align:bottom">
 		<p><h1>@Model.DetalleJugador.Nombre</h1><h1 style="margin-left:35px;color:@(Model.DetalleJugador.ProfitNumber < 0 ? "red" : "black")">@Model.DetalleJugador.Profit</h1></p>
@@ -40,7 +45,7 @@
 			<div class="statValue">@Model.DetalleJugador.Burbujas</div>
 		</div>
 
-		<p/>
+		<p />
 
 		<div class="gridWrapper">
 			<h3 style="grid-column: 1 / span 2">PREMIOS</h3>
@@ -73,6 +78,40 @@
 			}
 		</div>
 
+	</div>
+
+	<hr style="margin-top:3em;margin-bottom:3em;border: 3px solid black;width:100%;background-color:black" />
+
+	<div id="profitHistoryChart">
+		<canvas id="myChart" class="chartCanvas"></canvas>
+		<script>
+			var tourneyHistory = @JavaScriptConvert.SerializeObject( Model.ProfitHistory );
+			var ctx = document.getElementById('myChart');
+			var chart = new Chart(ctx, {
+				type: 'line',
+				data: {
+					labels: tourneyHistory.labels,
+					datasets: [{
+						label: 'Profit Torneos',
+						data: tourneyHistory.tournaments,
+						borderColor: 'cyan',
+						pointBackgroundColor: function (context) {
+							var index = context.dataIndex;
+							var value = context.dataset.data[index];
+							return value < 0 ? 'red' : 'green';
+						},
+						pointRadius: 5,
+						fill: false
+					}]
+				}
+			});
+
+			function setColor(context) {
+				var index = context.dataIndex;
+				var value = context.dataset.data[index];
+				return value < 0 ? 'red' : 'green';
+			}
+		</script>
 	</div>
 
 </body>

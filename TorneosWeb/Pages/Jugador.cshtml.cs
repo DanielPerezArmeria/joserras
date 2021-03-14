@@ -11,6 +11,7 @@ namespace TorneosWeb.Pages
 	public class JugadorModel : PageModel
 	{
 		public DetalleJugador DetalleJugador { get; set; }
+		public ProfitChartItem ProfitHistory { get; set; }
 
 		private IReadService readService;
 		private IChartService chartService;
@@ -25,8 +26,7 @@ namespace TorneosWeb.Pages
 		public void OnGet(Guid id)
 		{
 			DetalleJugador = readService.FindDetalleJugador( id );
-			ProfitHistory profitHistory = chartService.GetProfitHistoryByPlayerId( id );
-			decimal s = profitHistory.TournamentProfitHistory.Sum( r => r.Profit );
+			ProfitHistory = chartService.GetProfitHistoryByPlayerId( id );
 		}
 			
 	}
