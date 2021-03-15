@@ -23,7 +23,7 @@ namespace TorneosWeb.domain.models
 		{
 			get
 			{
-				int total = PrecioBuyinNumber - PremioBountyNumber - (Liga == null ? 0 : Liga.Fee);
+				int total = PrecioBuyinNumber - PremioBountyNumber;
 				string buyin = total.ToString( Constants.CURRENCY_FORMAT );
 				if( Tipo == TournamentType.BOUNTY )
 				{

@@ -16,7 +16,7 @@ namespace TorneosWeb.domain.models
 		{
 			get
 			{
-				return PremiosNumber + PremiosLigaNumber - CostosNumber;
+				return ProfitTorneosNumber + PremiosLigaNumber;
 			}
 		}
 
@@ -53,6 +53,7 @@ namespace TorneosWeb.domain.models
 			get { return PremiosNumber > 0 ? PremiosNumber.ToString( Constants.CURRENCY_FORMAT ) : "$0"; }
 		}
 		public decimal PremiosNumber { get; set; }
+
 		[NoMap]
 		public string Costos
 		{
@@ -89,6 +90,12 @@ namespace TorneosWeb.domain.models
 
 		[NoMap]
 		public decimal PremiosLigaNumber { get; set; }
+
+		[NoMap]
+		public decimal CostosLigaNumber { get; set; }
+
+		[NoMap]
+		public decimal ProfitLigaNumber { get; set; }
 
 		[NoMap]
 		[Display( Name = "Premios Liga" )]

@@ -103,6 +103,7 @@ namespace TorneosWeb.service.impl
 					while( reader.Read() )
 					{
 						Torneo torneo = mapper.Map<SqlDataReader, Torneo>( reader );
+						torneo.Liga = ligaDao.GetLigaByTorneoId( torneo.Id );
 						torneos.Add( torneo );
 					}
 				} );
@@ -320,6 +321,8 @@ namespace TorneosWeb.service.impl
 					detalle.PremiosLigaNumber = premio;
 				}
 			} );
+
+			
 
 			return detalles;
 		}
