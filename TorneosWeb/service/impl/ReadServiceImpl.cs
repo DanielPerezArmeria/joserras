@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Data.SqlTypes;
 using System.Linq;
+using TorneosWeb.dao;
 using TorneosWeb.domain.models;
 using TorneosWeb.domain.models.ligas;
 using TorneosWeb.util;
@@ -16,14 +17,14 @@ namespace TorneosWeb.service.impl
 		private readonly string connString;
 		private IMapper mapper;
 		private JoserrasQuery joserrasQuery;
-		private ILigaReader ligaReader;
+		private ILigaDao ligaDao;
 
-		public ReadServiceImpl(IConfiguration conf, IMapper mapper, JoserrasQuery joserrasQuery, ILigaReader ligaReader)
+		public ReadServiceImpl(IConfiguration conf, IMapper mapper, JoserrasQuery joserrasQuery, ILigaDao ligaDao)
 		{
 			connString = conf.GetConnectionString( Properties.Resources.joserrasDb );
 			this.mapper = mapper;
 			this.joserrasQuery = joserrasQuery;
-			this.ligaReader = ligaReader;
+			this.ligaDao = ligaDao;
 		}
 
 		public List<Jugador> GetAllJugadores()
@@ -145,27 +146,6 @@ namespace TorneosWeb.service.impl
 			return torneo;
 		}
 
-		public Torneo FindTorneoById(Guid id)
-		{
-			Torneo torneo = null;
-			using( SqlConnection conn = new SqlConnection( connString ) )
-			{
-				conn.Open();
-				string query = string.Format( @"select * from torneos where id = '{0}'", id.ToString() );
-				joserrasQuery.ExecuteQuery( conn, query, reader =>
-				{
-					while( reader.Read() )
-					{
-						torneo = mapper.Map<Torneo>( reader );
-					}
-				} );
-
-				FillTorneos( torneo, conn );
-			}
-
-			return torneo;
-		}
-
 		#endregion
 
 
@@ -188,9 +168,10 @@ namespace TorneosWeb.service.impl
 				reader.Read();
 				return mapper.Map<SqlDataReader, Torneo>( reader );
 			} );
+
 			resultados.Torneo = torneo;
 
-			resultados.Torneo.Liga = ligaReader.GetLigaByTorneoId( torneoId );
+			resultados.Torneo.Liga = ligaDao.GetLigaByTorneoId( torneoId );
 
 			query = string.Format( "select dt.*, j.nombre from resultados dt, jugadores j "
 					+ "where dt.torneo_id = '{0}' and dt.jugador_id = j.id order by dt.posicion", torneoId );
@@ -392,7 +373,7 @@ namespace TorneosWeb.service.impl
 		}
 
 		#endregion
-		
+
 	}
 
 }

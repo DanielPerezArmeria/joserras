@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using TorneosWeb.dao;
 using TorneosWeb.domain.models;
 using TorneosWeb.domain.models.ligas;
 using TorneosWeb.util;
@@ -21,15 +22,17 @@ namespace TorneosWeb.service.impl
 		private readonly string ConnString;
 		private IReadService readService;
 		private IStatsService statsService;
+		private ILigaDao ligaDao;
 
 		public LigaReader(IConfiguration conf, IReadService readService, IMapper mapper, JoserrasQuery joserrasQuery,
-			IStatsService statsService, ILogger<LigaReader> log)
+			IStatsService statsService, ILogger<LigaReader> log, ILigaDao ligaDao)
 		{
 			this.conf = conf;
 			this.mapper = mapper;
 			this.joserrasQuery = joserrasQuery;
 			this.readService = readService;
 			this.statsService = statsService;
+			this.ligaDao = ligaDao;
 			Log = log;
 			ConnString = conf.GetConnectionString( Properties.Resources.joserrasDb );
 		}
@@ -219,17 +222,7 @@ namespace TorneosWeb.service.impl
 
 		public Liga GetLigaByTorneoId(Guid torneoId)
 		{
-			string query = string.Format( "select * from ligas where id = (select liga_id from torneos_liga where torneo_id = '{0}')", torneoId );
-			Liga liga = null;
-			joserrasQuery.ExecuteQuery( query, reader =>
-			{
-				while( reader.Read() )
-				{
-					liga = mapper.Map<SqlDataReader, Liga>( reader );
-				}
-			} );
-
-			return liga;
+			return ligaDao.GetLigaByTorneoId( torneoId );
 		}
 
 	}
