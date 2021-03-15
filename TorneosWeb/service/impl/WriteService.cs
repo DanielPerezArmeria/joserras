@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -41,18 +40,10 @@ namespace TorneosWeb.service.impl
 			this.prizeService = prizeService;
 		}
 
-		public void uploadTournament(List<IFormFile> files)
+		public Guid UploadTournament(TorneoDTO torneo, List<ResultadosDTO> resultados, List<KnockoutsDTO> kos)
 		{
-			TorneoDTO torneo;
-			List<ResultadosDTO> resultados;
-			List<KnockoutsDTO> kos;
-
 			try
 			{
-				torneo = tourneyReader.GetFormFileItems<TorneoDTO>( files.Find( t => t.FileName.Contains( "torneo" ) ) ).First();
-				resultados = tourneyReader.GetFormFileItems<ResultadosDTO>( files.Find( t => t.FileName.Contains( "resultados" ) ) ).ToList();
-				kos = tourneyReader.GetFormFileItems<KnockoutsDTO>( files.Find( t => t.FileName.Contains( "knockouts" ) ) ).ToList();
-
 				kos =
 					(from ko in kos
 					 group ko by new { ko.Jugador, ko.Eliminado }
@@ -129,6 +120,8 @@ namespace TorneosWeb.service.impl
 				List<Torneo> torneos = readService.GetAllTorneos().Where( t => monday <= t.FechaDate && t.FechaDate <= torneo.Fecha ).ToList();
 				profitsExporter.ExportProfits( torneos );
 			}
+
+			return torneo.Id;
 		}
 
 		private void InsertarNuevosJugadores(List<ResultadosDTO> resultados, TorneoUnitOfWork uow)
