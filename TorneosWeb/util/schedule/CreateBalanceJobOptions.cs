@@ -1,4 +1,5 @@
 ﻿using CronScheduler.Extensions.Scheduler;
+using System;
 
 namespace TorneosWeb.util.schedule
 {
@@ -7,6 +8,7 @@ namespace TorneosWeb.util.schedule
 		public CreateBalanceJobOptions()
 		{
 			CronSchedule = "0 0 7 ? * MON";
+			CronTimeZone = "Central Standard Time (Mexico)";
 		}
 
 	}

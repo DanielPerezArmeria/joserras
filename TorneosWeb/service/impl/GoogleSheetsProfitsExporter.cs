@@ -68,7 +68,7 @@ namespace TorneosWeb.service.impl
 			SortedDictionary<string, ProfitRow> rowValues = new SortedDictionary<string, ProfitRow>();
 			CreateRowValues( rowValues, torneos );
 
-			string range = string.Format( "{0}!A2:H{1}", SHEET, rowValues.Count + 1 );
+			string range = string.Format( "{0}!D2:O{1}", SHEET, rowValues.Count + 1 );
 			IList<IList<object>> rows = new List<IList<object>>();
 			foreach( ProfitRow profitRow in rowValues.Values )
 			{
@@ -135,7 +135,7 @@ namespace TorneosWeb.service.impl
 			rows.Add( datesRow );
 			ValueRange valueRequest = new ValueRange
 			{
-				Range = string.Format( "{0}!B1:H1", SHEET ),
+				Range = string.Format( "{0}!E1:O1", SHEET ),
 				MajorDimension = "ROWS",
 				Values = new List<IList<object>>( rows )
 			};
@@ -152,13 +152,13 @@ namespace TorneosWeb.service.impl
 		{
 			int rowsToClean = readService.GetAllJugadores().Count + 1;
 
-			string range = string.Format("{0}!A1:H{1}", SHEET, rowsToClean);
+			string range = string.Format("{0}!D1:O{1}", SHEET, rowsToClean);
 			IList<object> cellValues;
 			IList<IList<object>> rows = new List<IList<object>>();
 			for(int i = 1; i <= rowsToClean;  i++ )
 			{
 				cellValues = new List<object>();
-				for(int c = 0; c < 8; c++ )
+				for(int c = 0; c < 11; c++ )
 				{
 					cellValues.Add( string.Empty );
 				}
