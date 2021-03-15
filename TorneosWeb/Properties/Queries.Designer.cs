@@ -165,6 +165,45 @@ namespace TorneosWeb.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select ptl.jugador_id, sum(premio) as premios, fees
+        ///from puntos_torneo_liga ptl,
+        ///(select id as jugador_id, sum(total) as fees
+        ///from
+        ///(select j.id, l.fee, (sum(r.rebuys * l.fee) + count(tl.torneo_id) * l.fee) as total
+        ///from torneos_liga tl, resultados r, jugadores j, ligas l
+        ///where j.id = r.jugador_id and tl.torneo_id = r.torneo_id
+        ///	and l.id = tl.liga_id and l.abierta = 0
+        ///group by j.id, l.fee) as total_fees
+        ///group by id) as liga_fees
+        ///where ptl.jugador_id = liga_fees.jugador_id
+        ///group by ptl.jugador_id,  [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string GetTotalLigaProfits {
+            get {
+                return ResourceManager.GetString("GetTotalLigaProfits", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select ptl.jugador_id, sum(premio) as premios, fees
+        ///from puntos_torneo_liga ptl,
+        ///(select id as jugador_id, sum(total) as fees
+        ///from
+        ///(select j.id, l.fee, (sum(r.rebuys * l.fee) + count(tl.torneo_id) * l.fee) as total
+        ///from torneos_liga tl, resultados r, jugadores j, ligas l
+        ///where j.id = r.jugador_id and tl.torneo_id = r.torneo_id
+        ///	and l.id = tl.liga_id and l.abierta = 0 and j.id = &apos;{0}&apos;
+        ///group by j.id, l.fee) as total_fees
+        ///group by id) as liga_fees
+        ///where ptl.jugador_id = liga_fees.jugador_id and ptl.j [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string GetTotalLigaProfitsByPlayerId {
+            get {
+                return ResourceManager.GetString("GetTotalLigaProfitsByPlayerId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to insert into torneos (fecha, precio_buyin, precio_rebuy, entradas, rebuys, bolsa, tipo, premio_x_bounty, premiacion) output INSERTED.ID
         ///values (&apos;{0}&apos;, {1}, {2}, {3}, {4}, {5}, &apos;{6}&apos;, {7}, &apos;{8}&apos; ).
         /// </summary>

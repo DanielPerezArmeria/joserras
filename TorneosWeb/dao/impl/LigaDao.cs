@@ -1,6 +1,10 @@
 ﻿using AutoMapper;
+using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Data.SqlTypes;
+using TorneosWeb.domain.models;
 using TorneosWeb.domain.models.ligas;
 using TorneosWeb.util;
 
@@ -10,11 +14,13 @@ namespace TorneosWeb.dao.impl
 	{
 		private JoserrasQuery joserrasQuery;
 		private IMapper mapper;
+		private ILogger<LigaDao> log;
 
-		public LigaDao(JoserrasQuery joserrasQuery, IMapper mapper)
+		public LigaDao(JoserrasQuery joserrasQuery, IMapper mapper, ILogger<LigaDao> logger)
 		{
 			this.joserrasQuery = joserrasQuery;
 			this.mapper = mapper;
+			log = logger;
 		}
 
 		public Liga GetLigaByTorneoId(Guid torneoId)
@@ -30,6 +36,52 @@ namespace TorneosWeb.dao.impl
 			} );
 
 			return liga;
+		}
+
+		public LigaProfitsObject GetTotalLigaProfitsByPlayerId(Guid playerId)
+		{
+			string query = string.Format( Properties.Queries.GetTotalLigaProfitsByPlayerId, playerId.ToString() );
+			LigaProfitsObject profits = new LigaProfitsObject();
+			joserrasQuery.ExecuteQuery( query, reader =>
+			{
+				while( reader.Read() )
+				{
+					try
+					{
+						profits = mapper.Map<SqlDataReader, LigaProfitsObject>( reader );
+					}
+					catch( Exception e )
+					{
+						log.LogError( e, e.Message );
+						throw e;
+					}
+				}
+			} );
+
+			return profits;
+		}
+
+		public IEnumerable<LigaProfitsObject> GetTotalLigaProfits()
+		{
+			List<LigaProfitsObject> profitObjects = new List<LigaProfitsObject>();
+			string query = string.Format( Properties.Queries.GetTotalLigaProfits );
+			joserrasQuery.ExecuteQuery( query, reader =>
+			{
+				while( reader.Read() )
+				{
+					try
+					{
+						profitObjects.Add( mapper.Map<SqlDataReader, LigaProfitsObject>( reader ) );
+					}
+					catch( Exception e )
+					{
+						log.LogError( e, e.Message );
+						throw e;
+					}
+				}
+			} );
+
+			return profitObjects;
 		}
 
 	}

@@ -22,14 +22,13 @@ namespace TorneosWeb.service.impl
 		private readonly string connString;
 
 
-		public WriteService(IReadService service, ICacheService cacheService, IConfiguration config, IProfitsExporter profitsExporter,
+		public WriteService(IReadService service, ICacheService cacheService, IConfiguration config,
 			IPrizeService prizeService, ILogger<WriteService> logger)
 		{
 			readService = service;
 			this.cacheService = cacheService;
 			log = logger;
 			connString = config.GetConnectionString( Properties.Resources.joserrasDb );
-			this.profitsExporter = profitsExporter;
 			this.prizeService = prizeService;
 		}
 
@@ -99,14 +98,6 @@ namespace TorneosWeb.service.impl
 					uow.Rollback();
 					throw new JoserrasException( e.Message, e );
 				}
-			}
-
-			DayOfWeek dayOfWeek = torneo.Fecha.DayOfWeek;
-			if(dayOfWeek == DayOfWeek.Sunday )
-			{
-				DateTime monday = torneo.Fecha.AddDays( -6 );
-				List<Torneo> torneos = readService.GetAllTorneos().Where( t => monday <= t.FechaDate && t.FechaDate <= torneo.Fecha ).ToList();
-				profitsExporter.ExportProfits( torneos );
 			}
 
 			return torneo.Id;

@@ -16,7 +16,7 @@ namespace TorneosWeb.domain.models
 		{
 			get
 			{
-				return ProfitTorneosNumber + PremiosLigaNumber;
+				return ProfitTorneosNumber + ProfitLigasNumber;
 			}
 		}
 
@@ -61,6 +61,11 @@ namespace TorneosWeb.domain.models
 		}
 		public int CostosNumber { get; set; }
 
+		[NoMap]
+		public decimal CostosTotalesNumber { get { return CostosNumber + CostosLigaNumber; } }
+		[NoMap]
+		public string CostosTotales { get { return CostosTotalesNumber.ToString( Constants.CURRENCY_FORMAT ); } }
+
 		public decimal KosNumber { get; set; }
 
 		[Display( Name = "KO's" )]
@@ -75,7 +80,7 @@ namespace TorneosWeb.domain.models
 		{
 			get
 			{
-				return ROINumber != 0 ? ((float)ProfitNumber / CostosNumber).ToString( Constants.ROI_FORMAT ) : "%0.0";
+				return ROINumber != 0 ? ((float)ProfitNumber / (float)CostosTotalesNumber).ToString( Constants.ROI_FORMAT ) : "%0.0";
 			}
 		}
 
@@ -84,30 +89,35 @@ namespace TorneosWeb.domain.models
 		{
 			get
 			{
-				return (float)ProfitNumber / CostosNumber;
+				return (float)ProfitNumber / (float)CostosTotalesNumber;
 			}
 		}
 
 		[NoMap]
 		public decimal PremiosLigaNumber { get; set; }
+		[NoMap]
+		public string PremiosLiga
+		{
+			get { return PremiosLigaNumber.ToString( Constants.CURRENCY_FORMAT ); }
+		}
 
 		[NoMap]
 		public decimal CostosLigaNumber { get; set; }
 
 		[NoMap]
-		public decimal ProfitLigaNumber { get; set; }
+		public decimal ProfitLigasNumber { get { return PremiosLigaNumber - CostosLigaNumber; } }
 
 		[NoMap]
-		[Display( Name = "Premios Liga" )]
-		public string PremiosLiga
+		[Display( Name = "Profits Liga" )]
+		public string ProfitLigas
 		{
 			get
 			{
-				if(PremiosLigaNumber > 0 )
+				if( ProfitLigasNumber != 0 )
 				{
-					return PremiosLigaNumber.ToString( Constants.CURRENCY_FORMAT );
+					return ProfitLigasNumber.ToString( Constants.CURRENCY_FORMAT );
 				}
-				return "-";
+				return "$0";
 			}
 		}
 

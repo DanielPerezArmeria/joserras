@@ -182,6 +182,34 @@ where t.id = d.torneo_id {0} and d.jugador_id = j.id
 group by j.id, j.nombre
 ) as detalles</value>
   </data>
+  <data name="GetTotalLigaProfits" xml:space="preserve">
+    <value>select ptl.jugador_id, sum(premio) as premios, fees
+from puntos_torneo_liga ptl,
+(select id as jugador_id, sum(total) as fees
+from
+(select j.id, l.fee, (sum(r.rebuys * l.fee) + count(tl.torneo_id) * l.fee) as total
+from torneos_liga tl, resultados r, jugadores j, ligas l
+where j.id = r.jugador_id and tl.torneo_id = r.torneo_id
+	and l.id = tl.liga_id and l.abierta = 0
+group by j.id, l.fee) as total_fees
+group by id) as liga_fees
+where ptl.jugador_id = liga_fees.jugador_id
+group by ptl.jugador_id, fees</value>
+  </data>
+  <data name="GetTotalLigaProfitsByPlayerId" xml:space="preserve">
+    <value>select ptl.jugador_id, sum(premio) as premios, fees
+from puntos_torneo_liga ptl,
+(select id as jugador_id, sum(total) as fees
+from
+(select j.id, l.fee, (sum(r.rebuys * l.fee) + count(tl.torneo_id) * l.fee) as total
+from torneos_liga tl, resultados r, jugadores j, ligas l
+where j.id = r.jugador_id and tl.torneo_id = r.torneo_id
+	and l.id = tl.liga_id and l.abierta = 0 and j.id = '{0}'
+group by j.id, l.fee) as total_fees
+group by id) as liga_fees
+where ptl.jugador_id = liga_fees.jugador_id and ptl.jugador_id = '{0}'
+group by ptl.jugador_id, fees</value>
+  </data>
   <data name="InsertTorneo" xml:space="preserve">
     <value>insert into torneos (fecha, precio_buyin, precio_rebuy, entradas, rebuys, bolsa, tipo, premio_x_bounty, premiacion) output INSERTED.ID
 values ('{0}', {1}, {2}, {3}, {4}, {5}, '{6}', {7}, '{8}' )</value>
