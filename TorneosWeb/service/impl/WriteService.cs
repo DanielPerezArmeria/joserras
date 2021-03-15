@@ -6,7 +6,6 @@ using System.Data.SqlClient;
 using System.Linq;
 using TorneosWeb.domain.dto;
 using TorneosWeb.domain.models;
-using TorneosWeb.domain.models.ligas;
 using TorneosWeb.exception;
 using TorneosWeb.util;
 
@@ -17,9 +16,6 @@ namespace TorneosWeb.service.impl
 		private IReadService readService;
 		private ICacheService cacheService;
 		private ILogger<WriteService> log;
-		private IFileService tourneyReader;
-		private ILigaWriter ligaWriter;
-		private ILigaReader ligaReader;
 		private IProfitsExporter profitsExporter;
 		private IPrizeService prizeService;
 
@@ -27,15 +23,12 @@ namespace TorneosWeb.service.impl
 
 
 		public WriteService(IReadService service, ICacheService cacheService, IConfiguration config, IProfitsExporter profitsExporter,
-			IFileService tourneyReader, ILigaWriter ligaWriter, ILigaReader ligaReader, IPrizeService prizeService, ILogger<WriteService> logger)
+			IPrizeService prizeService, ILogger<WriteService> logger)
 		{
 			readService = service;
 			this.cacheService = cacheService;
 			log = logger;
 			connString = config.GetConnectionString( Properties.Resources.joserrasDb );
-			this.tourneyReader = tourneyReader;
-			this.ligaWriter = ligaWriter;
-			this.ligaReader = ligaReader;
 			this.profitsExporter = profitsExporter;
 			this.prizeService = prizeService;
 		}
@@ -84,11 +77,6 @@ namespace TorneosWeb.service.impl
 
 					torneo.Id = InsertarTorneo( torneo, resultados, uow );
 
-					if( torneo.Liga )
-					{
-						ligaWriter.AsociarTorneo( torneo.Id, uow );
-					}
-
 					InsertarResultados( torneo, resultados, uow );
 
 					if( kos != null && kos.Count > 0 )
@@ -134,8 +122,6 @@ namespace TorneosWeb.service.impl
 
 		private Guid InsertarTorneo(TorneoDTO torneo, List<ResultadosDTO> resultados, TorneoUnitOfWork uow)
 		{
-			Liga liga = ligaReader.GetCurrentLiga();
-
 			if(torneo.PrecioRebuy == 0  && torneo.Tipo != TournamentType.FREEZEOUT)
 			{
 				torneo.PrecioRebuy = torneo.PrecioBuyin;
@@ -143,12 +129,13 @@ namespace TorneosWeb.service.impl
 
 			torneo.Entradas = resultados.Count;
 			torneo.Rebuys = resultados.Sum( d => d.Rebuys );
-			torneo.Bolsa = prizeService.GetBolsaTorneo( torneo.Entradas + torneo.Rebuys, torneo.PrecioBuyin,
-					(torneo.Liga && liga != null) ? liga.Fee : 0 );
+			torneo.Bolsa = prizeService.GetBolsaTorneo( torneo.Entradas, torneo.Rebuys, torneo.PrecioBuyin, torneo.PrecioRebuy);
+
+			torneo.Premiacion = prizeService.SetPremiacionString( torneo, resultados );
 
 			Guid torneoId = Guid.Parse( uow.ExecuteScalar( Properties.Queries.InsertTorneo, torneo.Fecha.ToString( "yyyy-MM-dd" ),
 					torneo.PrecioBuyin, torneo.PrecioRebuy, torneo.Entradas, torneo.Rebuys, torneo.Bolsa.Total,
-					torneo.Tipo.ToString(), torneo.PrecioBounty )
+					torneo.Tipo.ToString(), torneo.PrecioBounty, torneo.Premiacion )
 					.ToString() );
 
 			return torneoId;

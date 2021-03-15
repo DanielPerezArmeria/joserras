@@ -19,6 +19,7 @@ namespace TorneosWeb.util.automapper
 				.ForMember( dest => dest.BolsaNumber, opt => opt.MapFrom( src => src.GetFieldValue<int>( src.GetOrdinal( "bolsa" ) ) ) )
 				.ForMember( dest => dest.PremioBountyNumber, opt => opt.MapFrom( src => src.GetFieldValue<int>( src.GetOrdinal( "premio_x_bounty" ) ) ) )
 				.ForMember( dest => dest.Tipo, opt => opt.MapFrom( src => src.GetFieldValue<string>( src.GetOrdinal( "tipo" ) ) ) )
+				.ForMember( dest => dest.Premiacion, opt => opt.MapFrom( src => src.GetFieldValue<string>( src.GetOrdinal( "premiacion" ) ) ) )
 				.IgnoreNoMap();
 
 			CreateMap<SqlDataReader, Posicion>()

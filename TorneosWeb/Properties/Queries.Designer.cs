@@ -165,8 +165,8 @@ namespace TorneosWeb.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to insert into torneos (fecha, precio_buyin, precio_rebuy, entradas, rebuys, bolsa, tipo, premio_x_bounty) output INSERTED.ID
-        ///values (&apos;{0}&apos;, {1}, {2}, {3}, {4}, {5}, &apos;{6}&apos;, {7} ).
+        ///   Looks up a localized string similar to insert into torneos (fecha, precio_buyin, precio_rebuy, entradas, rebuys, bolsa, tipo, premio_x_bounty, premiacion) output INSERTED.ID
+        ///values (&apos;{0}&apos;, {1}, {2}, {3}, {4}, {5}, &apos;{6}&apos;, {7}, &apos;{8}&apos; ).
         /// </summary>
         internal static string InsertTorneo {
             get {

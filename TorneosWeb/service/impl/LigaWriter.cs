@@ -50,7 +50,28 @@ namespace TorneosWeb.service.impl
 			cacheService.Clear();
 		}
 
-		public int AsociarTorneo(Guid torneoId, TorneoUnitOfWork uow)
+		public int AsociarTorneo(Guid torneoId)
+		{
+			using( TorneoUnitOfWork uow = new TorneoUnitOfWork( config.GetConnectionString( Properties.Resources.joserrasDb ) ) )
+			{
+				try
+				{
+					int asociar = AsociarTorneo( torneoId, uow );
+					uow.Commit();
+					cacheService.Clear();
+					return asociar;
+				}
+				catch( Exception e )
+				{
+					log.LogError( e, e.Message );
+					uow.Rollback();
+					string msg = string.Format( "No se pudo asociar el torneo con id: {0}", torneoId );
+					throw new JoserrasException( msg, e );
+				}
+			}
+		}
+
+		private int AsociarTorneo(Guid torneoId, TorneoUnitOfWork uow)
 		{
 			if( ligaReader.GetCurrentLiga() == null )
 			{
@@ -89,7 +110,7 @@ namespace TorneosWeb.service.impl
 				try
 				{
 					int asociar = AsociarTorneo( torneo.Id, uow );
-					Bolsa bolsa = prizeService.GetBolsaTorneo( torneo.Entradas + torneo.Rebuys, torneo.PrecioBuyinNumber, ligaReader.GetCurrentLiga().Fee );
+					Bolsa bolsa = prizeService.GetBolsaTorneo( torneo.Entradas, torneo.Rebuys, torneo.PrecioBuyinNumber, torneo.PrecioRebuyNumber );
 					string query = "update torneos set bolsa = {0} where id = '{1}'";
 					uow.ExecuteNonQuery( query, bolsa.Total, torneo.Id );
 					uow.Commit();

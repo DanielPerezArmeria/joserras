@@ -183,7 +183,7 @@ group by j.id, j.nombre
 ) as detalles</value>
   </data>
   <data name="InsertTorneo" xml:space="preserve">
-    <value>insert into torneos (fecha, precio_buyin, precio_rebuy, entradas, rebuys, bolsa, tipo, premio_x_bounty) output INSERTED.ID
-values ('{0}', {1}, {2}, {3}, {4}, {5}, '{6}', {7} )</value>
+    <value>insert into torneos (fecha, precio_buyin, precio_rebuy, entradas, rebuys, bolsa, tipo, premio_x_bounty, premiacion) output INSERTED.ID
+values ('{0}', {1}, {2}, {3}, {4}, {5}, '{6}', {7}, '{8}' )</value>
   </data>
 </root>

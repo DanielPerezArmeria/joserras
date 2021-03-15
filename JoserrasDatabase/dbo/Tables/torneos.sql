@@ -8,6 +8,7 @@
     [bolsa]        INT              NOT NULL,
     [tipo] NCHAR(20) NOT NULL DEFAULT 'NORMAL', 
     [premio_x_bounty] INT NOT NULL DEFAULT 0, 
+    [premiacion] VARCHAR(50) NOT NULL DEFAULT "", 
     CONSTRAINT [PK_torneos] PRIMARY KEY CLUSTERED ([id] ASC)
 );
 

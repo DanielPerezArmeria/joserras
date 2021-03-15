@@ -89,6 +89,8 @@ namespace TorneosWeb.domain.models
 		[NoMap]
 		IList<Posicion> Posiciones { get; set; }
 
+		public string Premiacion { get; set; }
+
 	}
 
 }
