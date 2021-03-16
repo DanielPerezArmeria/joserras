@@ -165,18 +165,18 @@ namespace TorneosWeb.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select ptl.jugador_id, sum(premio) as premios, fees
-        ///from puntos_torneo_liga ptl,
-        ///(select id as jugador_id, sum(total) as fees
+        ///   Looks up a localized string similar to select liga_fees.jugador_id, premios_liga.premios, fees
         ///from
+        ///(select id as jugador_id, sum(total) as fees from
         ///(select j.id, l.fee, (sum(r.rebuys * l.fee) + count(tl.torneo_id) * l.fee) as total
         ///from torneos_liga tl, resultados r, jugadores j, ligas l
         ///where j.id = r.jugador_id and tl.torneo_id = r.torneo_id
         ///	and l.id = tl.liga_id
         ///group by j.id, l.fee) as total_fees
-        ///group by id) as liga_fees
-        ///where ptl.jugador_id = liga_fees.jugador_id
-        ///group by ptl.jugador_id, fees.
+        ///group by id) as liga_fees,
+        ///(
+        ///	select j.id, coalesce(ptl.premios, 0) as premios from
+        ///	(select j.id from jugadores j) as j left outer j [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string GetTotalLigaProfits {
             get {
@@ -185,8 +185,8 @@ namespace TorneosWeb.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select ptl.jugador_id, sum(premio) as premios, fees
-        ///from puntos_torneo_liga ptl,
+        ///   Looks up a localized string similar to select liga_fees.jugador_id, premios_liga.premios, fees
+        ///from
         ///(select id as jugador_id, sum(total) as fees
         ///from
         ///(select j.id, l.fee, (sum(r.rebuys * l.fee) + count(tl.torneo_id) * l.fee) as total
@@ -194,8 +194,9 @@ namespace TorneosWeb.Properties {
         ///where j.id = r.jugador_id and tl.torneo_id = r.torneo_id
         ///	and l.id = tl.liga_id and j.id = &apos;{0}&apos;
         ///group by j.id, l.fee) as total_fees
-        ///group by id) as liga_fees
-        ///where ptl.jugador_id = liga_fees.jugador_id and ptl.jugador_id = &apos;{0}&apos;        /// [rest of string was truncated]&quot;;.
+        ///group by id) as liga_fees,
+        ///(select coalesce(sum(ptl.premio), 0) as premios from puntos_torneo_liga ptl
+        ///where ptl.jug [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string GetTotalLigaProfitsByPlayerId {
             get {
