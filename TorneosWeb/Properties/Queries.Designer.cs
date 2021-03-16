@@ -172,11 +172,11 @@ namespace TorneosWeb.Properties {
         ///(select j.id, l.fee, (sum(r.rebuys * l.fee) + count(tl.torneo_id) * l.fee) as total
         ///from torneos_liga tl, resultados r, jugadores j, ligas l
         ///where j.id = r.jugador_id and tl.torneo_id = r.torneo_id
-        ///	and l.id = tl.liga_id and l.abierta = 0
+        ///	and l.id = tl.liga_id
         ///group by j.id, l.fee) as total_fees
         ///group by id) as liga_fees
         ///where ptl.jugador_id = liga_fees.jugador_id
-        ///group by ptl.jugador_id,  [rest of string was truncated]&quot;;.
+        ///group by ptl.jugador_id, fees.
         /// </summary>
         internal static string GetTotalLigaProfits {
             get {
@@ -192,10 +192,10 @@ namespace TorneosWeb.Properties {
         ///(select j.id, l.fee, (sum(r.rebuys * l.fee) + count(tl.torneo_id) * l.fee) as total
         ///from torneos_liga tl, resultados r, jugadores j, ligas l
         ///where j.id = r.jugador_id and tl.torneo_id = r.torneo_id
-        ///	and l.id = tl.liga_id and l.abierta = 0 and j.id = &apos;{0}&apos;
+        ///	and l.id = tl.liga_id and j.id = &apos;{0}&apos;
         ///group by j.id, l.fee) as total_fees
         ///group by id) as liga_fees
-        ///where ptl.jugador_id = liga_fees.jugador_id and ptl.j [rest of string was truncated]&quot;;.
+        ///where ptl.jugador_id = liga_fees.jugador_id and ptl.jugador_id = &apos;{0}&apos;        /// [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string GetTotalLigaProfitsByPlayerId {
             get {
