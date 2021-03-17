@@ -90,11 +90,11 @@
 			var chart = new Chart(ctx, {
 				type: 'line',
 				data: {
-					labels: tourneyHistory.labels,
 					datasets: [{
 						label: 'Profit Torneos',
 						data: tourneyHistory.tournaments,
 						borderColor: 'cyan',
+						xAxisID: 'torneoAxis',
 						pointBackgroundColor: function (context) {
 							var index = context.dataIndex;
 							var value = context.dataset.data[index];
@@ -102,7 +102,33 @@
 						},
 						pointRadius: 5,
 						fill: false
-					}]
+					}, {
+							label: 'Profit Ligas',
+							data: tourneyHistory.liga,
+							borderColor: 'blue',
+							xAxisID: 'ligasAxis',
+							pointBackgroundColor: function (context) {
+								var index = context.dataIndex;
+								var value = context.dataset.data[index];
+								return value < 0 ? 'red' : 'green';
+							},
+							pointRadius: 5,
+							fill: false
+						}]
+				},
+				options: {
+					scales: {
+						xAxes: [{
+							id: 'torneoAxis',
+							type: 'category',
+							labels: tourneyHistory.labels
+						}, {
+							id: 'ligasAxis',
+							type: 'category',
+							labels: tourneyHistory.ligalabels,
+							position: 'top'
+						}]
+					}
 				}
 			});
 		</script>

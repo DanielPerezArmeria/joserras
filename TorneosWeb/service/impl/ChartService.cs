@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using TorneosWeb.domain.charts;
+using TorneosWeb.domain.models;
+using TorneosWeb.domain.models.ligas;
 using TorneosWeb.util;
 
 namespace TorneosWeb.service.impl
@@ -11,10 +13,14 @@ namespace TorneosWeb.service.impl
 	public class ChartService : IChartService
 	{
 		private JoserrasQuery joserrasQuery;
+		private IReadService readService;
+		private ILigaReader ligaReader;
 
-		public ChartService(JoserrasQuery joserrasQuery)
+		public ChartService(JoserrasQuery joserrasQuery, IReadService readService, ILigaReader ligaReader)
 		{
 			this.joserrasQuery = joserrasQuery;
+			this.readService = readService;
+			this.ligaReader = ligaReader;
 		}
 
 		public ProfitChartItem GetProfitHistoryByPlayerId(Guid playerId)
@@ -22,45 +28,44 @@ namespace TorneosWeb.service.impl
 			List<ChartDatePoint> tourneyProfitHistory = joserrasQuery.ExecuteQuery( Properties.ChartQueries.PROFIT_HISTORY, BuildTourneyProfit,
 				new SqlParameter( "playerId", playerId ) );
 
-			List<ChartDatePoint> ligaProfitHistory = joserrasQuery.ExecuteQuery( Properties.ChartQueries.LIGA_PROFIT_HISTORY, BuildLigaProfit,
-				new SqlParameter( "playerId", playerId ) );
+			ProfitChartItem chartItem = new ProfitChartItem();
 
-			ProfitChartItem profitHistory = new ProfitChartItem();
-
-			List<ChartDatePoint> consolidatedDates = new List<ChartDatePoint>( tourneyProfitHistory );
-			foreach(ChartDatePoint point in tourneyProfitHistory )
-			{
-				if( !ligaProfitHistory.Contains( point ) )
-				{
-					ligaProfitHistory.Add( new ChartDatePoint( point.Year, point.Month, 0 ) );
-				}
-			}
-
-			ligaProfitHistory.Sort();
-			AcumularTotales( ligaProfitHistory );
-
-			profitHistory.Tournaments = tourneyProfitHistory.Select( t => t.Total ).ToArray();
-			profitHistory.Liga = ligaProfitHistory.Select( t => t.Total ).ToArray();
-			profitHistory.Labels = ( from t in tourneyProfitHistory
+			chartItem.Tournaments = tourneyProfitHistory.Select( t => t.Total ).ToArray();
+			chartItem.Labels = ( from t in tourneyProfitHistory
 															select new DateTime( t.Year, t.Month, 1 ).ToString( "MMM/yyyy" ).Titleize()
 														).ToArray();
 
-			return profitHistory;
+			GetLigaProfits( chartItem, playerId );
+
+			return chartItem;
 		}
 
-		private List<ChartDatePoint> BuildLigaProfit(SqlDataReader reader)
+		private void GetLigaProfits(ProfitChartItem chartItem, Guid playerId)
 		{
-			List<DateDecimalPoint> tuples = new List<DateDecimalPoint>();
+			List<string> ligaLabels = new List<string>();
+			List<decimal> ligaProfits = new List<decimal>();
 
-			while( reader.Read() )
+			List<Liga> ligas = new List<Liga>( ligaReader.GetAllLigas() );
+			ligas.Reverse();
+			Liga current = ligaReader.GetCurrentLiga();
+			if(current != null ) { ligas.Add( current ); }
+
+			decimal sum = 0;
+			foreach(Liga liga in ligas )
 			{
-				decimal total = reader.GetFieldValue<decimal>( reader.GetOrdinal( "premio" ) );
-				tuples.Add( new DateDecimalPoint() { Date = reader.GetFieldValue<DateTime>( reader.GetOrdinal( "fecha_cierre" ) ), Total = total } );
+				List<DetalleJugador> detalles = readService.GetAllDetalleJugador( liga );
+				DetalleJugador detalle = detalles.SingleOrDefault( d => d.Id == playerId );
+				if(detalle != null )
+				{
+					decimal item = sum + detalle.ProfitLigasNumber;
+					ligaProfits.Add( item );
+					sum = item;
+					ligaLabels.Add( liga.Nombre );
+				}
 			}
 
-			List<ChartDatePoint> dividedDatePoints = AgruparPorMeses( tuples );
-
-			return dividedDatePoints;
+			chartItem.Liga = ligaProfits.ToArray();
+			chartItem.Ligalabels = ligaLabels.Select( l => "Liga - " + l ).ToArray();
 		}
 
 		private List<ChartDatePoint> BuildTourneyProfit(SqlDataReader reader)
@@ -100,7 +105,6 @@ namespace TorneosWeb.service.impl
 			decimal profitSum = 0;
 			for( int i = 0; i < points.Count; i++ )
 			{
-				;
 				points[ i ].Total = points[ i ].Total + profitSum;
 				profitSum = points[ i ].Total;
 			}
