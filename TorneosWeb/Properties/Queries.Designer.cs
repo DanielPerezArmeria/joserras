@@ -135,6 +135,26 @@ namespace TorneosWeb.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select liga_fees.jugador_id, premios_liga.premios, fees
+        ///from
+        ///(select id as jugador_id, sum(total) as fees from
+        ///(select j.id, l.fee, (sum(r.rebuys * l.fee) + count(tl.torneo_id) * l.fee) as total
+        ///from torneos_liga tl, resultados r, jugadores j, ligas l
+        ///where j.id = r.jugador_id and tl.torneo_id = r.torneo_id
+        ///	and l.id = tl.liga_id and l.id = &apos;{0}&apos;
+        ///group by j.id, l.fee) as total_fees
+        ///group by id) as liga_fees,
+        ///(
+        ///	select j.id, coalesce(ptl.premios, 0) as premios from
+        ///	(select j.id from jugadores j)  [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string GetLigaProfitsByLiga {
+            get {
+                return ResourceManager.GetString("GetLigaProfitsByLiga", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select res.nombre, count(res.nombre) as podios_neg
         ///from
         ///(select t.fecha, j.nombre, sum(d.premio) as premio, sum((t.precio_rebuy * d.rebuys) + t.precio_buyin ) as costos

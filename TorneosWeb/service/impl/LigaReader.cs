@@ -175,19 +175,11 @@ namespace TorneosWeb.service.impl
 				} );
 			}
 
+			List<DetalleJugador> det = readService.GetAllDetalleJugador( liga );
 			List<Standing> list = standings.Values.OrderByDescending( s => s.Total ).ToList();
 			foreach(Standing s in list )
 			{
-				decimal profit = 0M;
-				foreach( Torneo torneo in liga.Torneos )
-				{
-					Resultados results = readService.FindResultadosTorneo( torneo.Id );
-					foreach( Posicion pos in results.Posiciones.Where( p => p.Nombre == s.Jugador ) )
-					{
-						profit = profit + pos.ProfitNumber;
-					}
-				}
-				s.ProfitNumber = profit;
+				s.ProfitNumber = det.Single( d => d.Id == s.JugadorId ).ProfitNumber;
 			}
 
 			return list;

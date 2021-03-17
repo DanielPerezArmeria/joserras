@@ -12,6 +12,8 @@ namespace TorneosWeb.dao
 		LigaProfitsObject GetTotalLigaProfitsByPlayerId(Guid playerId);
 
 		IEnumerable<LigaProfitsObject> GetTotalLigaProfits();
+
+		IEnumerable<LigaProfitsObject> GetLigaProfitsByLiga(Liga liga);
 	}
 
 }

@@ -318,19 +318,12 @@ namespace TorneosWeb.service.impl
 		{
 			List<DetalleJugador> detalles = GetAllDetalleJugador( QueryUtils.FormatTorneoIdIn( liga ) );
 
-			//Encontrar profits de la liga
-			string query = "select jugador_id, sum(premio) as premio_liga from puntos_torneo_liga where liga_id = '{0}' group by jugador_id";
-			query = string.Format( query, liga.Id );
-			joserrasQuery.ExecuteQuery( query, reader =>
+			foreach( LigaProfitsObject profitObject in ligaDao.GetLigaProfitsByLiga( liga ) )
 			{
-				while( reader.Read() )
-				{
-					Guid jugadorId = (Guid)reader[ "jugador_id" ];
-					decimal premio = reader.GetFieldValue<decimal>( reader.GetOrdinal( "premio_liga" ) );
-					DetalleJugador detalle = detalles.Where( d => d.Id == jugadorId ).First();
-					detalle.PremiosLigaNumber = premio;
-				}
-			} );
+				DetalleJugador det = detalles.Single( d => d.Id == profitObject.JugadorId );
+				det.CostosLigaNumber = profitObject.Fees;
+				det.PremiosLigaNumber = profitObject.Premios;
+			}
 
 			return detalles;
 		}

@@ -84,6 +84,29 @@ namespace TorneosWeb.dao.impl
 			return profitObjects;
 		}
 
+		public IEnumerable<LigaProfitsObject> GetLigaProfitsByLiga(Liga liga)
+		{
+			List<LigaProfitsObject> profitObjects = new List<LigaProfitsObject>();
+			string query = string.Format( Properties.Queries.GetLigaProfitsByLiga, liga.Id );
+			joserrasQuery.ExecuteQuery( query, reader =>
+			{
+				while( reader.Read() )
+				{
+					try
+					{
+						profitObjects.Add( mapper.Map<SqlDataReader, LigaProfitsObject>( reader ) );
+					}
+					catch( Exception e )
+					{
+						log.LogError( e, e.Message );
+						throw e;
+					}
+				}
+			} );
+
+			return profitObjects;
+		}
+
 	}
 
 }
