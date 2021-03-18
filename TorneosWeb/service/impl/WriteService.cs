@@ -16,7 +16,6 @@ namespace TorneosWeb.service.impl
 		private IReadService readService;
 		private ICacheService cacheService;
 		private ILogger<WriteService> log;
-		private IProfitsExporter profitsExporter;
 		private IPrizeService prizeService;
 
 		private readonly string connString;

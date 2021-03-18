@@ -220,18 +220,3 @@ table.paleBlueRows tfoot td {
 		grid-template-columns: auto auto auto auto;
 	}
 }
-
-
-/* CHART
-####################################################*/
-.chartCanvas {
-	display: none;
-}
-
-@media screen and (orientation: landscape) {
-	.chartCanvas {
-		display: block;
-		width: 80%;
-		align-self: center;
-	}
-}
