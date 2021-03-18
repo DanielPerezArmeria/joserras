@@ -102,6 +102,8 @@ namespace TorneosWeb
 			container.RegisterDecorator<IStatsService, CacheWrapperStatsService>( Lifestyle.Singleton );
 			container.RegisterDecorator<ILigaReader, CacheWrapperLigaReader>( Lifestyle.Singleton );
 			container.RegisterDecorator<IChartService, CacheWrapperChartService>( Lifestyle.Singleton );
+			container.RegisterDecorator<IWriteService, WriteServiceLigaDecorator>( Lifestyle.Singleton );
+			container.RegisterDecorator<IWriteService, BalanceGeneratorWriteServiceDecorator>( Lifestyle.Singleton );
 
 			container.Collection.Register<IPrizeFiller>( new[] { typeof( IPrizeFiller ).Assembly }, Lifestyle.Singleton );
 

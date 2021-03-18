@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using TorneosWeb.domain.dto;
 using TorneosWeb.domain.models;
 using TorneosWeb.exception;
 using TorneosWeb.service;
@@ -17,6 +18,7 @@ namespace TorneosWeb.Pages
 		private IWriteService writeService;
 		private IReadService readService;
 		private IProfitsExporter profitsExporter;
+		private IFileService tourneyReader;
 
 		public string Result { get; private set; }
 		public string BalanceSheet { get; set; }
@@ -25,11 +27,12 @@ namespace TorneosWeb.Pages
 		public BufferedMultipleFileUploadPhysical TorneoUpload { get; set; }
 
 
-		public AgregarTorneoModel(IWriteService service, IReadService readService, IProfitsExporter profitsExporter)
+		public AgregarTorneoModel(IWriteService service, IReadService readService, IProfitsExporter profitsExporter, IFileService tourneyReader)
 		{
 			writeService = service;
 			this.readService = readService;
 			this.profitsExporter = profitsExporter;
+			this.tourneyReader = tourneyReader;
 
 			BalanceSheet = Properties.Resources.BALANCE_SHEET;
 		}
@@ -49,7 +52,15 @@ namespace TorneosWeb.Pages
 
 			try
 			{
-				writeService.uploadTournament( TorneoUpload.FormFiles );
+				TorneoDTO torneo;
+				List<ResultadosDTO> resultados;
+				List<KnockoutsDTO> kos;
+
+				torneo = tourneyReader.GetFormFileItems<TorneoDTO>( TorneoUpload.FormFiles.Find( t => t.FileName.Contains( "torneo" ) ) ).First();
+				resultados = tourneyReader.GetFormFileItems<ResultadosDTO>( TorneoUpload.FormFiles.Find( t => t.FileName.Contains( "resultados" ) ) ).ToList();
+				kos = tourneyReader.GetFormFileItems<KnockoutsDTO>( TorneoUpload.FormFiles.Find( t => t.FileName.Contains( "knockouts" ) ) ).ToList();
+
+				writeService.UploadTournament( torneo, resultados, kos );
 			}
 			catch( JoserrasException je)
 			{

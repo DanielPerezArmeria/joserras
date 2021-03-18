@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using TorneosWeb.dao;
 using TorneosWeb.domain.models;
 using TorneosWeb.domain.models.ligas;
 using TorneosWeb.util;
@@ -21,15 +22,17 @@ namespace TorneosWeb.service.impl
 		private readonly string ConnString;
 		private IReadService readService;
 		private IStatsService statsService;
+		private ILigaDao ligaDao;
 
 		public LigaReader(IConfiguration conf, IReadService readService, IMapper mapper, JoserrasQuery joserrasQuery,
-			IStatsService statsService, ILogger<LigaReader> log)
+			IStatsService statsService, ILogger<LigaReader> log, ILigaDao ligaDao)
 		{
 			this.conf = conf;
 			this.mapper = mapper;
 			this.joserrasQuery = joserrasQuery;
 			this.readService = readService;
 			this.statsService = statsService;
+			this.ligaDao = ligaDao;
 			Log = log;
 			ConnString = conf.GetConnectionString( Properties.Resources.joserrasDb );
 		}
@@ -172,19 +175,11 @@ namespace TorneosWeb.service.impl
 				} );
 			}
 
+			List<DetalleJugador> det = readService.GetAllDetalleJugador( liga );
 			List<Standing> list = standings.Values.OrderByDescending( s => s.Total ).ToList();
 			foreach(Standing s in list )
 			{
-				decimal profit = 0M;
-				foreach( Torneo torneo in liga.Torneos )
-				{
-					Resultados results = readService.FindResultadosTorneo( torneo.Id );
-					foreach( Posicion pos in results.Posiciones.Where( p => p.Nombre == s.Jugador ) )
-					{
-						profit = profit + pos.ProfitNumber;
-					}
-				}
-				s.ProfitNumber = profit;
+				s.ProfitNumber = det.Single( d => d.Id == s.JugadorId ).ProfitNumber;
 			}
 
 			return list;
@@ -215,6 +210,11 @@ namespace TorneosWeb.service.impl
 			}
 
 			return standings.OrderByDescending( s => s.Total ).ToList();
+		}
+
+		public Liga GetLigaByTorneoId(Guid torneoId)
+		{
+			return ligaDao.GetLigaByTorneoId( torneoId );
 		}
 
 	}

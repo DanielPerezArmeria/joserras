@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Data.SqlTypes;
 using System.Linq;
+using TorneosWeb.dao;
 using TorneosWeb.domain.models;
 using TorneosWeb.domain.models.ligas;
 using TorneosWeb.util;
@@ -16,12 +17,14 @@ namespace TorneosWeb.service.impl
 		private readonly string connString;
 		private IMapper mapper;
 		private JoserrasQuery joserrasQuery;
+		private ILigaDao ligaDao;
 
-		public ReadServiceImpl(IConfiguration conf, IMapper mapper, JoserrasQuery joserrasQuery)
+		public ReadServiceImpl(IConfiguration conf, IMapper mapper, JoserrasQuery joserrasQuery, ILigaDao ligaDao)
 		{
 			connString = conf.GetConnectionString( Properties.Resources.joserrasDb );
 			this.mapper = mapper;
 			this.joserrasQuery = joserrasQuery;
+			this.ligaDao = ligaDao;
 		}
 
 		public List<Jugador> GetAllJugadores()
@@ -100,6 +103,7 @@ namespace TorneosWeb.service.impl
 					while( reader.Read() )
 					{
 						Torneo torneo = mapper.Map<SqlDataReader, Torneo>( reader );
+						torneo.Liga = ligaDao.GetLigaByTorneoId( torneo.Id );
 						torneos.Add( torneo );
 					}
 				} );
@@ -121,16 +125,6 @@ namespace TorneosWeb.service.impl
 			{
 				// Obtener Resultados
 				t.Resultados = FindResultadosTorneo( conn, t.Id );
-
-				// Obtener Liga
-				string query = string.Format( "select * from ligas where id = (select liga_id from torneos_liga where torneo_id = '{0}')", t.Id );
-				joserrasQuery.ExecuteQuery( conn, query, reader =>
-				{
-					while( reader.Read() )
-					{
-						t.Liga = mapper.Map<SqlDataReader, Liga>( reader );
-					}
-				} );
 			}
 		}
 
@@ -148,27 +142,6 @@ namespace TorneosWeb.service.impl
 						torneo = mapper.Map<Torneo>( reader );
 					}
 				} );
-			}
-
-			return torneo;
-		}
-
-		public Torneo FindTorneoById(Guid id)
-		{
-			Torneo torneo = null;
-			using( SqlConnection conn = new SqlConnection( connString ) )
-			{
-				conn.Open();
-				string query = string.Format( @"select * from torneos where id = '{0}'", id.ToString() );
-				joserrasQuery.ExecuteQuery( conn, query, reader =>
-				{
-					while( reader.Read() )
-					{
-						torneo = mapper.Map<Torneo>( reader );
-					}
-				} );
-
-				FillTorneos( torneo, conn );
 			}
 
 			return torneo;
@@ -196,7 +169,10 @@ namespace TorneosWeb.service.impl
 				reader.Read();
 				return mapper.Map<SqlDataReader, Torneo>( reader );
 			} );
+
 			resultados.Torneo = torneo;
+
+			resultados.Torneo.Liga = ligaDao.GetLigaByTorneoId( torneoId );
 
 			query = string.Format( "select dt.*, j.nombre from resultados dt, jugadores j "
 					+ "where dt.torneo_id = '{0}' and dt.jugador_id = j.id order by dt.posicion", torneoId );
@@ -251,21 +227,9 @@ namespace TorneosWeb.service.impl
 				}
 
 				//Encontrar profits de ligas
-				query = string.Format("select sum(premio) as premio_liga from puntos_torneo_liga where jugador_id = '{0}'", playerId.ToString());
-				joserrasQuery.ExecuteQuery( conn, query, reader =>
-				{
-					while( reader.Read() )
-					{
-						decimal premio = 0;
-						try
-						{
-							premio = reader.GetFieldValue<decimal>( reader.GetOrdinal( "premio_liga" ) );
-						}
-						catch( SqlNullValueException ) { }
-
-						detalle.PremiosLigaNumber = premio;
-					}
-				} );
+				LigaProfitsObject ligaProfits = ligaDao.GetTotalLigaProfitsByPlayerId( playerId );
+				detalle.PremiosLigaNumber = ligaProfits.Premios;
+				detalle.CostosLigaNumber = ligaProfits.Fees;
 			}
 
 			detalle.Knockouts = GetKnockoutsByPlayer( playerId );
@@ -333,18 +297,12 @@ namespace TorneosWeb.service.impl
 		{
 			List<DetalleJugador> detalles = GetAllDetalleJugador( string.Empty );
 
-			//Encontrar profits de ligas
-			string query = "select jugador_id, sum(premio) as premio_liga from puntos_torneo_liga group by jugador_id";
-			joserrasQuery.ExecuteQuery( query, reader =>
+			foreach(LigaProfitsObject profitObject in ligaDao.GetTotalLigaProfits() )
 			{
-				while( reader.Read() )
-				{
-					Guid jugadorId = (Guid)reader[ "jugador_id" ];
-					decimal premio = reader.GetFieldValue<decimal>( reader.GetOrdinal( "premio_liga" ) );
-					DetalleJugador detalle = detalles.Where( d => d.Id == jugadorId ).First();
-					detalle.PremiosLigaNumber = premio;
-				}
-			} );
+				DetalleJugador det = detalles.Single( d => d.Id == profitObject.JugadorId );
+				det.CostosLigaNumber = profitObject.Fees;
+				det.PremiosLigaNumber = profitObject.Premios;
+			}
 
 			return detalles;
 		}
@@ -360,19 +318,12 @@ namespace TorneosWeb.service.impl
 		{
 			List<DetalleJugador> detalles = GetAllDetalleJugador( QueryUtils.FormatTorneoIdIn( liga ) );
 
-			//Encontrar profits de la liga
-			string query = "select jugador_id, sum(premio) as premio_liga from puntos_torneo_liga where liga_id = '{0}' group by jugador_id";
-			query = string.Format( query, liga.Id );
-			joserrasQuery.ExecuteQuery( query, reader =>
+			foreach( LigaProfitsObject profitObject in ligaDao.GetLigaProfitsByLiga( liga ) )
 			{
-				while( reader.Read() )
-				{
-					Guid jugadorId = (Guid)reader[ "jugador_id" ];
-					decimal premio = reader.GetFieldValue<decimal>( reader.GetOrdinal( "premio_liga" ) );
-					DetalleJugador detalle = detalles.Where( d => d.Id == jugadorId ).First();
-					detalle.PremiosLigaNumber = premio;
-				}
-			} );
+				DetalleJugador det = detalles.Single( d => d.Id == profitObject.JugadorId );
+				det.CostosLigaNumber = profitObject.Fees;
+				det.PremiosLigaNumber = profitObject.Premios;
+			}
 
 			return detalles;
 		}
@@ -398,7 +349,7 @@ namespace TorneosWeb.service.impl
 		}
 
 		#endregion
-		
+
 	}
 
 }

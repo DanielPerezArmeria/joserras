@@ -26,33 +26,6 @@ namespace TorneosWeb.service.impl
 
 		public void SetPremiosTorneo(TorneoDTO torneo, IEnumerable<ResultadosDTO> resultados)
 		{
-			torneo.Premiacion = SetPremiacionString( torneo, resultados );
-			FillPrizes( torneo, resultados );
-		}
-
-		private string SetPremiacionString(TorneoDTO torneo, IEnumerable<ResultadosDTO> resultados)
-		{
-			int entradas = torneo.Entradas + torneo.Rebuys;
-			if( resultados.Any( r => !r.Premio.IsNullEmptyOrZero() ) ) {
-				List<string> list = resultados.Where( r => !r.Premio.IsNullEmptyOrZero() )
-						.OrderBy( r => r.Posicion ).Select( r => r.Premio ).ToList();
-				return string.Join( PrizeFill.SEPARATOR, list );
-			}
-			else if( !string.IsNullOrEmpty( torneo.Premiacion ) )
-			{
-				return torneo.Premiacion;
-			}
-			else
-			{
-				IEnumerable<PrizeRange> PrizeRanges = prizeDao.GetPrizeRanges();
-				PrizeRange selectedRange = PrizeRanges.First( r => r.IsBetween( entradas ) );
-				log.LogDebug( "Selected prize range: {0}", selectedRange.ToString() );
-				return selectedRange.Premiacion;
-			}
-		}
-
-		private void FillPrizes(TorneoDTO torneo, IEnumerable<ResultadosDTO> resultados)
-		{
 			IEnumerable<string> premios = torneo.Premiacion.Split( PrizeFill.SEPARATOR );
 
 			int placesAwarded = premios.Count();
@@ -64,14 +37,14 @@ namespace TorneosWeb.service.impl
 					string premio = premios.ElementAt( i - 1 );
 
 					IPrizeFiller selectedFiller = fillers.SingleOrDefault( f => f.CanHandle( torneo, resultados, torneo.Bolsa, premio ) );
-					if(selectedFiller == null )
+					if( selectedFiller == null )
 					{
 						throw new JoserrasException( "No se pudo seleccionar un Prize Filler para la posición: " + i );
 					}
 
 					res.Premio = selectedFiller.AssignPrize( torneo, resultados, torneo.Bolsa, premio );
 				}
-				catch(JoserrasException je )
+				catch( JoserrasException je )
 				{
 					log.LogError( je, je.Message );
 					throw;
@@ -82,13 +55,13 @@ namespace TorneosWeb.service.impl
 					log.LogError( e, msg );
 					throw new JoserrasException( msg );
 				}
-				catch(InvalidOperationException ioe )
+				catch( InvalidOperationException ioe )
 				{
 					string msg = string.Format( "No se pudieron asignaron los premios. Faltó de registrar la Posición: {0}", i );
 					log.LogError( ioe, msg );
 					throw new JoserrasException( msg );
 				}
-				catch(Exception e )
+				catch( Exception e )
 				{
 					log.LogError( e, e.Message );
 					throw new JoserrasException( "Error desconocido. No se pudo asignar el premio de la posición: " + i, e );
@@ -96,9 +69,34 @@ namespace TorneosWeb.service.impl
 			}
 		}
 
-		public Bolsa GetBolsaTorneo(int entradas, int buyin, int ligaFee = 0)
+		public string SetPremiacionString(TorneoDTO torneo, IEnumerable<ResultadosDTO> resultados)
 		{
-			return new Bolsa( (entradas * buyin) - (entradas * ligaFee) );
+			string premiacion = string.Empty;
+			int entradas = torneo.Entradas + torneo.Rebuys;
+			if( resultados.Any( r => !r.Premio.IsNullEmptyOrZero() ) ) {
+				List<string> list = resultados.Where( r => !r.Premio.IsNullEmptyOrZero() )
+						.OrderBy( r => r.Posicion ).Select( r => r.Premio ).ToList();
+				premiacion = string.Join( PrizeFill.SEPARATOR, list );
+			}
+			else if( !string.IsNullOrEmpty( torneo.Premiacion ) )
+			{
+				premiacion = torneo.Premiacion;
+			}
+			else
+			{
+				IEnumerable<PrizeRange> PrizeRanges = prizeDao.GetPrizeRanges();
+				PrizeRange selectedRange = PrizeRanges.First( r => r.IsBetween( entradas ) );
+				log.LogDebug( "Selected prize range: {0}", selectedRange.ToString() );
+				premiacion = selectedRange.Premiacion;
+			}
+
+			log.LogDebug( "Premiación del torneo es: " + premiacion );
+			return premiacion;
+		}
+
+		public Bolsa GetBolsaTorneo(int entradas, int rebuys, int buyinPrice, int rebuyPrice)
+		{
+			return new Bolsa( (entradas * buyinPrice) + (rebuys * rebuyPrice) );
 		}
 
 	}

@@ -252,26 +252,6 @@ namespace TorneosWeb.service.decorators
 			return cacheService.Get<Torneo>( "Torneo" + fecha.ToShortDateString() );
 		}
 
-		public Torneo FindTorneoById(Guid id)
-		{
-			Torneo torneo = cacheService.Get<Torneo>( "Torneo" + id.ToString() );
-
-			if( torneo == null )
-			{
-				try
-				{
-					cacheService.Add( "Torneo" + id.ToString(), wrapped.FindTorneoById( id ) );
-				}
-				catch( Exception e )
-				{
-					log.LogWarning( e, e.Message );
-					throw new JoserrasException( e );
-				}
-			}
-
-			return cacheService.Get<Torneo>( "Torneo" + id.ToString() );
-		}
-
 	}
 
 }

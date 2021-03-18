@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using TorneosWeb.domain.models;
 using TorneosWeb.domain.models.ligas;
 
@@ -15,6 +16,8 @@ namespace TorneosWeb.service
 		List<Standing> GetStandings(Liga liga);
 
 		List<Standing> GetStandings(Liga liga, Torneo torneo);
+
+		Liga GetLigaByTorneoId(Guid torneoId);
 	}
 
 }

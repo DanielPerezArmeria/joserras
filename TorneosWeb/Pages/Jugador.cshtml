@@ -50,14 +50,14 @@
 		<div class="gridWrapper">
 			<h3 style="grid-column: 1 / span 2">PREMIOS</h3>
 
-			<div class="statLabel">@Html.DisplayNameFor( model => model.DetalleJugador.Premios ):</div>
+			<div class="statLabel">Premios Torneos:</div>
 			<div class="statValue">@Model.DetalleJugador.Premios</div>
 
-			<div class="statLabel">@Html.DisplayNameFor( model => model.DetalleJugador.PremiosLiga ):</div>
+			<div class="statLabel">Premios Ligas:</div>
 			<div class="statValue">@Model.DetalleJugador.PremiosLiga</div>
 
-			<div class="statLabel">@Html.DisplayNameFor( model => model.DetalleJugador.Costos ):</div>
-			<div class="statValue" style="color:red">@Model.DetalleJugador.Costos</div>
+			<div class="statLabel">Costos Totales:</div>
+			<div class="statValue" style="color:red">@Model.DetalleJugador.CostosTotales</div>
 
 			<hr align="left" style="margin-top:1em;margin-bottom:1em;border: 2px solid black;grid-column: 1 / span 2;width:75%;background-color:black" />
 
@@ -90,11 +90,11 @@
 			var chart = new Chart(ctx, {
 				type: 'line',
 				data: {
-					labels: tourneyHistory.labels,
 					datasets: [{
 						label: 'Profit Torneos',
 						data: tourneyHistory.tournaments,
 						borderColor: 'cyan',
+						xAxisID: 'torneoAxis',
 						pointBackgroundColor: function (context) {
 							var index = context.dataIndex;
 							var value = context.dataset.data[index];
@@ -102,15 +102,50 @@
 						},
 						pointRadius: 5,
 						fill: false
-					}]
+					}, {
+							label: 'Profit Ligas',
+							data: tourneyHistory.liga,
+							borderColor: 'blue',
+							xAxisID: 'ligasAxis',
+							pointBackgroundColor: function (context) {
+								var index = context.dataIndex;
+								var value = context.dataset.data[index];
+								return value < 0 ? 'red' : 'green';
+							},
+							pointRadius: 5,
+							fill: false
+						}]
+				},
+				options: {
+					scales: {
+						xAxes: [{
+							id: 'torneoAxis',
+							type: 'category',
+							labels: tourneyHistory.labels,
+							scaleLabel: {
+								display: true,
+								labelString: 'TORNEOS',
+								fontStyle: 'bold',
+								fontColor: 'cyan',
+								fontSize: '14'
+							}
+						},
+							{
+								id: 'ligasAxis',
+								type: 'category',
+								labels: tourneyHistory.ligalabels,
+								position: 'top',
+								scaleLabel: {
+									display: true,
+									labelString: 'LIGAS',
+									fontStyle: 'bold',
+									fontColor: 'blue',
+									fontSize: '14'
+								}
+							}]
+					}
 				}
 			});
-
-			function setColor(context) {
-				var index = context.dataIndex;
-				var value = context.dataset.data[index];
-				return value < 0 ? 'red' : 'green';
-			}
 		</script>
 	</div>
 

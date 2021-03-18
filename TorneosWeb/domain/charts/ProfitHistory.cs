@@ -7,6 +7,7 @@ namespace TorneosWeb.domain.charts
 		public string[] Labels { get; set; }
 		public decimal[] Tournaments { get; set; }
 		public decimal[] Liga { get; set; }
+		public string[] Ligalabels { get; set; }
 
 	}
 

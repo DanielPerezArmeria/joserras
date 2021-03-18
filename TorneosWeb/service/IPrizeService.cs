@@ -8,7 +8,9 @@ namespace TorneosWeb.service
 	{
 		void SetPremiosTorneo(TorneoDTO torneo, IEnumerable<ResultadosDTO> resultados);
 
-		Bolsa GetBolsaTorneo(int entradas, int buyin, int ligaFee = 0);
+		Bolsa GetBolsaTorneo(int entradas, int rebuys, int buyinPrice, int rebuyPrice);
+
+		string SetPremiacionString(TorneoDTO torneo, IEnumerable<ResultadosDTO> resultados);
 	}
 
 }

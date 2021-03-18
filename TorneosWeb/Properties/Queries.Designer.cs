@@ -135,6 +135,26 @@ namespace TorneosWeb.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select liga_fees.jugador_id, premios_liga.premios, fees
+        ///from
+        ///(select id as jugador_id, sum(total) as fees from
+        ///(select j.id, l.fee, (sum(r.rebuys * l.fee) + count(tl.torneo_id) * l.fee) as total
+        ///from torneos_liga tl, resultados r, jugadores j, ligas l
+        ///where j.id = r.jugador_id and tl.torneo_id = r.torneo_id
+        ///	and l.id = tl.liga_id and l.id = &apos;{0}&apos;
+        ///group by j.id, l.fee) as total_fees
+        ///group by id) as liga_fees,
+        ///(
+        ///	select j.id, coalesce(ptl.premios, 0) as premios from
+        ///	(select j.id from jugadores j)  [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string GetLigaProfitsByLiga {
+            get {
+                return ResourceManager.GetString("GetLigaProfitsByLiga", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select res.nombre, count(res.nombre) as podios_neg
         ///from
         ///(select t.fecha, j.nombre, sum(d.premio) as premio, sum((t.precio_rebuy * d.rebuys) + t.precio_buyin ) as costos
@@ -165,8 +185,48 @@ namespace TorneosWeb.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to insert into torneos (fecha, precio_buyin, precio_rebuy, entradas, rebuys, bolsa, tipo, premio_x_bounty) output INSERTED.ID
-        ///values (&apos;{0}&apos;, {1}, {2}, {3}, {4}, {5}, &apos;{6}&apos;, {7} ).
+        ///   Looks up a localized string similar to select liga_fees.jugador_id, premios_liga.premios, fees
+        ///from
+        ///(select id as jugador_id, sum(total) as fees from
+        ///(select j.id, l.fee, (sum(r.rebuys * l.fee) + count(tl.torneo_id) * l.fee) as total
+        ///from torneos_liga tl, resultados r, jugadores j, ligas l
+        ///where j.id = r.jugador_id and tl.torneo_id = r.torneo_id
+        ///	and l.id = tl.liga_id
+        ///group by j.id, l.fee) as total_fees
+        ///group by id) as liga_fees,
+        ///(
+        ///	select j.id, coalesce(ptl.premios, 0) as premios from
+        ///	(select j.id from jugadores j) as j left outer j [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string GetTotalLigaProfits {
+            get {
+                return ResourceManager.GetString("GetTotalLigaProfits", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select liga_fees.jugador_id, premios_liga.premios, fees
+        ///from
+        ///(select id as jugador_id, sum(total) as fees
+        ///from
+        ///(select j.id, l.fee, (sum(r.rebuys * l.fee) + count(tl.torneo_id) * l.fee) as total
+        ///from torneos_liga tl, resultados r, jugadores j, ligas l
+        ///where j.id = r.jugador_id and tl.torneo_id = r.torneo_id
+        ///	and l.id = tl.liga_id and j.id = &apos;{0}&apos;
+        ///group by j.id, l.fee) as total_fees
+        ///group by id) as liga_fees,
+        ///(select coalesce(sum(ptl.premio), 0) as premios from puntos_torneo_liga ptl
+        ///where ptl.jug [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string GetTotalLigaProfitsByPlayerId {
+            get {
+                return ResourceManager.GetString("GetTotalLigaProfitsByPlayerId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to insert into torneos (fecha, precio_buyin, precio_rebuy, entradas, rebuys, bolsa, tipo, premio_x_bounty, premiacion) output INSERTED.ID
+        ///values (&apos;{0}&apos;, {1}, {2}, {3}, {4}, {5}, &apos;{6}&apos;, {7}, &apos;{8}&apos; ).
         /// </summary>
         internal static string InsertTorneo {
             get {
