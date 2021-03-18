@@ -65,7 +65,7 @@ namespace TorneosWeb.service.impl
 			}
 
 			chartItem.Liga = ligaProfits.ToArray();
-			chartItem.Ligalabels = ligaLabels.Select( l => "Liga - " + l ).ToArray();
+			chartItem.Ligalabels = ligaLabels.ToArray();
 		}
 
 		private List<ChartDatePoint> BuildTourneyProfit(SqlDataReader reader)

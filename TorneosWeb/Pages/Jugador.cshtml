@@ -121,13 +121,28 @@
 						xAxes: [{
 							id: 'torneoAxis',
 							type: 'category',
-							labels: tourneyHistory.labels
-						}, {
-							id: 'ligasAxis',
-							type: 'category',
-							labels: tourneyHistory.ligalabels,
-							position: 'top'
-						}]
+							labels: tourneyHistory.labels,
+							scaleLabel: {
+								display: true,
+								labelString: 'TORNEOS',
+								fontStyle: 'bold',
+								fontColor: 'cyan',
+								fontSize: '14'
+							}
+						},
+							{
+								id: 'ligasAxis',
+								type: 'category',
+								labels: tourneyHistory.ligalabels,
+								position: 'top',
+								scaleLabel: {
+									display: true,
+									labelString: 'LIGAS',
+									fontStyle: 'bold',
+									fontColor: 'blue',
+									fontSize: '14'
+								}
+							}]
 					}
 				}
 			});
