@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using System;
-using System.Linq;
 using TorneosWeb.domain.charts;
 using TorneosWeb.domain.models;
 using TorneosWeb.service;
@@ -14,19 +13,16 @@ namespace TorneosWeb.Pages
 		public ProfitChartItem ProfitHistory { get; set; }
 
 		private IReadService readService;
-		private IChartService chartService;
 
 
-		public JugadorModel(IReadService service, IChartService chartService)
+		public JugadorModel(IReadService service)
 		{
 			readService = service;
-			this.chartService = chartService;
 		}
 
 		public void OnGet(Guid id)
 		{
 			DetalleJugador = readService.FindDetalleJugador( id );
-			ProfitHistory = chartService.GetProfitHistoryByPlayerId( id );
 		}
 			
 	}
