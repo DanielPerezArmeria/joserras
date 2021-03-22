@@ -91,7 +91,7 @@ namespace TorneosWeb
 			container.RegisterSingleton<IProfitsExporter>( () =>
 				new GoogleSheetsProfitsExporter( contentRoot + @"/Files/Joserras Project-fd7d4368e5dd.json",
 				"1fWhxbneW19urTN7RFMaTRtycIB32X6C4LPM9QGzDY-w", container.GetInstance<ILogger<GoogleSheetsProfitsExporter>>(),
-				container.GetInstance<IReadService>() ) );
+				container.GetInstance<IReadService>(), container.GetInstance<ILigaReader>() ) );
 
 			ignoreClasses.Add( Type.GetType( "TorneosWeb.service.IProfitsExporter" ) );
 

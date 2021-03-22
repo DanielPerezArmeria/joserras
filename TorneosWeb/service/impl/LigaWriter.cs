@@ -141,7 +141,7 @@ namespace TorneosWeb.service.impl
 					string query = "insert into puntos_torneo_liga values ('{0}', '{1}', {2}, {3})";
 					foreach( Standing standing in standings )
 					{
-						string q = string.Format( query, liga.Id, standing.JugadorId, standing.Total, standing.PremioNumber );
+						string q = string.Format( query, liga.Id, standing.JugadorId, standing.Total, standing.PremioLigaNumber );
 						try
 						{
 							log.LogInformation( "Guardando: {0}", q );
@@ -185,7 +185,7 @@ namespace TorneosWeb.service.impl
 			{
 				Standing standing = standings.ElementAt( i );
 				decimal factor = decimal.Parse( prizesString[ i ].Replace( "%", "" ) ) / 100;
-				standing.PremioNumber = totalToSplit * factor;
+				standing.PremioLigaNumber = totalToSplit * factor;
 			}
 		}
 

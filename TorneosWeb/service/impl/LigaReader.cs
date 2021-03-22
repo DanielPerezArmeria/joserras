@@ -121,7 +121,7 @@ namespace TorneosWeb.service.impl
 
 		public List<Standing> GetStandings(Liga liga)
 		{
-			if(liga == null || liga.Torneos.Count < 1 )
+			if(liga == null || liga.Torneos?.Count < 1 )
 			{
 				return new List<Standing>();
 			}
@@ -170,7 +170,7 @@ namespace TorneosWeb.service.impl
 					{
 						Guid jugadorId = (Guid)reader[ "jugador_id" ];
 						decimal premio = reader.GetFieldValue<decimal>( reader.GetOrdinal( "premio" ) );
-						standings.Where( s => s.Value.JugadorId == jugadorId ).First().Value.PremioNumber = premio;
+						standings.Where( s => s.Value.JugadorId == jugadorId ).First().Value.PremioLigaNumber = premio;
 					}
 				} );
 			}

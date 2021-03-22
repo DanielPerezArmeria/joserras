@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using TorneosWeb.domain;
 using TorneosWeb.domain.models;
+using TorneosWeb.domain.models.ligas;
 
 namespace TorneosWeb.service.impl
 {
@@ -22,16 +23,18 @@ namespace TorneosWeb.service.impl
 		private readonly SheetsService sheetsService;
 		private ILogger<GoogleSheetsProfitsExporter> log;
 		private IReadService readService;
+		private ILigaReader ligaReader;
 
 		static string[] Scopes = { SheetsService.Scope.Spreadsheets };
 
 		public GoogleSheetsProfitsExporter(string credentialFileName, string spreadsheetId, ILogger<GoogleSheetsProfitsExporter> logger,
-			IReadService readService)
+			IReadService readService, ILigaReader ligaReader)
 		{
 			CredentialFileName = credentialFileName;
 			SpreadsheetId = spreadsheetId;
 			log = logger;
 			this.readService = readService;
+			this.ligaReader = ligaReader;
 
 			try
 			{
@@ -86,6 +89,21 @@ namespace TorneosWeb.service.impl
 						row.Add( pair.Value );
 					}
 				}
+
+				Liga liga = torneos.FirstOrDefault( t => t.Liga?.FechaCierreDate != null )?.Liga;
+				if(liga != null )
+				{
+					KeyValuePair<Guid, decimal> ligaPair = profitRow.Profits.SingleOrDefault( p => p.Key == liga.Id );
+					if( ligaPair.Equals( default( KeyValuePair<Guid, int> ) ) )
+					{
+						row.Add( "" );
+					}
+					else
+					{
+						row.Add( ligaPair.Value );
+					}
+				}
+
 				rows.Add( row );
 			}
 			ValueRange valueRequest = new ValueRange
@@ -121,6 +139,28 @@ namespace TorneosWeb.service.impl
 					profitRow.Profits.Add( new KeyValuePair<Guid, decimal>( torneo.Id, posicion.ProfitTotal ) );
 				}
 			}
+
+			Liga liga = torneos.FirstOrDefault( t => t.Liga?.FechaCierreDate != null )?.Liga;
+			if(liga != null )
+			{
+				liga = ligaReader.FindLigaByNombre( liga.Nombre );
+				List<Standing> standings = ligaReader.GetStandings( liga );
+				foreach(Standing standing in standings )
+				{
+					ProfitRow profitRow = null;
+					if( rowValues.ContainsKey( standing.Jugador ) )
+					{
+						profitRow = rowValues[ standing.Jugador ];
+					}
+					else
+					{
+						profitRow = new ProfitRow();
+						profitRow.Nombre = standing.Jugador;
+						rowValues.Add( standing.Jugador, profitRow );
+					}
+					profitRow.Profits.Add( new KeyValuePair<Guid, decimal>( liga.Id, standing.PremioLigaNumber ) );
+				}
+			}
 		}
 
 		private IList<object> CreateDatesRow(List<Torneo> torneos)
@@ -129,6 +169,11 @@ namespace TorneosWeb.service.impl
 			foreach(Torneo t in torneos )
 			{
 				datesRow.Add( t.Fecha );
+			}
+
+			if( torneos.Any( t => t.Liga != null ) )
+			{
+				datesRow.Add( "Liga" );
 			}
 
 			IList<IList<object>> rows = new List<IList<object>>();

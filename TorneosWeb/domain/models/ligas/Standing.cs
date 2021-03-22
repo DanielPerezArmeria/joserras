@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using TorneosWeb.util;
 using TorneosWeb.util.PointRules;
@@ -45,13 +46,14 @@ namespace TorneosWeb.domain.models.ligas
 
 		public decimal ProfitNumber { get; set; }
 
-		public string Premio
+		[Display( Name = "Premio Liga" )]
+		public string PremioLiga
 		{
 			get
 			{
-				if(PremioNumber > 0 )
+				if(PremioLigaNumber > 0 )
 				{
-					return PremioNumber.ToString( Constants.CURRENCY_FORMAT );
+					return PremioLigaNumber.ToString( Constants.CURRENCY_FORMAT );
 				}
 				else
 				{
@@ -60,7 +62,7 @@ namespace TorneosWeb.domain.models.ligas
 			}
 		}
 
-		public decimal PremioNumber { get; set; }
+		public decimal PremioLigaNumber { get; set; }
 
 	}
 

@@ -24,10 +24,10 @@
 				<th>
 					@Html.DisplayNameFor( model => model[ 0 ].Profit )
 				</th>
-				@if( !Model[ 0 ].Liga.Abierta && Model[0].PremioNumber > 0 )
+				@if( !Model[ 0 ].Liga.Abierta && Model[0].PremioLigaNumber > 0 )
 				{
 					<th>
-						@Html.DisplayNameFor( model => model[ 0 ].Premio )
+						@Html.DisplayNameFor( model => model[ 0 ].PremioLiga )
 					</th>
 				}
 			</tr>
@@ -52,10 +52,10 @@
 				<td class="profit" style="text-align:right;margin-right:10em;color:@(standing.ProfitNumber < 0 ? "red" : "black")">
 					@Html.DisplayFor( item => standing.Profit )
 				</td>
-				@if( !standing.Liga.Abierta && Model[ 0 ].PremioNumber > 0 )
+				@if( !standing.Liga.Abierta && Model[ 0 ].PremioLigaNumber > 0 )
 				{
 					<td class="profit" style="text-align:right;margin-right:10em">
-						@Html.DisplayFor( item => standing.Premio )
+						@Html.DisplayFor( item => standing.PremioLiga )
 					</td>
 				}
 			</tr>
