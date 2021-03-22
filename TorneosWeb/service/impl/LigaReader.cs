@@ -204,7 +204,7 @@ namespace TorneosWeb.service.impl
 					standing.Puntos[ rule.Value.Type ] = rule.Value.GetPuntaje( pos.JugadorId, liga, results ) + p;
 				}
 
-				standing.ProfitNumber = pos.ProfitNumber;
+				standing.ProfitNumber = pos.ProfitTorneoNumber;
 
 				standings.Add( standing );
 			}

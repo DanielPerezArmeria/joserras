@@ -30,10 +30,46 @@ namespace TorneosWeb.domain.models
 		}
 
 		[NoMap]
-		public string Profit { get { return ProfitNumber != 0 ? ProfitNumber.ToString( Constants.CURRENCY_FORMAT ) : "$0"; } }
+		[Display( Name = "Profit Torneo" )]
+		public string ProfitTorneo { get { return ProfitTorneoNumber != 0 ? ProfitTorneoNumber.ToString( Constants.CURRENCY_FORMAT ) : "$0"; } }
 
 		[NoMap]
-		public decimal ProfitNumber { get; set; }
+		public decimal ProfitTorneoNumber
+		{
+			get { return PremioNumber - TorneoCostos; }
+		}
+
+		[NoMap]
+		public decimal ProfitTotal
+		{
+			get
+			{
+				return ProfitTorneoNumber - LigaCostos;
+			}
+		}
+
+		[NoMap]
+		public decimal LigaCostos
+		{
+			get
+			{
+				if(Resultados.Torneo.Liga != null )
+				{
+					return (Rebuys + 1) * Resultados.Torneo.Liga.Fee;
+				}
+
+				return 0;
+			}
+		}
+
+		[NoMap]
+		public decimal TorneoCostos
+		{
+			get { return Resultados.Torneo.PrecioBuyinNumber + (Rebuys * Resultados.Torneo.PrecioRebuyNumber); }
+		}
+
+		[NoMap]
+		public Resultados Resultados { get; set; }
 
 		public bool Puntualidad { get; set; }
 

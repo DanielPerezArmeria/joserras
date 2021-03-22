@@ -118,7 +118,7 @@ namespace TorneosWeb.service.impl
 						profitRow.Nombre = posicion.Nombre;
 						rowValues.Add( posicion.Nombre, profitRow );
 					}
-					profitRow.Profits.Add( new KeyValuePair<Guid, decimal>( torneo.Id, posicion.ProfitNumber ) );
+					profitRow.Profits.Add( new KeyValuePair<Guid, decimal>( torneo.Id, posicion.ProfitTotal ) );
 				}
 			}
 		}

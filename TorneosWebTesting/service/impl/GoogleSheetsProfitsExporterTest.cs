@@ -86,7 +86,7 @@ namespace TorneosWebTesting.service.impl
 
 		private Posicion CreatePosicion(string nombre, int profit)
 		{
-			return new Posicion { Nombre = nombre, ProfitNumber = profit };
+			return new Posicion { Nombre = nombre, ProfitTorneoNumber = profit };
 		}
 
 		private List<Jugador> CreateJugadores()

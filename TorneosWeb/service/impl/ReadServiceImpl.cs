@@ -183,14 +183,7 @@ namespace TorneosWeb.service.impl
 				while( reader.Read() )
 				{
 					Posicion posicion = mapper.Map<SqlDataReader, Posicion>( reader );
-					decimal premio = 0;
-					try
-					{
-						premio = decimal.Parse( posicion.Premio, System.Globalization.NumberStyles.Currency );
-					}
-					catch( FormatException ) { }
-					int costos = resultados.Torneo.PrecioBuyinNumber + (posicion.Rebuys * resultados.Torneo.PrecioRebuyNumber);
-					posicion.ProfitNumber = premio + posicion.PremioBountiesNumber - costos;
+					posicion.Resultados = resultados;
 					posiciones.Add( posicion );
 					resultados.Jugadores.Add( posicion.Nombre );
 				}
