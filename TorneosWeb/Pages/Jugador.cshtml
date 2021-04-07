@@ -1,6 +1,9 @@
 ﻿@page
 @model TorneosWeb.Pages.JugadorModel
 @using TorneosWeb.util
+@{
+	ViewData[ "Listado" ] = "Torneos";
+}
 
 <!DOCTYPE html>
 
@@ -79,6 +82,12 @@
 		</div>
 
 	</div>
+
+	<hr style="margin-top:3em;margin-bottom:3em;border: 3px solid black;background-color:black" />
+
+	<h3>Últimos 25 torneos jugados</h3>
+
+	<partial name="_TorneosListing" model="Model.Torneos" view-data="ViewData" />
 
 </body>
 </html>

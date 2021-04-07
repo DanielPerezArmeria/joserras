@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using TorneosWeb.domain.charts;
 using TorneosWeb.domain.models;
 using TorneosWeb.service;
@@ -11,6 +13,7 @@ namespace TorneosWeb.Pages
 	{
 		public DetalleJugador DetalleJugador { get; set; }
 		public ProfitChartItem ProfitHistory { get; set; }
+		public List<Torneo> Torneos { get; set; }
 
 		private IReadService readService;
 
@@ -23,6 +26,7 @@ namespace TorneosWeb.Pages
 		public void OnGet(Guid id)
 		{
 			DetalleJugador = readService.FindDetalleJugador( id );
+			Torneos = readService.GetAllTorneos().Where( t => t.Resultados.Posiciones.Any( p => p.JugadorId.Equals( id ) ) ).Take( 25 ).ToList();
 		}
 			
 	}
