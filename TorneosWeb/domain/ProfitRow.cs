@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace TorneosWeb.domain
 {
@@ -7,11 +6,11 @@ namespace TorneosWeb.domain
 	{
 		public ProfitRow()
 		{
-			Profits = new List<KeyValuePair<Guid, decimal>>();
+			Profits = new Dictionary<string, decimal>();
 		}
 
 		public string Nombre { get; set; }
-		public List<KeyValuePair<Guid, decimal>> Profits { get; set; }
+		public IDictionary<string, decimal> Profits { get; set; }
 	}
 
 }

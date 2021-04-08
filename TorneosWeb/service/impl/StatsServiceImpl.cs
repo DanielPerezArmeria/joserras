@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Humanizer;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -15,12 +17,14 @@ namespace TorneosWeb.service.impl
 		private readonly string connString;
 		private JoserrasQuery joserrasQuery;
 		private IReadService readService;
+		private ILogger<StatsServiceImpl> log;
 
-		public StatsServiceImpl(IConfiguration conf, IReadService readService, JoserrasQuery joserrasQuery)
+		public StatsServiceImpl(IConfiguration conf, IReadService readService, JoserrasQuery joserrasQuery, ILogger<StatsServiceImpl> logger)
 		{
 			connString = conf.GetConnectionString( Properties.Resources.joserrasDb );
 			this.joserrasQuery = joserrasQuery;
 			this.readService = readService;
+			log = logger;
 		}
 
 		public Estadisticas GetStats()
@@ -78,7 +82,8 @@ namespace TorneosWeb.service.impl
 		{
 			// Quita los jugadores q han jugado menos del 10% de los juegos
 			int maxTorneos = estadisticas.Detalles.Max( d => d.Torneos );
-			List<Guid> jugadoresMenosDiezPorCiento = estadisticas.Detalles.Where( d => d.Torneos < maxTorneos / 15 ).Select( d => d.Id ).ToList();
+			List<Guid> jugadoresMenosDiezPorCiento =
+					estadisticas.Detalles.Where( d => d.Torneos < maxTorneos * 0.15  ).Select( d => d.Id ).ToList();
 
 			// Quita los jugadores q no han jugado en 3 meses
 			List<Guid> jugadoresInactividad = new List<Guid>();
@@ -98,7 +103,14 @@ namespace TorneosWeb.service.impl
 				} );
 			}
 
-			estadisticas.Detalles.RemoveAll( d => jugadoresMenosDiezPorCiento.Contains( d.Id ) && jugadoresInactividad.Contains( d.Id ) );
+			if( jugadoresMenosDiezPorCiento.Count > 0 && jugadoresInactividad.Count > 0 )
+			{
+				log.LogDebug( "{0} jugadores con menos del 15% de los {1} torneos jugados:", jugadoresMenosDiezPorCiento.Count, maxTorneos );
+				log.LogDebug( jugadoresMenosDiezPorCiento.Humanize() );
+				log.LogDebug( "{0} jugadores con más de 3 meses sin jugar:", jugadoresInactividad.Count );
+				log.LogDebug( jugadoresInactividad.Humanize() );
+				estadisticas.Detalles.RemoveAll( d => jugadoresMenosDiezPorCiento.Contains( d.Id ) && jugadoresInactividad.Contains( d.Id ) );
+			}
 		}
 
 		private Estadisticas GetStats(Estadisticas estadisticas, string q, SqlConnection conn)

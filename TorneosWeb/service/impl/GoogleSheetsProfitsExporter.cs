@@ -66,7 +66,7 @@ namespace TorneosWeb.service.impl
 
 		private void InsertProfitData(List<Torneo> torneos)
 		{
-			IList<object> firstRowDates = CreateDatesRow( torneos );
+			List<object> firstRowDates = CreateDatesRow( torneos );
 
 			SortedDictionary<string, ProfitRow> rowValues = new SortedDictionary<string, ProfitRow>();
 			CreateRowValues( rowValues, torneos );
@@ -77,30 +77,28 @@ namespace TorneosWeb.service.impl
 			{
 				IList<object> row = new List<object>();
 				row.Add( profitRow.Nombre );
-				foreach( Torneo torneo in torneos )
+				foreach( string fecha in firstRowDates )
 				{
-					KeyValuePair<Guid, decimal> pair = profitRow.Profits.Where( p => p.Key.Equals( torneo.Id ) ).FirstOrDefault();
-					if(pair.Equals(default( KeyValuePair<Guid, int> ) ) )
+					if(!profitRow.Profits.ContainsKey(fecha) )
 					{
 						row.Add( "" );
 					}
 					else
 					{
-						row.Add( pair.Value );
+						row.Add( profitRow.Profits[fecha] );
 					}
 				}
 
 				Liga liga = torneos.FirstOrDefault( t => t.Liga?.FechaCierreDate != null )?.Liga;
 				if(liga != null )
 				{
-					KeyValuePair<Guid, decimal> ligaPair = profitRow.Profits.SingleOrDefault( p => p.Key == liga.Id );
-					if( ligaPair.Equals( default( KeyValuePair<Guid, int> ) ) )
+					if( !profitRow.Profits.ContainsKey(liga.Id.ToString()) )
 					{
 						row.Add( "" );
 					}
 					else
 					{
-						row.Add( ligaPair.Value );
+						row.Add( profitRow.Profits[ liga.Id.ToString() ] );
 					}
 				}
 
@@ -120,10 +118,10 @@ namespace TorneosWeb.service.impl
 
 		private void CreateRowValues(SortedDictionary<string, ProfitRow> rowValues, List<Torneo> torneos)
 		{
-			foreach(Torneo torneo in torneos )
+			foreach( Torneo torneo in torneos )
 			{
 				Resultados resultados = readService.FindResultadosTorneo( torneo.Id );
-				foreach(Posicion posicion in resultados.Posiciones )
+				foreach( Posicion posicion in resultados.Posiciones )
 				{
 					ProfitRow profitRow = null;
 					if( rowValues.ContainsKey( posicion.Nombre ) )
@@ -136,7 +134,15 @@ namespace TorneosWeb.service.impl
 						profitRow.Nombre = posicion.Nombre;
 						rowValues.Add( posicion.Nombre, profitRow );
 					}
-					profitRow.Profits.Add( new KeyValuePair<Guid, decimal>( torneo.Id, posicion.ProfitTotal ) );
+
+					if( profitRow.Profits.ContainsKey( torneo.Fecha ) )
+					{
+						profitRow.Profits[ torneo.Fecha ] = profitRow.Profits[ torneo.Fecha ] + posicion.ProfitTotal;
+					}
+					else
+					{
+						profitRow.Profits.Add( torneo.Fecha, posicion.ProfitTotal );
+					}
 				}
 			}
 
@@ -158,17 +164,20 @@ namespace TorneosWeb.service.impl
 						profitRow.Nombre = standing.Jugador;
 						rowValues.Add( standing.Jugador, profitRow );
 					}
-					profitRow.Profits.Add( new KeyValuePair<Guid, decimal>( liga.Id, standing.PremioLigaNumber ) );
+					profitRow.Profits.Add( liga.Id.ToString(), standing.PremioLigaNumber );
 				}
 			}
 		}
 
-		private IList<object> CreateDatesRow(List<Torneo> torneos)
+		private List<object> CreateDatesRow(List<Torneo> torneos)
 		{
 			List<object> datesRow = new List<object>();
 			foreach(Torneo t in torneos )
 			{
-				datesRow.Add( t.Fecha );
+				if(!datesRow.Contains( t.Fecha ) )
+				{
+					datesRow.Add( t.Fecha );
+				}
 			}
 
 			if( torneos.Any( t => t.Liga != null ) )

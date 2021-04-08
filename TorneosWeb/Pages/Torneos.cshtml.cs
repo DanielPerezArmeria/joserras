@@ -19,7 +19,7 @@ namespace TorneosWeb.Pages
 
 		public void OnGet()
 		{
-			Torneos = readService.GetAllTorneos().Take( 15 ).ToList();
+			Torneos = readService.GetAllTorneos().Take( 20 ).ToList();
 		}
 
 	}
