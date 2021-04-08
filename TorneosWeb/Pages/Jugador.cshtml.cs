@@ -26,7 +26,7 @@ namespace TorneosWeb.Pages
 		public void OnGet(Guid id)
 		{
 			DetalleJugador = readService.FindDetalleJugador( id );
-			Torneos = readService.GetAllTorneos().Where( t => t.Resultados.Posiciones.Any( p => p.JugadorId.Equals( id ) ) ).Take( 25 ).ToList();
+			Torneos = readService.GetAllTorneos().Where( t => t.Resultados.Posiciones.Any( p => p.JugadorId.Equals( id ) ) ).Take( 15 ).ToList();
 		}
 			
 	}
