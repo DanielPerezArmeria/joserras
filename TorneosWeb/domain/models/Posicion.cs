@@ -17,9 +17,9 @@ namespace TorneosWeb.domain.models
 		[Display(Name = "$ Premio")]
 		public string Premio { get { return PremioNumber > 0 ? PremioNumber.ToString( Constants.CURRENCY_FORMAT ) : "-"; } }
 
-		public string Podio { get; set; }
+		public bool Podio { get; set; }
 		public int Rebuys { get; set; }
-		public string Burbuja { get; set; }
+		public bool Burbuja { get; set; }
 
 		public decimal KnockoutsNumber { get; set; }
 
