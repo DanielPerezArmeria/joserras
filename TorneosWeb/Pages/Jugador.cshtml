@@ -4,6 +4,7 @@
 @{
 	ViewData[ "Listado" ] = "Torneos";
 }
+@using Humanizer;
 
 <!DOCTYPE html>
 
@@ -71,6 +72,16 @@
 			<div class="statValue" style="font-weight:bold;color:@(Model.DetalleJugador.ProfitNumber < 0 ? "red" : "black")">@Model.DetalleJugador.ROI</div>
 		</div>
 
+		<div class="gridWrapper" style="grid-auto-rows:min-content;grid-template-columns: 30px 150px;justify-content:flex-start">
+			<h3 style="grid-column: 1 / span 2">PODIOS</h3>
+
+			@foreach( int podios in Model.Podios.Keys )
+			{
+				<div class="statLabel">@podios.Ordinalize():</div>
+				<div class="statValue" style="text-align:left">@Model.Podios[podios]</div>
+			}
+		</div>
+
 		<div class="gridWrapper">
 			<h3 style="grid-column: 1 / span 2">KO's</h3>
 
@@ -85,7 +96,7 @@
 
 	<hr style="margin-top:3em;margin-bottom:3em;border: 3px solid black;background-color:black" />
 
-	<h3>Últimos 25 torneos jugados</h3>
+	<h3>Últimos 15 torneos jugados</h3>
 
 	<partial name="_TorneosListing" model="Model.Torneos" view-data="ViewData" />
 
