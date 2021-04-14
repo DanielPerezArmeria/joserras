@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TorneosWeb", "TorneosWeb\To
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "JoserrasDatabase", "JoserrasDatabase\JoserrasDatabase.sqlproj", "{CB94003B-26C6-41F2-9065-555D09297962}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TorneosWebTesting", "TorneosWebTesting\TorneosWebTesting.csproj", "{BB86370F-4EF0-43E2-B92B-49E33232A1F1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TorneosWebTesting", "TorneosWebTesting\TorneosWebTesting.csproj", "{BB86370F-4EF0-43E2-B92B-49E33232A1F1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JoserrasTorneoClient", "JoserrasTorneoClient\JoserrasTorneoClient.csproj", "{F6F3C274-08ED-43E5-8485-94D269D9A7F8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,6 +31,10 @@ Global
 		{BB86370F-4EF0-43E2-B92B-49E33232A1F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BB86370F-4EF0-43E2-B92B-49E33232A1F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BB86370F-4EF0-43E2-B92B-49E33232A1F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6F3C274-08ED-43E5-8485-94D269D9A7F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6F3C274-08ED-43E5-8485-94D269D9A7F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6F3C274-08ED-43E5-8485-94D269D9A7F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6F3C274-08ED-43E5-8485-94D269D9A7F8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

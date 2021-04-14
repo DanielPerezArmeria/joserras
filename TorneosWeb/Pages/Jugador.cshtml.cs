@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using TorneosWeb.domain.charts;
 using TorneosWeb.domain.models;
 using TorneosWeb.service;
 
@@ -12,7 +11,6 @@ namespace TorneosWeb.Pages
 	public class JugadorModel : PageModel
 	{
 		public DetalleJugador DetalleJugador { get; set; }
-		public ProfitChartItem ProfitHistory { get; set; }
 		public List<Torneo> Torneos { get; set; }
 		public IDictionary<int,int> Podios { get; set; }
 
