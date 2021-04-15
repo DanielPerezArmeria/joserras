@@ -44,7 +44,6 @@ namespace TorneosWeb
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddRazorPages();
-			services.AddControllers();
 
 			CultureInfo mex = new CultureInfo( "es-MX" );
 			CultureInfo.DefaultThreadCurrentCulture = mex;
