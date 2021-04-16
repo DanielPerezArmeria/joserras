@@ -40,7 +40,11 @@ namespace TorneosWeb.domain.models
 		}
 
 		[NoMap]
-		public decimal ProfitTotal
+		[Display( Name = "Profit Total" )]
+		public string ProfitTotal { get { return ProfitTotalNumber != 0 ? ProfitTotalNumber.ToString( Constants.CURRENCY_FORMAT ) : "$0"; } }
+
+		[NoMap]
+		public decimal ProfitTotalNumber
 		{
 			get
 			{
