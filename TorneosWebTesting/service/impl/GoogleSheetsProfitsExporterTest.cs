@@ -15,6 +15,7 @@ namespace TorneosWebTesting.service.impl
 
 		private Mock<ILogger<GoogleSheetsProfitsExporter>> logger;
 		private Mock<IReadService> readService;
+		private Mock<ILigaReader> ligaReader;
 
 		[Fact]
 		public void ExportProfitsTest()
@@ -31,7 +32,7 @@ namespace TorneosWebTesting.service.impl
 			readService.Setup( f => f.GetAllJugadores() ).Returns( CreateJugadores() );
 
 			exporter = new GoogleSheetsProfitsExporter( @"./Files/Joserras Project-fd7d4368e5dd.json",
-				"1fWhxbneW19urTN7RFMaTRtycIB32X6C4LPM9QGzDY-w", logger.Object, readService.Object );
+				"1fWhxbneW19urTN7RFMaTRtycIB32X6C4LPM9QGzDY-w", logger.Object, readService.Object, ligaReader.Object );
 
 			exporter.ExportProfits( torneos );
 		}
@@ -62,7 +63,7 @@ namespace TorneosWebTesting.service.impl
 			Resultados resultados = new Resultados();
 
 			List<Posicion> posiciones = new List<Posicion>();
-			posiciones.Add( CreatePosicion( "Daniel", 1000) );
+			posiciones.Add( CreatePosicion( "Daniel", 1000 ) );
 			posiciones.Add( CreatePosicion( "Mote", 500 ) );
 			posiciones.Add( CreatePosicion( "Korean", -300 ) );
 			posiciones.Add( CreatePosicion( "Gers", 77 ) );
@@ -86,7 +87,11 @@ namespace TorneosWebTesting.service.impl
 
 		private Posicion CreatePosicion(string nombre, int profit)
 		{
-			return new Posicion { Nombre = nombre, ProfitTorneoNumber = profit };
+			Mock<Posicion> pos = new Mock<Posicion>();
+			pos.SetupGet( p => p.Nombre ).Returns( nombre );
+			pos.SetupGet( p => p.ProfitTorneoNumber ).Returns( profit );
+
+			return pos.Object;
 		}
 
 		private List<Jugador> CreateJugadores()
