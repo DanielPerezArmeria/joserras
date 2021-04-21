@@ -171,7 +171,7 @@ namespace TorneosWeb.service.impl
 				{
 					log.LogError( e, e.Message );
 					uow.Rollback();
-					throw e;
+					throw;
 				}
 			}
 		}
