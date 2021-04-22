@@ -25,9 +25,9 @@ namespace TorneosWeb
 {
 	public class Startup
 	{
-		private Container container = new SimpleInjector.Container();
+		private Container container = new();
 		private string contentRoot;
-		private ILogger<Startup> log;
+		private readonly ILogger<Startup> log;
 
 		public Startup(IConfiguration configuration, ILogger<Startup> logger)
 		{
@@ -45,7 +45,7 @@ namespace TorneosWeb
 		{
 			services.AddRazorPages();
 
-			CultureInfo mex = new CultureInfo( "es-MX" );
+			CultureInfo mex = new( "es-MX" );
 			CultureInfo.DefaultThreadCurrentCulture = mex;
 			CultureInfo.DefaultThreadCurrentUICulture = mex;
 
