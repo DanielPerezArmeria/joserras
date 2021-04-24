@@ -114,11 +114,6 @@ namespace TorneosWeb.service.impl
 			return torneos;
 		}
 
-		private void FillTorneos(Torneo torneo, SqlConnection conn)
-		{
-			FillTorneos( new List<Torneo>() { torneo }, conn );
-		}
-
 		private void FillTorneos(List<Torneo> torneos, SqlConnection conn)
 		{
 			foreach( Torneo t in torneos )

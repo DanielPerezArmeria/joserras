@@ -34,7 +34,6 @@ namespace TorneosWeb.service.impl
 
 		public Liga FindLigaByNombre(string nombre)
 		{
-			string query = string.Format("select * from ligas where nombre = '{0}'", nombre);
 			Liga liga = null;
 			using( SqlConnection conn = new SqlConnection( ConnString ) )
 			{
@@ -42,7 +41,7 @@ namespace TorneosWeb.service.impl
 
 				liga = ligaDao.FindLigaByNombre( nombre );
 
-				query = string.Format( "select torneo_id from torneos_liga where liga_id = '{0}'", liga.Id );
+				string query = string.Format( "select torneo_id from torneos_liga where liga_id = '{0}'", liga.Id );
 				List<Guid> torneosIds = new List<Guid>();
 				joserrasQuery.ExecuteQuery( conn, query, reader =>
 				{

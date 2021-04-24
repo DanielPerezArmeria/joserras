@@ -28,24 +28,18 @@ namespace TorneosWeb.dao.impl
 		public Liga GetLigaByTorneoId(Guid torneoId)
 		{
 			string query = string.Format( "select * from ligas where id = (select liga_id from torneos_liga where torneo_id = '{0}')", torneoId );
-			Liga liga = null;
-			joserrasQuery.ExecuteQuery( query, reader =>
-			{
-				while( reader.Read() )
-				{
-					liga = mapper.Map<SqlDataReader, Liga>( reader );
-					liga.PointRules = pointRuleFactory.BuildRules( liga.Puntaje );
-				}
-			} );
-
-			return liga;
+			return ExecuteLigaQuery( query ); ;
 		}
 
 		public Liga FindLigaByNombre(string nombre)
 		{
 			string query = string.Format( "select * from ligas where nombre = '{0}'", nombre );
-			Liga liga = null;
+			return ExecuteLigaQuery( query );
+		}
 
+		private Liga ExecuteLigaQuery(string query)
+		{
+			Liga liga = null;
 			joserrasQuery.ExecuteQuery( query, reader =>
 			{
 				while (reader.Read())
