@@ -19,7 +19,6 @@ namespace TorneosWeb.domain.models.ligas
 			set
 			{
 				puntaje = value;
-				PointRules = PointRule.Build( puntaje );
 			}
 		}
 
