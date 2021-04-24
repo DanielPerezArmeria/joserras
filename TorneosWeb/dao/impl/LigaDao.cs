@@ -3,7 +3,6 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Data.SqlTypes;
 using TorneosWeb.domain.models;
 using TorneosWeb.domain.models.ligas;
 using TorneosWeb.util;
@@ -53,7 +52,7 @@ namespace TorneosWeb.dao.impl
 					catch( Exception e )
 					{
 						log.LogError( e, e.Message );
-						throw e;
+						throw;
 					}
 				}
 			} );
@@ -76,7 +75,7 @@ namespace TorneosWeb.dao.impl
 					catch( Exception e )
 					{
 						log.LogError( e, e.Message );
-						throw e;
+						throw;
 					}
 				}
 			} );
@@ -99,7 +98,7 @@ namespace TorneosWeb.dao.impl
 					catch( Exception e )
 					{
 						log.LogError( e, e.Message );
-						throw e;
+						throw;
 					}
 				}
 			} );

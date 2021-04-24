@@ -52,7 +52,7 @@
 							</th>
 						}
 						<th>
-							@Html.DisplayNameFor( model => model.Resultados.Posiciones[ 0 ].ProfitTorneo )
+							@Html.DisplayNameFor( model => model.Resultados.Posiciones[ 0 ].ProfitTotal )
 						</th>
 					</tr>
 				</thead>
@@ -81,8 +81,8 @@
 								@Html.DisplayFor( modelItem => posicion.PremioBounties )
 							</td>
 						}
-						<td class="profit" style="text-align:right;margin-right:10em;color:@(posicion.ProfitTorneoNumber < 0 ? "red" : "black")">
-							@Html.DisplayFor( modelItem => posicion.ProfitTorneo )
+						<td class="profit" style="text-align:right;margin-right:10em;color:@(posicion.ProfitTotalNumber < 0 ? "red" : "black")">
+							@Html.DisplayFor( modelItem => posicion.ProfitTotal )
 						</td>
 					</tr>
 					}

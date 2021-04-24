@@ -137,11 +137,11 @@ namespace TorneosWeb.service.impl
 
 					if( profitRow.Profits.ContainsKey( torneo.Fecha ) )
 					{
-						profitRow.Profits[ torneo.Fecha ] = profitRow.Profits[ torneo.Fecha ] + posicion.ProfitTotal;
+						profitRow.Profits[ torneo.Fecha ] = profitRow.Profits[ torneo.Fecha ] + posicion.ProfitTotalNumber;
 					}
 					else
 					{
-						profitRow.Profits.Add( torneo.Fecha, posicion.ProfitTotal );
+						profitRow.Profits.Add( torneo.Fecha, posicion.ProfitTotalNumber );
 					}
 				}
 			}

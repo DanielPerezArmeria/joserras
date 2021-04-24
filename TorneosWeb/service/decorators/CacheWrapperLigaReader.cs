@@ -22,7 +22,7 @@ namespace TorneosWeb.service.decorators
 
 		public Liga FindLigaByNombre(string nombre)
 		{
-			if(!cacheService.Contains("Liga:" + nombre ) )
+			if(!cacheService.ContainsKey("Liga:" + nombre ) )
 			{
 				try
 				{
@@ -40,7 +40,7 @@ namespace TorneosWeb.service.decorators
 
 		public List<Liga> GetAllLigas()
 		{
-			if(!cacheService.Contains( "GetAllLigas" ) )
+			if(!cacheService.ContainsKey( "GetAllLigas" ) )
 			{
 				try
 				{
@@ -58,7 +58,7 @@ namespace TorneosWeb.service.decorators
 
 		public Liga GetCurrentLiga()
 		{
-			if( !cacheService.Contains( "GetCurrentLiga" ) )
+			if( !cacheService.ContainsKey( "GetCurrentLiga" ) )
 			{
 				try
 				{
@@ -77,7 +77,7 @@ namespace TorneosWeb.service.decorators
 		public List<Standing> GetStandings(Liga liga)
 		{
 			string key = "Standings:" + liga.Nombre;
-			if(!cacheService.Contains( key ) )
+			if(!cacheService.ContainsKey( key ) )
 			{
 				cacheService.Add( key, wrapped.GetStandings( liga ) );
 			}
@@ -88,7 +88,7 @@ namespace TorneosWeb.service.decorators
 		public List<Standing> GetStandings(Liga liga, Torneo torneo)
 		{
 			string key = "Standings:" + liga.Nombre + ":" + torneo.Id;
-			if(!cacheService.Contains( key ) )
+			if(!cacheService.ContainsKey( key ) )
 			{
 				cacheService.Add( key, wrapped.GetStandings( liga, torneo ) );
 			}
@@ -99,7 +99,7 @@ namespace TorneosWeb.service.decorators
 		public Liga GetLigaByTorneoId(Guid torneoId)
 		{
 			string key = nameof( GetLigaByTorneoId ) + ":" + torneoId;
-			if( !cacheService.Contains( key ) )
+			if( !cacheService.ContainsKey( key ) )
 			{
 				try
 				{
