@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SimpleInjector;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TorneosWeb.domain.models;
@@ -9,19 +10,21 @@ namespace TorneosWeb.util.PointRules
 {
 	public class RemoveWorstRule : PointRule
 	{
-		private readonly ILigaReader ligaReader;
+		private readonly Container container;
 
-		public override PointRuleType Type => PointRuleType.PEORES;
+		public override PointRuleType Type => PointRuleType.PEOR;
 
 		public override RuleScope RuleScope => RuleScope.LIGA;
 
-		public RemoveWorstRule(ILigaReader ligaReader)
+		public RemoveWorstRule(Container container)
 		{
-			this.ligaReader = ligaReader;
+			this.container = container;
 		}
 
 		public override decimal GetPuntaje(Guid jugadorId, Liga liga, Resultados resultados)
 		{
+			ILigaReader ligaReader = container.GetInstance<ILigaReader>();
+
 			int numTorneos = liga.Torneos.Count;
 			if(numTorneos < 2)
 			{
@@ -48,6 +51,14 @@ namespace TorneosWeb.util.PointRules
 			}
 
 			return menor * -1;
+		}
+
+		public override string Descripcion
+		{
+			get
+			{
+				return Type.ToString() + ": No cuenta el peor resultado.";
+			}
 		}
 
 	}

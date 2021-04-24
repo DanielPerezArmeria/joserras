@@ -41,8 +41,8 @@ namespace TorneosWeb.service.impl
 						pointRules.Add( pRule, new PuntualidadPointRule( ruleSplit[1] ) );
 						break;
 
-					case PointRuleType.PEORES:
-						pointRules.Add( pRule, new RemoveWorstRule( container.GetInstance<ILigaReader>() ) );
+					case PointRuleType.PEOR:
+						pointRules.Add( pRule, new RemoveWorstRule( container ) );
 						break;
 
 					default:

@@ -7,7 +7,7 @@
 		REBUY,
 		ASISTENCIA,
 		PUNTUALIDAD,
-		PEORES
+		PEOR
 	}
 
 }
