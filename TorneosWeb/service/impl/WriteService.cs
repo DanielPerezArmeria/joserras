@@ -13,7 +13,6 @@ namespace TorneosWeb.service.impl
 {
 	public class WriteService : IWriteService
 	{
-		private IReadService readService;
 		private ICacheService cacheService;
 		private ILogger<WriteService> log;
 		private IPrizeService prizeService;
@@ -21,10 +20,9 @@ namespace TorneosWeb.service.impl
 		private readonly string connString;
 
 
-		public WriteService(IReadService service, ICacheService cacheService, IConfiguration config,
-			IPrizeService prizeService, ILogger<WriteService> logger)
+		public WriteService(ICacheService cacheService, IConfiguration config, IPrizeService prizeService,
+			ILogger<WriteService> logger)
 		{
-			readService = service;
 			this.cacheService = cacheService;
 			log = logger;
 			connString = config.GetConnectionString( Properties.Resources.joserrasDb );
