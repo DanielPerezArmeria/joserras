@@ -166,7 +166,15 @@ namespace TorneosWeb
 					pattern: "{controller=Home}/{action=Index}/{id?}");
 			});
 
-			container.Verify();
+			try
+			{
+				container.Verify();
+			}
+			catch (Exception e)
+			{
+				log.LogError( e, e.Message );
+				throw;
+			}
 		}
 
 	}

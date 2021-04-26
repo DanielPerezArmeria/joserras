@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -15,20 +14,16 @@ namespace TorneosWeb.service.impl
 {
 	public class LigaReader : ILigaReader
 	{
-		private readonly IConfiguration conf;
-		private IMapper mapper;
-		private JoserrasQuery joserrasQuery;
+		private readonly JoserrasQuery joserrasQuery;
 		private readonly ILogger<LigaReader> Log;
 		private readonly string ConnString;
-		private IReadService readService;
-		private IStatsService statsService;
-		private ILigaDao ligaDao;
+		private readonly IReadService readService;
+		private readonly IStatsService statsService;
+		private readonly ILigaDao ligaDao;
 
-		public LigaReader(IConfiguration conf, IReadService readService, IMapper mapper, JoserrasQuery joserrasQuery,
+		public LigaReader(IConfiguration conf, IReadService readService, JoserrasQuery joserrasQuery,
 			IStatsService statsService, ILogger<LigaReader> log, ILigaDao ligaDao)
 		{
-			this.conf = conf;
-			this.mapper = mapper;
 			this.joserrasQuery = joserrasQuery;
 			this.readService = readService;
 			this.statsService = statsService;
@@ -39,21 +34,14 @@ namespace TorneosWeb.service.impl
 
 		public Liga FindLigaByNombre(string nombre)
 		{
-			string query = string.Format("select * from ligas where nombre = '{0}'", nombre);
 			Liga liga = null;
 			using( SqlConnection conn = new SqlConnection( ConnString ) )
 			{
 				conn.Open();
 
-				joserrasQuery.ExecuteQuery( conn, query, reader =>
-				{
-					while( reader.Read() )
-					{
-						liga = mapper.Map<SqlDataReader, Liga>( reader );
-					}
-				} );
+				liga = ligaDao.FindLigaByNombre( nombre );
 
-				query = string.Format( "select torneo_id from torneos_liga where liga_id = '{0}'", liga.Id );
+				string query = string.Format( "select torneo_id from torneos_liga where liga_id = '{0}'", liga.Id );
 				List<Guid> torneosIds = new List<Guid>();
 				joserrasQuery.ExecuteQuery( conn, query, reader =>
 				{
@@ -148,7 +136,7 @@ namespace TorneosWeb.service.impl
 						standings.Add( pos.Nombre, standing );
 					}
 					
-					foreach(KeyValuePair<string,PointRule> rule in liga.PointRules )
+					foreach(KeyValuePair<string,PointRule> rule in liga.PointRules.Where( p => p.Value.RuleScope == RuleScope.REGLA ))
 					{
 						standing.Puntos.TryGetValue(rule.Value.Type, out FDecimal p );
 						if(p == null )
@@ -161,7 +149,15 @@ namespace TorneosWeb.service.impl
 				}
 			}
 
-			if( !liga.Abierta )
+			foreach (KeyValuePair<string, PointRule> rule in liga.PointRules.Where( p => p.Value.RuleScope == RuleScope.LIGA ))
+			{
+				foreach(Standing standing in standings.Values)
+				{
+					standing.Puntos[rule.Value.Type] = rule.Value.GetPuntaje( standing.JugadorId, liga, null );
+				}
+			}
+
+			if ( !liga.Abierta )
 			{
 				string query = string.Format( "select * from puntos_torneo_liga where liga_id = '{0}'", liga.Id );
 				joserrasQuery.ExecuteQuery( query, reader =>
@@ -198,7 +194,7 @@ namespace TorneosWeb.service.impl
 					JugadorId = pos.JugadorId
 				};
 
-				foreach( KeyValuePair<string, PointRule> rule in liga.PointRules )
+				foreach( KeyValuePair<string, PointRule> rule in liga.PointRules.Where( p => p.Value.RuleScope == RuleScope.REGLA ) )
 				{
 					standing.Puntos.TryGetValue( rule.Value.Type, out FDecimal p );
 					standing.Puntos[ rule.Value.Type ] = rule.Value.GetPuntaje( pos.JugadorId, liga, results ) + p;
@@ -214,7 +210,10 @@ namespace TorneosWeb.service.impl
 
 		public Liga GetLigaByTorneoId(Guid torneoId)
 		{
-			return ligaDao.GetLigaByTorneoId( torneoId );
+			Liga liga = ligaDao.GetLigaByTorneoId( torneoId );
+			liga.Estadisticas = statsService.GetStats( liga );
+			liga.Standings = GetStandings( liga );
+			return liga;
 		}
 
 	}

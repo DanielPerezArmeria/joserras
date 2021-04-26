@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using TorneosWeb.domain.models;
 using TorneosWeb.domain.models.ligas;
+using TorneosWeb.service;
 using TorneosWeb.util;
 
 namespace TorneosWeb.dao.impl
@@ -14,23 +15,37 @@ namespace TorneosWeb.dao.impl
 		private JoserrasQuery joserrasQuery;
 		private IMapper mapper;
 		private ILogger<LigaDao> log;
+		private IPointRuleFactory pointRuleFactory;
 
-		public LigaDao(JoserrasQuery joserrasQuery, IMapper mapper, ILogger<LigaDao> logger)
+		public LigaDao(JoserrasQuery joserrasQuery, IMapper mapper, ILogger<LigaDao> logger, IPointRuleFactory pointRuleFactory)
 		{
 			this.joserrasQuery = joserrasQuery;
 			this.mapper = mapper;
 			log = logger;
+			this.pointRuleFactory = pointRuleFactory;
 		}
 
 		public Liga GetLigaByTorneoId(Guid torneoId)
 		{
 			string query = string.Format( "select * from ligas where id = (select liga_id from torneos_liga where torneo_id = '{0}')", torneoId );
+			return ExecuteLigaQuery( query ); ;
+		}
+
+		public Liga FindLigaByNombre(string nombre)
+		{
+			string query = string.Format( "select * from ligas where nombre = '{0}'", nombre );
+			return ExecuteLigaQuery( query );
+		}
+
+		private Liga ExecuteLigaQuery(string query)
+		{
 			Liga liga = null;
 			joserrasQuery.ExecuteQuery( query, reader =>
 			{
-				while( reader.Read() )
+				while (reader.Read())
 				{
 					liga = mapper.Map<SqlDataReader, Liga>( reader );
+					liga.PointRules = pointRuleFactory.BuildRules( liga.Puntaje );
 				}
 			} );
 

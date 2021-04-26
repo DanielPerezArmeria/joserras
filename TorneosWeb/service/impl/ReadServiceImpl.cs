@@ -3,7 +3,6 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Data.SqlTypes;
 using System.Linq;
 using TorneosWeb.dao;
 using TorneosWeb.domain.models;
@@ -112,11 +111,6 @@ namespace TorneosWeb.service.impl
 			}
 
 			return torneos;
-		}
-
-		private void FillTorneos(Torneo torneo, SqlConnection conn)
-		{
-			FillTorneos( new List<Torneo>() { torneo }, conn );
 		}
 
 		private void FillTorneos(List<Torneo> torneos, SqlConnection conn)
