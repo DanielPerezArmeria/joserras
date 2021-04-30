@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TorneosWeb.dao;
 using TorneosWeb.domain.dto.ligas;
 using TorneosWeb.domain.models;
 using TorneosWeb.domain.models.dto;
@@ -23,8 +24,9 @@ namespace TorneosWeb.service.impl
 		private IConfiguration config;
 		private ICacheService cacheService;
 		private IPrizeService prizeService;
+		private IStorageDao storageDao;
 
-		public LigaWriter(IReadService readService, IFileService dataReader, ILigaReader ligaReader, IPrizeService prizeService,
+		public LigaWriter(IReadService readService, IFileService dataReader, ILigaReader ligaReader, IPrizeService prizeService, IStorageDao storageDao,
 				IConfiguration config, ICacheService cacheService, ILogger<LigaWriter> log)
 		{
 			this.readService = readService;
@@ -34,6 +36,7 @@ namespace TorneosWeb.service.impl
 			this.config = config;
 			this.log = log;
 			this.cacheService = cacheService;
+			this.storageDao = storageDao;
 		}
 
 		public void AgregarNuevaLiga(IFormFile file)
@@ -71,6 +74,13 @@ namespace TorneosWeb.service.impl
 			}
 		}
 
+		private void SaveStandings(Liga liga, Guid torneoId)
+		{
+			Torneo torneo = readService.GetAllTorneos().Single( t => t.Id.Equals( torneoId ) );
+			List<Standing> standings = ligaReader.GetStandings( liga, torneo );
+			storageDao.SaveTorneoStandings( "puntos", torneoId, standings );
+		}
+
 		private int AsociarTorneo(Guid torneoId, TorneoUnitOfWork uow)
 		{
 			if( ligaReader.GetCurrentLiga() == null )
@@ -79,10 +89,10 @@ namespace TorneosWeb.service.impl
 				return 0;
 			}
 
-			int rowsAffected = 0;
+			int rowsAffected;
 
 			Liga liga = ligaReader.GetCurrentLiga();
-			log.LogDebug( "Asociando torneo con id'{0}' en Liga '{1}'", torneoId, liga.Nombre );
+			log.LogDebug( "Asociando torneo con id '{0}' en Liga '{1}'", torneoId, liga.Nombre );
 			string query = "insert into torneos_liga (liga_id, torneo_id) values ('{0}', '{1}')";
 			try
 			{
@@ -92,6 +102,8 @@ namespace TorneosWeb.service.impl
 			{
 				throw;
 			}
+
+			SaveStandings( liga, torneoId );
 
 			return rowsAffected;
 		}
@@ -105,28 +117,7 @@ namespace TorneosWeb.service.impl
 				return 0;
 			}
 
-			using( TorneoUnitOfWork uow = new TorneoUnitOfWork( config.GetConnectionString( Properties.Resources.joserrasDb ) ) )
-			{
-				try
-				{
-					int asociar = AsociarTorneo( torneo.Id, uow );
-					Bolsa bolsa = prizeService.GetBolsaTorneo( torneo.Entradas, torneo.Rebuys, torneo.PrecioBuyinNumber, torneo.PrecioRebuyNumber );
-					string query = "update torneos set bolsa = {0} where id = '{1}'";
-					uow.ExecuteNonQuery( query, bolsa.Total, torneo.Id );
-					uow.Commit();
-					cacheService.Clear();
-
-					return asociar;
-				}
-				catch( Exception e )
-				{
-					log.LogError( e, e.Message );
-					uow.Rollback();
-					string msg = string.Format( "No se pudo asociar el torneo con fecha: {0}", date );
-					throw new JoserrasException( msg, e );
-				}
-			}
-			
+			return AsociarTorneo( torneo.Id );
 		}
 
 		public void CerrarLiga()

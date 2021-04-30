@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using TorneosWeb.config;
 using TorneosWeb.service;
 using TorneosWeb.service.decorators;
 using TorneosWeb.service.impl;
@@ -55,6 +56,8 @@ namespace TorneosWeb
 				 options.CheckConsentNeeded = context => true;
 				 options.MinimumSameSitePolicy = SameSiteMode.None;
 			 } );
+
+			services.Configure<AzureTableConfig>( Configuration.GetSection( "AzureTableConfig" ) );
 
 			services.AddSimpleInjector( container, options =>
 			{

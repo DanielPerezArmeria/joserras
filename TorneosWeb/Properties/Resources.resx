@@ -123,4 +123,7 @@
   <data name="joserrasDb" xml:space="preserve">
     <value>joserrasDb</value>
   </data>
+  <data name="storage" xml:space="preserve">
+    <value>storage</value>
+  </data>
 </root>

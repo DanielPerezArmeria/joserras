@@ -22,63 +22,46 @@ namespace TorneosWeb.service.decorators
 
 		public Liga FindLigaByNombre(string nombre)
 		{
-			if(!cacheService.ContainsKey("Liga:" + nombre ) )
+			string key = string.Format( "{0}:{1}", nameof( FindLigaByNombre ), nombre );
+			if(!cacheService.ContainsKey( key ) )
 			{
-				try
-				{
-					cacheService.Add( "Liga:" + nombre, wrapped.FindLigaByNombre( nombre ) );
-				}
-				catch( Exception e )
-				{
-					log.LogWarning( e, e.Message );
-					throw new JoserrasException( e );
-				}
+				log.LogDebug( "Key '{0}' was not found in cache. Calling service.", key );
+				cacheService.Add( key, wrapped.FindLigaByNombre( nombre ) );
 			}
 
-			return cacheService.Get<Liga>( "Liga:" + nombre );
+			return cacheService.Get<Liga>( key );
 		}
 
 		public List<Liga> GetAllLigas()
 		{
-			if(!cacheService.ContainsKey( "GetAllLigas" ) )
+			string key = nameof( GetAllLigas );
+			if (!cacheService.ContainsKey( "GetAllLigas" ) )
 			{
-				try
-				{
-					cacheService.Add( "GetAllLigas", wrapped.GetAllLigas() );
-				}
-				catch( Exception e )
-				{
-					log.LogWarning( e, e.Message );
-					throw new JoserrasException( e );
-				}
+				log.LogDebug( "Key '{0}' was not found in cache. Calling service.", key );
+				cacheService.Add( key, wrapped.GetAllLigas() );
 			}
 
-			return cacheService.Get<List<Liga>>( "GetAllLigas" );
+			return cacheService.Get<List<Liga>>( key );
 		}
 
 		public Liga GetCurrentLiga()
 		{
-			if( !cacheService.ContainsKey( "GetCurrentLiga" ) )
+			string key = nameof( GetCurrentLiga );
+			if ( !cacheService.ContainsKey( "GetCurrentLiga" ) )
 			{
-				try
-				{
-					cacheService.Add( "GetCurrentLiga", wrapped.GetCurrentLiga() );
-				}
-				catch( Exception e )
-				{
-					log.LogWarning( e, e.Message );
-					throw new JoserrasException( e );
-				}
+				log.LogDebug( "Key '{0}' was not found in cache. Calling service.", key );
+				cacheService.Add( key, wrapped.GetCurrentLiga() );
 			}
 
-			return cacheService.Get<Liga>( "GetCurrentLiga" );
+			return cacheService.Get<Liga>( key );
 		}
 
 		public List<Standing> GetStandings(Liga liga)
 		{
-			string key = "Standings:" + liga.Nombre;
-			if(!cacheService.ContainsKey( key ) )
+			string key = string.Format( "{0}:{1}", nameof( GetStandings ), liga.Id );
+			if (!cacheService.ContainsKey( key ) )
 			{
+				log.LogDebug( "Key '{0}' was not found in cache. Calling service.", key );
 				cacheService.Add( key, wrapped.GetStandings( liga ) );
 			}
 
@@ -87,9 +70,10 @@ namespace TorneosWeb.service.decorators
 
 		public List<Standing> GetStandings(Liga liga, Torneo torneo)
 		{
-			string key = "Standings:" + liga.Nombre + ":" + torneo.Id;
-			if(!cacheService.ContainsKey( key ) )
+			string key = string.Format( "{0}:{1}:{2}", nameof( GetStandings ), liga.Id, torneo.Id );
+			if (!cacheService.ContainsKey( key ) )
 			{
+				log.LogDebug( "Key '{0}' was not found in cache. Calling service.", key );
 				cacheService.Add( key, wrapped.GetStandings( liga, torneo ) );
 			}
 
@@ -101,15 +85,8 @@ namespace TorneosWeb.service.decorators
 			string key = nameof( GetLigaByTorneoId ) + ":" + torneoId;
 			if( !cacheService.ContainsKey( key ) )
 			{
-				try
-				{
-					cacheService.Add( key, wrapped.GetLigaByTorneoId( torneoId ) );
-				}
-				catch( Exception e )
-				{
-					log.LogWarning( e, e.Message );
-					throw new JoserrasException( e );
-				}
+				log.LogDebug( "Key '{0}' was not found in cache. Calling service.", key );
+				cacheService.Add( key, wrapped.GetLigaByTorneoId( torneoId ) );
 			}
 
 			return cacheService.Get<Liga>( key );

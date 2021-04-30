@@ -97,6 +97,7 @@ namespace TorneosWeb.service.impl
 				}
 			}
 
+			log.LogDebug( "Torneo con id: '{0}' ha sido agregado exitosamente", torneo.Id );
 			return torneo.Id;
 		}
 
