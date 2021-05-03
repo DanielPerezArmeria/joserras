@@ -86,7 +86,9 @@ namespace TorneosWeb.service.impl
 				points = new( s.Puntos.Where( p => p.Key.GetScope().Equals( RuleScope.LIGA ) ).ToDictionary( x => x.Key, x => x.Value ) );
 				ligaStandings.Add( new() { Jugador = s.Jugador, JugadorId = s.JugadorId, Puntos = points } );
 			}
-			storageDao.SaveTorneoStandings( "puntos", torneoId, torneoStandings );
+			
+			storageDao.SaveTorneoStandings( AzureTables.PUNTOS_TORNEO_TABLE, torneoId, torneoStandings );
+			storageDao.SaveTorneoStandings( AzureTables.PUNTOS_LIGA_TABLE, torneoId, ligaStandings );
 		}
 
 		private int AsociarTorneo(Guid torneoId, TorneoUnitOfWork uow)
