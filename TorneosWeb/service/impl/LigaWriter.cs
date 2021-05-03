@@ -88,7 +88,7 @@ namespace TorneosWeb.service.impl
 			}
 			
 			storageDao.SaveTorneoStandings( AzureTables.PUNTOS_TORNEO_TABLE, torneoId, torneoStandings );
-			storageDao.SaveTorneoStandings( AzureTables.PUNTOS_LIGA_TABLE, torneoId, ligaStandings );
+			storageDao.SaveTorneoStandings( AzureTables.PUNTOS_LIGA_TABLE, liga.Id, ligaStandings );
 		}
 
 		private int AsociarTorneo(Guid torneoId, TorneoUnitOfWork uow)

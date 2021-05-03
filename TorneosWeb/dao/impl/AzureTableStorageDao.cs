@@ -1,10 +1,8 @@
 ﻿using Microsoft.Azure.Cosmos.Table;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
-using TorneosWeb.config;
-using TorneosWeb.dao.azure;
+using TorneosWeb.domain.azure;
 using TorneosWeb.domain.models.ligas;
 using TorneosWeb.util;
 using TorneosWeb.util.azure;
@@ -17,13 +15,13 @@ namespace TorneosWeb.dao.impl
 		private readonly ILogger<AzureTableStorageDao> log;
 		private readonly IAzureTableFinder tableFinder;
 
-		public AzureTableStorageDao(IOptions<AzureTableConfig> azureTableConfig, IAzureTableFinder tableFinder, ILogger<AzureTableStorageDao> logger)
+		public AzureTableStorageDao(IAzureTableFinder tableFinder, ILogger<AzureTableStorageDao> logger)
 		{
 			this.tableFinder = tableFinder;
       log = logger;
 		}
 
-		public void SaveTorneoStandings(string tableName, Guid torneoId, List<Standing> standings)
+		public void SaveTorneoStandings<T>(string tableName, Guid torneoId, List<Standing> standings) where T : AbstractPuntosAzureEntity
 		{
 			CloudTable table = tableFinder.GetTable( tableName );
 
@@ -31,7 +29,7 @@ namespace TorneosWeb.dao.impl
 
 			foreach (Standing standing in standings)
 			{
-				PuntosTorneo puntos = new( torneoId.ToString(), standing.JugadorId.ToString() );
+				T puntos = (T)Activator.CreateInstance( typeof(T), new object[] { torneoId.ToString(), standing.JugadorId.ToString() } );
 				puntos.Standings = new SortedDictionary<PointRuleType, FDecimal>( standing.Puntos );
 
 				batchOperation.InsertOrReplace( puntos );
