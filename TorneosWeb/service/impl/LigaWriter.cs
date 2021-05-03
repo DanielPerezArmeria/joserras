@@ -7,10 +7,10 @@ using System.Linq;
 using TorneosWeb.dao;
 using TorneosWeb.domain.dto.ligas;
 using TorneosWeb.domain.models;
-using TorneosWeb.domain.models.dto;
 using TorneosWeb.domain.models.ligas;
 using TorneosWeb.exception;
 using TorneosWeb.util;
+using TorneosWeb.util.PointRules;
 
 namespace TorneosWeb.service.impl
 {
@@ -23,16 +23,14 @@ namespace TorneosWeb.service.impl
 		private ILigaReader ligaReader;
 		private IConfiguration config;
 		private ICacheService cacheService;
-		private IPrizeService prizeService;
 		private IStorageDao storageDao;
 
-		public LigaWriter(IReadService readService, IFileService dataReader, ILigaReader ligaReader, IPrizeService prizeService, IStorageDao storageDao,
+		public LigaWriter(IReadService readService, IFileService dataReader, ILigaReader ligaReader, IStorageDao storageDao,
 				IConfiguration config, ICacheService cacheService, ILogger<LigaWriter> log)
 		{
 			this.readService = readService;
 			ligaDataReader = dataReader;
 			this.ligaReader = ligaReader;
-			this.prizeService = prizeService;
 			this.config = config;
 			this.log = log;
 			this.cacheService = cacheService;
@@ -42,7 +40,7 @@ namespace TorneosWeb.service.impl
 		public void AgregarNuevaLiga(IFormFile file)
 		{
 			LigaDTO liga = ligaDataReader.GetFormFileItems<LigaDTO>( file ).First();
-			using( TorneoUnitOfWork uow = new TorneoUnitOfWork( config.GetConnectionString( Properties.Resources.joserrasDb ) ) )
+			using( TorneoUnitOfWork uow = new( config.GetConnectionString( Properties.Resources.joserrasDb ) ) )
 			{
 				string query = @"insert into ligas (nombre, abierta, puntaje, fee, premiacion, desempate) values ('{0}', {1}, '{2}', {3}, '{4}', '{5}')";
 				uow.ExecuteNonQuery( query, liga.Nombre, 1, liga.Puntaje, liga.Fee, liga.Premiacion, liga.Desempate );
@@ -77,8 +75,18 @@ namespace TorneosWeb.service.impl
 		private void SaveStandings(Liga liga, Guid torneoId)
 		{
 			Torneo torneo = readService.GetAllTorneos().Single( t => t.Id.Equals( torneoId ) );
-			List<Standing> standings = ligaReader.GetStandings( liga, torneo );
-			storageDao.SaveTorneoStandings( "puntos", torneoId, standings );
+			List<Standing> torneoStandings = ligaReader.GetStandings( liga, torneo );
+			List<Standing> reglaStandings = new();
+			List<Standing> ligaStandings = new();
+			foreach (Standing s in torneoStandings)
+			{
+				SortedDictionary<PointRuleType, FDecimal> points = new( s.Puntos.Where( p => p.Key.GetScope().Equals( RuleScope.TORNEO ) ).ToDictionary( x => x.Key, x => x.Value ) );
+				reglaStandings.Add( new() { Jugador = s.Jugador, JugadorId = s.JugadorId, Puntos = points } );
+
+				points = new( s.Puntos.Where( p => p.Key.GetScope().Equals( RuleScope.LIGA ) ).ToDictionary( x => x.Key, x => x.Value ) );
+				ligaStandings.Add( new() { Jugador = s.Jugador, JugadorId = s.JugadorId, Puntos = points } );
+			}
+			storageDao.SaveTorneoStandings( "puntos", torneoId, torneoStandings );
 		}
 
 		private int AsociarTorneo(Guid torneoId, TorneoUnitOfWork uow)
@@ -97,13 +105,12 @@ namespace TorneosWeb.service.impl
 			try
 			{
 				rowsAffected = uow.ExecuteNonQuery( query, liga.Id, torneoId );
+				SaveStandings( liga, torneoId );
 			}
 			catch( Exception )
 			{
 				throw;
 			}
-
-			SaveStandings( liga, torneoId );
 
 			return rowsAffected;
 		}

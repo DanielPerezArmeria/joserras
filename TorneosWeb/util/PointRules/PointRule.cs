@@ -17,7 +17,7 @@ namespace TorneosWeb.util.PointRules
 
 		public virtual RuleScope RuleScope
 		{
-			get { return RuleScope.REGLA; }
+			get { return RuleScope.TORNEO; }
 		}
 
 		public virtual string Descripcion

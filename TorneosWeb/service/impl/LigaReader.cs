@@ -136,7 +136,7 @@ namespace TorneosWeb.service.impl
 						standings.Add( pos.Nombre, standing );
 					}
 					
-					foreach(KeyValuePair<string,PointRule> rule in liga.PointRules.Where( p => p.Value.RuleScope == RuleScope.REGLA ))
+					foreach(KeyValuePair<string,PointRule> rule in liga.PointRules.Where( p => p.Value.RuleScope == RuleScope.TORNEO ))
 					{
 						standing.Puntos.TryGetValue(rule.Value.Type, out FDecimal p );
 						if(p == null )
@@ -194,7 +194,7 @@ namespace TorneosWeb.service.impl
 					JugadorId = pos.JugadorId
 				};
 
-				foreach( KeyValuePair<string, PointRule> rule in liga.PointRules.Where( p => p.Value.RuleScope == RuleScope.REGLA ) )
+				foreach( KeyValuePair<string, PointRule> rule in liga.PointRules.Where( p => p.Value.RuleScope == RuleScope.TORNEO ) )
 				{
 					standing.Puntos.TryGetValue( rule.Value.Type, out FDecimal p );
 					standing.Puntos[ rule.Value.Type ] = rule.Value.GetPuntaje( pos.JugadorId, liga, results ) + p;

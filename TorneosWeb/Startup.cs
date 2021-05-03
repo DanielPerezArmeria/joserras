@@ -19,6 +19,7 @@ using TorneosWeb.service.decorators;
 using TorneosWeb.service.impl;
 using TorneosWeb.util;
 using TorneosWeb.util.automapper;
+using TorneosWeb.util.azure;
 using TorneosWeb.util.prize;
 using TorneosWeb.util.schedule;
 
@@ -168,6 +169,10 @@ namespace TorneosWeb
 					name: "default",
 					pattern: "{controller=Home}/{action=Index}/{id?}");
 			});
+
+			// Azure Registration
+			container.RegisterConditional<IAzureTableFinder, DevAzureTableFinder>( Lifestyle.Singleton, p => env.IsDevelopment() );
+			container.RegisterConditional<IAzureTableFinder, ProdAzureTableFinder>( Lifestyle.Singleton, p => !p.Handled );
 
 			try
 			{

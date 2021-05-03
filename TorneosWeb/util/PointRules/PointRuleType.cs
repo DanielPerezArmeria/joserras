@@ -10,4 +10,20 @@
 		PEOR
 	}
 
+	public static class PointRuleExtensions
+	{
+		public static RuleScope GetScope(this PointRuleType type)
+		{
+			switch (type)
+			{
+				case PointRuleType.PEOR:
+					return RuleScope.LIGA;
+				default:
+					return RuleScope.TORNEO;
+			}
+
+		}
+
+	}
+
 }
