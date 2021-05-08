@@ -1,6 +1,6 @@
 ﻿using Microsoft.Azure.Cosmos.Table;
 
-namespace TorneosWeb.util.azure
+namespace TorneosWeb.service
 {
 	public interface IAzureTableFinder
 	{

@@ -5,17 +5,17 @@ using System;
 using System.Collections.Generic;
 using TorneosWeb.config;
 
-namespace TorneosWeb.util.azure
+namespace TorneosWeb.service.impl
 {
-	public class ProdAzureTableFinder : IAzureTableFinder
+	public class AzureTableFinder : IAzureTableFinder
 	{
 		private CloudStorageAccount storageAccount;
 		private readonly AzureTableConfig azureTableConfig;
-		private readonly ILogger<ProdAzureTableFinder> log;
+		private readonly ILogger<AzureTableFinder> log;
 		private readonly string connString;
 		private readonly IDictionary<string, CloudTable> tables;
 
-		public ProdAzureTableFinder(IOptions<AzureTableConfig> azureTableConfig, ILogger<ProdAzureTableFinder> logger)
+		public AzureTableFinder(IOptions<AzureTableConfig> azureTableConfig, ILogger<AzureTableFinder> logger)
 		{
 			this.azureTableConfig = azureTableConfig.Value;
 			connString = this.azureTableConfig.Storage;
@@ -30,16 +30,21 @@ namespace TorneosWeb.util.azure
 			{
 				storageAccount = CloudStorageAccount.Parse( connString );
 			}
-			catch (FormatException)
+			catch (FormatException e)
 			{
-				Console.WriteLine( "Invalid storage account information provided. Please confirm the AccountName and AccountKey are valid in the app.config file - then restart the application." );
-				throw;
+				log.LogError( e, "Invalid storage account information provided. Please confirm the AccountName and AccountKey are valid in the app.config file - then restart the application." );
+				if (azureTableConfig.ThrowException)
+				{
+					throw;
+				}
 			}
-			catch (ArgumentException)
+			catch (ArgumentException e)
 			{
-				Console.WriteLine( "Invalid storage account information provided. Please confirm the AccountName and AccountKey are valid in the app.config file - then restart the sample." );
-				Console.ReadLine();
-				throw;
+				log.LogError( e, "Invalid storage account information provided. Please confirm the AccountName and AccountKey are valid in the app.config file - then restart the application." );
+				if (azureTableConfig.ThrowException)
+				{
+					throw;
+				}
 			}
 		}
 

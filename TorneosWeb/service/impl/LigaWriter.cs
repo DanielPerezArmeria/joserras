@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TorneosWeb.dao;
+using TorneosWeb.domain.azure;
 using TorneosWeb.domain.dto.ligas;
 using TorneosWeb.domain.models;
 using TorneosWeb.domain.models.ligas;
@@ -87,8 +88,8 @@ namespace TorneosWeb.service.impl
 				ligaStandings.Add( new() { Jugador = s.Jugador, JugadorId = s.JugadorId, Puntos = points } );
 			}
 			
-			storageDao.SaveTorneoStandings( AzureTables.PUNTOS_TORNEO_TABLE, torneoId, torneoStandings );
-			storageDao.SaveTorneoStandings( AzureTables.PUNTOS_LIGA_TABLE, liga.Id, ligaStandings );
+			storageDao.SaveTorneoStandings( torneoId, torneoStandings );
+			storageDao.SaveLigaStandings( liga.Id, ligaStandings );
 		}
 
 		private int AsociarTorneo(Guid torneoId, TorneoUnitOfWork uow)
