@@ -14,6 +14,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using TorneosWeb.config;
+using TorneosWeb.dao.azure;
 using TorneosWeb.service;
 using TorneosWeb.service.decorators;
 using TorneosWeb.service.impl;
@@ -106,6 +107,8 @@ namespace TorneosWeb
 			container.RegisterDecorator<ILigaReader, CacheWrapperLigaReader>( Lifestyle.Singleton );
 			container.RegisterDecorator<IWriteService, WriteServiceLigaDecorator>( Lifestyle.Singleton );
 			container.RegisterDecorator<IWriteService, BalanceGeneratorWriteServiceDecorator>( Lifestyle.Singleton );
+
+			container.RegisterSingleton( typeof( IStandingsDao<> ), typeof( StandingsAzureDao<> ) );
 
 			container.Collection.Register<IPrizeFiller>( new[] { typeof( IPrizeFiller ).Assembly }, Lifestyle.Singleton );
 

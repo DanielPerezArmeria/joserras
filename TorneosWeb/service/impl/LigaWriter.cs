@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TorneosWeb.dao;
+using TorneosWeb.dao.azure;
 using TorneosWeb.domain.azure;
 using TorneosWeb.domain.dto.ligas;
 using TorneosWeb.domain.models;
@@ -25,6 +26,8 @@ namespace TorneosWeb.service.impl
 		private IConfiguration config;
 		private ICacheService cacheService;
 		private IStorageDao storageDao;
+		private IStandingsDao<PuntosLiga> puntosLigaDao;
+		private IStandingsDao<PuntosTorneo> puntosTorneoDao;
 
 		public LigaWriter(IReadService readService, IFileService dataReader, ILigaReader ligaReader, IStorageDao storageDao,
 				IConfiguration config, ICacheService cacheService, ILogger<LigaWriter> log)
@@ -87,9 +90,9 @@ namespace TorneosWeb.service.impl
 				points = new( s.Puntos.Where( p => p.Key.GetScope().Equals( RuleScope.LIGA ) ).ToDictionary( x => x.Key, x => x.Value ) );
 				ligaStandings.Add( new() { Jugador = s.Jugador, JugadorId = s.JugadorId, Puntos = points } );
 			}
-			
-			storageDao.SaveTorneoStandings( torneoId, torneoStandings );
-			storageDao.SaveLigaStandings( liga.Id, ligaStandings );
+
+			puntosTorneoDao.Save( torneoId, torneoStandings );
+			puntosLigaDao.Save( liga.Id, ligaStandings );
 		}
 
 		private int AsociarTorneo(Guid torneoId, TorneoUnitOfWork uow)
