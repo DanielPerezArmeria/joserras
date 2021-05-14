@@ -29,8 +29,8 @@ namespace TorneosWeb.service.impl
 		private IStandingsDao<PuntosLiga> puntosLigaDao;
 		private IStandingsDao<PuntosTorneo> puntosTorneoDao;
 
-		public LigaWriter(IReadService readService, IFileService dataReader, ILigaReader ligaReader, IStorageDao storageDao,
-				IConfiguration config, ICacheService cacheService, ILogger<LigaWriter> log)
+		public LigaWriter(IReadService readService, IFileService dataReader, ILigaReader ligaReader, IStorageDao storageDao, IStandingsDao<PuntosTorneo> puntosTorneoDao,
+				IConfiguration config, ICacheService cacheService, ILogger<LigaWriter> log, IStandingsDao<PuntosLiga> puntosLigaDao )
 		{
 			this.readService = readService;
 			ligaDataReader = dataReader;
@@ -39,6 +39,8 @@ namespace TorneosWeb.service.impl
 			this.log = log;
 			this.cacheService = cacheService;
 			this.storageDao = storageDao;
+			this.puntosLigaDao = puntosLigaDao;
+			this.puntosTorneoDao = puntosTorneoDao;
 		}
 
 		public void AgregarNuevaLiga(IFormFile file)
@@ -136,14 +138,12 @@ namespace TorneosWeb.service.impl
 		public void CerrarLiga()
 		{
 			Liga liga = ligaReader.GetCurrentLiga();
-			List<Standing> standings = ligaReader.GetStandings( liga );
-			SetPremiosLiga( liga, standings );
 			using( TorneoUnitOfWork uow = new TorneoUnitOfWork( config.GetConnectionString( Properties.Resources.joserrasDb ) ) )
 			{
 				try
 				{
 					string query = "insert into puntos_torneo_liga values ('{0}', '{1}', {2}, {3})";
-					foreach( Standing standing in standings )
+					foreach( Standing standing in liga.Standings )
 					{
 						string q = string.Format( query, liga.Id, standing.JugadorId, standing.Total, standing.PremioLigaNumber );
 						try

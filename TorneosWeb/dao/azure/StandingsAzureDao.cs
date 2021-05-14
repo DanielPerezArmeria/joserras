@@ -23,7 +23,7 @@ namespace TorneosWeb.dao.azure
 
 		public void Save(Guid id, List<Standing> standings)
 		{
-			CloudTable table = tableFinder.GetTable( nameof(T) );
+			CloudTable table = tableFinder.GetTable( typeof( T ).Name );
 
 			TableBatchOperation batchOperation = new();
 
@@ -35,8 +35,16 @@ namespace TorneosWeb.dao.azure
 				batchOperation.InsertOrReplace( puntos );
 			}
 
-			log.LogDebug( "Saving points in table '{0}' for Id '{1}'", nameof( T ), id );
-			table.ExecuteBatch( batchOperation );
+			log.LogDebug( "Saving points in table '{0}' for Id '{1}'", typeof( T ).Name, id );
+			try
+			{
+				table.ExecuteBatch( batchOperation );
+			}
+			catch (Exception e)
+			{
+				log.LogError( e, "Could not insert in Table '{0}'", typeof( T ).Name );
+				throw;
+			}
 			log.LogDebug( "Records inserted" );
 		}
 

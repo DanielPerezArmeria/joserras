@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using TorneosWeb.config;
+using TorneosWeb.domain.azure;
 
 namespace TorneosWeb.service.impl
 {
@@ -29,6 +30,14 @@ namespace TorneosWeb.service.impl
 			try
 			{
 				storageAccount = CloudStorageAccount.Parse( connString );
+
+				CloudTableClient tableClient = storageAccount.CreateCloudTableClient( new TableClientConfiguration() );
+
+				//CloudTable tableLiga = tableClient.GetTableReference( nameof(PuntosLiga) );
+				//CloudTable tableTorneo = tableClient.GetTableReference( nameof( PuntosTorneo ) );
+
+				//tableLiga.CreateIfNotExists();
+				//tableTorneo.CreateIfNotExists();
 			}
 			catch (FormatException e)
 			{
@@ -53,7 +62,6 @@ namespace TorneosWeb.service.impl
 			if (!tables.ContainsKey( tableName ))
 			{
 				CloudTableClient tableClient = storageAccount.CreateCloudTableClient( new TableClientConfiguration() );
-
 				tables.Add( tableName, tableClient.GetTableReference( tableName ) );
 			}
 

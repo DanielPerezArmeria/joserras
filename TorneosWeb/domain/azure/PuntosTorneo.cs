@@ -6,7 +6,7 @@
 
 		public PuntosTorneo(string partitionKey, string rowKey) : base( partitionKey, rowKey )
 		{
-
+			
 		}
 
 	}
