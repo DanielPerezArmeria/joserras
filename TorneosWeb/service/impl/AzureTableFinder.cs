@@ -42,7 +42,7 @@ namespace TorneosWeb.service.impl
 			catch (FormatException e)
 			{
 				log.LogError( e, "Invalid storage account information provided. Please confirm the AccountName and AccountKey are valid in the app.config file - then restart the application." );
-				if (azureTableConfig.ThrowException)
+				if (azureTableConfig.Enabled)
 				{
 					throw;
 				}
@@ -50,7 +50,7 @@ namespace TorneosWeb.service.impl
 			catch (ArgumentException e)
 			{
 				log.LogError( e, "Invalid storage account information provided. Please confirm the AccountName and AccountKey are valid in the app.config file - then restart the application." );
-				if (azureTableConfig.ThrowException)
+				if (azureTableConfig.Enabled)
 				{
 					throw;
 				}

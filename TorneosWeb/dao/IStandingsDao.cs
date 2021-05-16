@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TorneosWeb.domain.azure;
 using TorneosWeb.domain.models.ligas;
 
-namespace TorneosWeb.dao.azure
+namespace TorneosWeb.dao
 {
 	public interface IStandingsDao<T> where T : AbstractPuntosAzureEntity
 	{

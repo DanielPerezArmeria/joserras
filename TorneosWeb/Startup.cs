@@ -14,7 +14,9 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using TorneosWeb.config;
-using TorneosWeb.dao.azure;
+using TorneosWeb.dao;
+using TorneosWeb.dao.decorators;
+using TorneosWeb.dao.impl;
 using TorneosWeb.service;
 using TorneosWeb.service.decorators;
 using TorneosWeb.service.impl;
@@ -107,6 +109,7 @@ namespace TorneosWeb
 			container.RegisterDecorator<ILigaReader, CacheWrapperLigaReader>( Lifestyle.Singleton );
 			container.RegisterDecorator<IWriteService, WriteServiceLigaDecorator>( Lifestyle.Singleton );
 			container.RegisterDecorator<IWriteService, BalanceGeneratorWriteServiceDecorator>( Lifestyle.Singleton );
+			container.RegisterDecorator( typeof( IStandingsDao<> ), typeof( NullAzureDaoDecorator<> ), Lifestyle.Singleton );
 
 			container.RegisterSingleton( typeof( IStandingsDao<> ), typeof( StandingsAzureDao<> ) );
 
@@ -119,7 +122,7 @@ namespace TorneosWeb
 		{
 			var registrations =
 				from type in Assembly.GetExecutingAssembly().GetExportedTypes()
-				where type.Namespace.StartsWith( nameSpace )
+				where type.Namespace.StartsWith( nameSpace ) && !type.IsGenericType
 				from service in type.GetInterfaces()
 				select new { service, implementation = type };
 

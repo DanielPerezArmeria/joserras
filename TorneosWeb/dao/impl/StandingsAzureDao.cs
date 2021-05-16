@@ -8,7 +8,7 @@ using TorneosWeb.service;
 using TorneosWeb.util;
 using TorneosWeb.util.PointRules;
 
-namespace TorneosWeb.dao.azure
+namespace TorneosWeb.dao.impl
 {
 	public class StandingsAzureDao<T> : IStandingsDao<T> where T : AbstractPuntosAzureEntity
 	{

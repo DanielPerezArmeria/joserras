@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TorneosWeb.dao;
-using TorneosWeb.dao.azure;
 using TorneosWeb.domain.azure;
 using TorneosWeb.domain.dto.ligas;
 using TorneosWeb.domain.models;
@@ -25,11 +24,10 @@ namespace TorneosWeb.service.impl
 		private ILigaReader ligaReader;
 		private IConfiguration config;
 		private ICacheService cacheService;
-		private IStorageDao storageDao;
 		private IStandingsDao<PuntosLiga> puntosLigaDao;
 		private IStandingsDao<PuntosTorneo> puntosTorneoDao;
 
-		public LigaWriter(IReadService readService, IFileService dataReader, ILigaReader ligaReader, IStorageDao storageDao, IStandingsDao<PuntosTorneo> puntosTorneoDao,
+		public LigaWriter(IReadService readService, IFileService dataReader, ILigaReader ligaReader, IStandingsDao<PuntosTorneo> puntosTorneoDao,
 				IConfiguration config, ICacheService cacheService, ILogger<LigaWriter> log, IStandingsDao<PuntosLiga> puntosLigaDao )
 		{
 			this.readService = readService;
@@ -38,7 +36,6 @@ namespace TorneosWeb.service.impl
 			this.config = config;
 			this.log = log;
 			this.cacheService = cacheService;
-			this.storageDao = storageDao;
 			this.puntosLigaDao = puntosLigaDao;
 			this.puntosTorneoDao = puntosTorneoDao;
 		}
