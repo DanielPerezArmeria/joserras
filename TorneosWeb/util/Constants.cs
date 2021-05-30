@@ -16,4 +16,10 @@
 		public static string SEPARATOR = "-";
 	}
 
+	public static class AzureTables
+	{
+		public static string PUNTOS_TORNEO_TABLE = "puntostorneo";
+		public static string PUNTOS_LIGA_TABLE = "puntosliga";
+	}
+
 }

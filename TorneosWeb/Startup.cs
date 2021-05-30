@@ -13,6 +13,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using TorneosWeb.config;
+using TorneosWeb.dao;
+using TorneosWeb.dao.decorators;
+using TorneosWeb.dao.impl;
 using TorneosWeb.service;
 using TorneosWeb.service.decorators;
 using TorneosWeb.service.impl;
@@ -55,6 +59,8 @@ namespace TorneosWeb
 				 options.CheckConsentNeeded = context => true;
 				 options.MinimumSameSitePolicy = SameSiteMode.None;
 			 } );
+
+			services.Configure<AzureTableConfig>( Configuration.GetSection( "AzureTableConfig" ) );
 
 			services.AddSimpleInjector( container, options =>
 			{
@@ -103,6 +109,9 @@ namespace TorneosWeb
 			container.RegisterDecorator<ILigaReader, CacheWrapperLigaReader>( Lifestyle.Singleton );
 			container.RegisterDecorator<IWriteService, WriteServiceLigaDecorator>( Lifestyle.Singleton );
 			container.RegisterDecorator<IWriteService, BalanceGeneratorWriteServiceDecorator>( Lifestyle.Singleton );
+			container.RegisterDecorator( typeof( IStandingsDao<> ), typeof( NullAzureDaoDecorator<> ), Lifestyle.Singleton );
+
+			container.RegisterSingleton( typeof( IStandingsDao<> ), typeof( StandingsAzureDao<> ) );
 
 			container.Collection.Register<IPrizeFiller>( new[] { typeof( IPrizeFiller ).Assembly }, Lifestyle.Singleton );
 
@@ -113,7 +122,7 @@ namespace TorneosWeb
 		{
 			var registrations =
 				from type in Assembly.GetExecutingAssembly().GetExportedTypes()
-				where type.Namespace.StartsWith( nameSpace )
+				where type.Namespace.StartsWith( nameSpace ) && !type.IsGenericType
 				from service in type.GetInterfaces()
 				select new { service, implementation = type };
 

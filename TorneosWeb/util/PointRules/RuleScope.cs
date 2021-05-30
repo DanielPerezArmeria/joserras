@@ -2,7 +2,6 @@
 {
 	public enum RuleScope
 	{
-		REGLA,
 		TORNEO,
 		LIGA
 	}

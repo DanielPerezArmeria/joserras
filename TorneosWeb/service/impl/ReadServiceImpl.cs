@@ -166,8 +166,6 @@ namespace TorneosWeb.service.impl
 
 			resultados.Torneo = torneo;
 
-			resultados.Torneo.Liga = ligaDao.GetLigaByTorneoId( torneoId );
-
 			query = string.Format( "select dt.*, j.nombre from resultados dt, jugadores j "
 					+ "where dt.torneo_id = '{0}' and dt.jugador_id = j.id order by dt.posicion", torneoId );
 			List<Posicion> posiciones = new List<Posicion>();

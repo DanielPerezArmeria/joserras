@@ -75,7 +75,7 @@
 		<div class="gridWrapper" style="grid-auto-rows:min-content;grid-template-columns: 30px 150px;justify-content:flex-start">
 			<h3 style="grid-column: 1 / span 2">PODIOS</h3>
 
-			@for( int i = 1; i <= Model.Podios.Count; i++ )
+			@foreach( int i in Model.Podios.Keys.OrderBy( k => k ) )
 			{
 				<div class="statLabel">@i.Ordinalize():</div>
 				<div class="statValue" style="text-align:left">@Model.Podios[i]</div>

@@ -26,6 +26,7 @@ namespace TorneosWeb.service.decorators
 			string key = nameof( GetAllJugadores );
 			if( !cacheService.ContainsKey( key ) )
 			{
+				log.LogDebug( "Key '{0}' was not found in cache. Calling service.", key );
 				cacheService.Add( key, wrapped.GetAllJugadores() );
 			}
 
@@ -37,6 +38,7 @@ namespace TorneosWeb.service.decorators
 			string key = nameof( GetAllKnockouts );
 			if( !cacheService.ContainsKey( key ) )
 			{
+				log.LogDebug( "Key '{0}' was not found in cache. Calling service.", key );
 				cacheService.Add( key, wrapped.GetAllKnockouts() );
 			}
 
@@ -48,6 +50,7 @@ namespace TorneosWeb.service.decorators
 			string key = "GetAllKnockouts:" + start.ToShortDateString() + ":" + end.ToShortDateString();
 			if( !cacheService.ContainsKey( key ) )
 			{
+				log.LogDebug( "Key '{0}' was not found in cache. Calling service.", key );
 				cacheService.Add( key, wrapped.GetAllKnockouts( start, end ) );
 			}
 			return cacheService.Get<SortedList<string, Dictionary<string, Knockouts>>>( key );
@@ -58,6 +61,7 @@ namespace TorneosWeb.service.decorators
 			string key = string.Format( "{0}:{1}", nameof( GetAllKnockouts ), liga.Nombre );
 			if( !cacheService.ContainsKey( key ) )
 			{
+				log.LogDebug( "Key '{0}' was not found in cache. Calling service.", key );
 				cacheService.Add( key, wrapped.GetAllKnockouts( liga ) );
 			}
 			return cacheService.Get<SortedList<string, Dictionary<string, Knockouts>>>( key );
@@ -69,6 +73,7 @@ namespace TorneosWeb.service.decorators
 
 			if( !cacheService.ContainsKey( key ) )
 			{
+				log.LogDebug( "Key '{0}' was not found in cache. Calling service.", key );
 				cacheService.Add( key, wrapped.GetAllTorneos() );
 			}
 
@@ -81,6 +86,7 @@ namespace TorneosWeb.service.decorators
 
 			if( !cacheService.ContainsKey( key ) )
 			{
+				log.LogDebug( "Key '{0}' was not found in cache. Calling service.", key );
 				cacheService.Add( key, wrapped.FindResultadosTorneo( id ) );
 			}
 
@@ -92,6 +98,7 @@ namespace TorneosWeb.service.decorators
 			string key = string.Format( "{0}:{1}", nameof( FindDetalleJugador ), id.ToString() );
 			if ( !cacheService.ContainsKey( key ) )
 			{
+				log.LogDebug( "Key '{0}' was not found in cache. Calling service.", key );
 				cacheService.Add( key, wrapped.FindDetalleJugador( id ) );
 			}
 
@@ -108,6 +115,7 @@ namespace TorneosWeb.service.decorators
 			string key = string.Format( "{0}:{1}", nameof( GetKnockoutsByTournamentId ), torneoId.ToString() );
 			if ( !cacheService.ContainsKey( key ) )
 			{
+				log.LogDebug( "Key '{0}' was not found in cache. Calling service.", key );
 				cacheService.Add( key, wrapped.GetKnockoutsByTournamentId( torneoId ) );
 			}
 
@@ -119,6 +127,7 @@ namespace TorneosWeb.service.decorators
 			string key = string.Format( "{0}:{1}", nameof( GetKnockoutsByPlayer ), playerId.ToString() );
 			if ( !cacheService.ContainsKey( key ) )
 			{
+				log.LogDebug( "Key '{0}' was not found in cache. Calling service.", key );
 				cacheService.Add( key, wrapped.GetKnockoutsByPlayer( playerId ) );
 			}
 
@@ -130,6 +139,7 @@ namespace TorneosWeb.service.decorators
 			string key = nameof( GetAllDetalleJugador );
 			if( !cacheService.ContainsKey( key ) )
 			{
+				log.LogDebug( "Key '{0}' was not found in cache. Calling service.", key );
 				cacheService.Add( key, wrapped.GetAllDetalleJugador() );
 			}
 
@@ -141,6 +151,7 @@ namespace TorneosWeb.service.decorators
 			string key = "GetAllDetalleJugador:" + start.ToShortDateString() + ":" + end.ToShortDateString();
 			if( !cacheService.ContainsKey( key ) )
 			{
+				log.LogDebug( "Key '{0}' was not found in cache. Calling service.", key );
 				cacheService.Add( key, wrapped.GetAllDetalleJugador( start, end ) );
 			}
 
@@ -152,6 +163,7 @@ namespace TorneosWeb.service.decorators
 			string key = "GetAllDetalleJugador:" + liga.Nombre;
 			if( !cacheService.ContainsKey( key ) )
 			{
+				log.LogDebug( "Key '{0}' was not found in cache. Calling service.", key );
 				cacheService.Add( key, wrapped.GetAllDetalleJugador( liga ) );
 			}
 
@@ -164,6 +176,7 @@ namespace TorneosWeb.service.decorators
 
 			if (!cacheService.ContainsKey( key ) )
 			{
+				log.LogDebug( "Key '{0}' was not found in cache. Calling service.", key );
 				cacheService.Add( key, wrapped.FindTorneoByFecha( fecha ) );
 			}
 
