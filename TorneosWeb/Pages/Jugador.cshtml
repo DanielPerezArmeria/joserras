@@ -75,7 +75,7 @@
 		<div class="gridWrapper" style="grid-auto-rows:min-content;grid-template-columns: 30px 150px;justify-content:flex-start">
 			<h3 style="grid-column: 1 / span 2">PODIOS</h3>
 
-			@foreach( int i in Model.Podios.Keys.OrderBy( k => k ) )
+			@foreach (int i in Model.Podios.Keys.OrderBy( k => k ))
 			{
 				<div class="statLabel">@i.Ordinalize():</div>
 				<div class="statValue" style="text-align:left">@Model.Podios[i]</div>
@@ -85,7 +85,7 @@
 		<div class="gridWrapper">
 			<h3 style="grid-column: 1 / span 2">KO's</h3>
 
-			@foreach( var ko in Model.DetalleJugador.Knockouts )
+			@foreach (var ko in Model.DetalleJugador.Knockouts)
 			{
 				<div class="statLabel">@ko.Eliminado:</div>
 				<div class="statValue">@ko.Eliminaciones</div>
@@ -98,7 +98,64 @@
 
 	<h3>Últimos 15 torneos jugados</h3>
 
-	<partial name="_TorneosListing" model="Model.Torneos" view-data="ViewData" />
+	<div style="overflow:auto;width:100%">
+		<table class="table" style="width:100%">
+
+			<thead>
+				<tr>
+					<th></th>
+					<th>
+						@Html.DisplayNameFor( model => model.Torneos[0].Fecha )
+					</th>
+					<th>
+						@Html.DisplayNameFor( model => model.Torneos[0].Tipo )
+					</th>
+					<th>
+						@Html.DisplayNameFor( model => model.Torneos[0].Ganador )
+					</th>
+					<th>
+						@Html.DisplayNameFor( model => model.Torneos[0].Precio_Buyin )
+					</th>
+					<th style="text-align:center">
+						@Html.DisplayNameFor( model => model.Torneos[0].Lugar )
+					</th>
+					<th>
+						@Html.DisplayNameFor( model => model.Torneos[0].Profit )
+					</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				@foreach (var torneo in Model.Torneos)
+				{
+					<tr>
+						<td>
+							@Html.ActionLink( "Resultados", "TorneoResults", "Home", new { torneoId = torneo.Id, listado = "Torneos" } )
+						</td>
+						<td>
+							@Html.DisplayFor( modelItem => torneo.Fecha )
+						</td>
+						<td>
+							@Html.DisplayFor( modelItem => torneo.Tipo )
+						</td>
+						<td>
+							<a asp-page="./Jugador" asp-route-id="@torneo.GanadorId">@Html.DisplayFor( modelItem => torneo.Ganador )</a>
+						</td>
+						<td>
+							@Html.DisplayFor( modelItem => torneo.Precio_Buyin )
+						</td>
+						<td style="text-align:center">
+							@Html.DisplayFor( modelItem => torneo.Lugar )
+						</td>
+						<td class="profit" style="text-align:right;margin-right:10em;color:@(torneo.ProfitNumber < 0 ? "red" : "black")">
+							@Html.DisplayFor( modelItem => torneo.Profit )
+						</td>
+					</tr>
+				}
+			</tbody>
+
+		</table>
+	</div>
 
 </body>
 </html>

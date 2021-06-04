@@ -28,6 +28,7 @@ namespace TorneosWeb.util.automapper
 				.ForMember( dest => dest.Fees, opt => opt.MapFrom( src => src.GetFieldValue<int>( src.GetOrdinal( "fees" ) ) ) )
 				.IgnoreNoMap();
 		}
+
 	}
 
 }
