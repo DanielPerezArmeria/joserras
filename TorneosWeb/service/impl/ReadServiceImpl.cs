@@ -153,7 +153,7 @@ namespace TorneosWeb.service.impl
 			}
 		}
 
-		private Resultados FindResultadosTorneo( SqlConnection conn, Guid torneoId)
+		private Resultados FindResultadosTorneo(SqlConnection conn, Guid torneoId)
 		{
 			Resultados resultados = new Resultados();
 			
@@ -163,6 +163,7 @@ namespace TorneosWeb.service.impl
 				reader.Read();
 				return mapper.Map<SqlDataReader, Torneo>( reader );
 			} );
+			torneo.Liga = ligaDao.GetLigaByTorneoId( torneo.Id );
 
 			resultados.Torneo = torneo;
 
