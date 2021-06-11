@@ -105,6 +105,7 @@ namespace TorneosWeb
 			RegisterNamespace( "TorneosWeb.dao.impl" );
 
 			container.RegisterDecorator<IReadService, CacheWrapperReadService>( Lifestyle.Singleton );
+			container.RegisterDecorator<IReadService, LockingReadServiceDecorator>( Lifestyle.Singleton );
 			container.RegisterDecorator<IStatsService, CacheWrapperStatsService>( Lifestyle.Singleton );
 			container.RegisterDecorator<ILigaReader, CacheWrapperLigaReader>( Lifestyle.Singleton );
 			container.RegisterDecorator<IWriteService, WriteServiceLigaDecorator>( Lifestyle.Singleton );
