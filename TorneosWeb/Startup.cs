@@ -104,19 +104,21 @@ namespace TorneosWeb
 			RegisterNamespace( "TorneosWeb.service.impl", ignoreClasses );
 			RegisterNamespace( "TorneosWeb.dao.impl" );
 
-			container.RegisterDecorator<IReadService, CacheWrapperReadService>( Lifestyle.Singleton );
-			container.RegisterDecorator<IReadService, LockingReadServiceDecorator>( Lifestyle.Singleton );
-			container.RegisterDecorator<IStatsService, CacheWrapperStatsService>( Lifestyle.Singleton );
-			container.RegisterDecorator<ILigaReader, CacheWrapperLigaReader>( Lifestyle.Singleton );
-			container.RegisterDecorator<IWriteService, WriteServiceLigaDecorator>( Lifestyle.Singleton );
-			container.RegisterDecorator<IWriteService, BalanceGeneratorWriteServiceDecorator>( Lifestyle.Singleton );
-			container.RegisterDecorator( typeof( IStandingsDao<> ), typeof( NullAzureDaoDecorator<> ), Lifestyle.Singleton );
-
 			container.RegisterSingleton( typeof( IStandingsDao<> ), typeof( StandingsAzureDao<> ) );
 
 			container.Collection.Register<IPrizeFiller>( new[] { typeof( IPrizeFiller ).Assembly }, Lifestyle.Singleton );
 
 			container.RegisterSingleton<JoserrasQuery>();
+
+			container.RegisterDecorator<IReadService, CacheWrapperReadService>( Lifestyle.Singleton );
+			container.RegisterDecorator<IReadService, LockingReadServiceDecorator>( Lifestyle.Singleton );
+			container.RegisterDecorator<IStatsService, CacheWrapperStatsService>( Lifestyle.Singleton );
+			container.RegisterDecorator<IStatsService, LockingStatsServiceDecorator>( Lifestyle.Singleton );
+			container.RegisterDecorator<ILigaReader, CacheWrapperLigaReader>( Lifestyle.Singleton );
+			container.RegisterDecorator<ILigaReader, LockingLigaReaderDecorator>( Lifestyle.Singleton );
+			container.RegisterDecorator<IWriteService, WriteServiceLigaDecorator>( Lifestyle.Singleton );
+			container.RegisterDecorator<IWriteService, BalanceGeneratorWriteServiceDecorator>( Lifestyle.Singleton );
+			container.RegisterDecorator( typeof( IStandingsDao<> ), typeof( NullAzureDaoDecorator<> ), Lifestyle.Singleton );
 		}
 
 		private void RegisterNamespace(string nameSpace, IEnumerable<Type> ignoreServiceClasses)
