@@ -295,6 +295,7 @@ namespace TorneosWeb.service.impl
 				 }
 			 } );
 
+			kos.RemoveAll( k => string.Empty.Equals( k.Mano ) );
 			return kos;
 		}
 

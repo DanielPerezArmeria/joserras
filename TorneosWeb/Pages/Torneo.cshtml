@@ -124,40 +124,43 @@
 				</table>
 			</div>
 
-			<hr style="margin-top:3em;margin-bottom:3em;border: 3px solid black;width:100%;background-color:black" />
-			<div style="overflow:auto;width:100%">
-				<table id="koList" class="table">
-					<thead>
-						<tr style="text-align:center">
-							<th>
-								@Html.DisplayNameFor( model => model.Resultados.KnockoutList[0].Nombre )
-							</th>
-							<th>
-								@Html.DisplayNameFor( model => model.Resultados.KnockoutList[0].Eliminado )
-							</th>
-							<th>
-								@Html.DisplayNameFor( model => model.Resultados.KnockoutList[0].Mano )
-							</th>
-						</tr>
-					</thead>
-					<tbody>
-						@foreach (var ko in Model.Resultados.KnockoutList)
-						{
-							<tr>
-								<td>
-									@ko.Nombre
-								</td>
-								<td>
-									@ko.Eliminado
-								</td>
-								<td>
-									<a href="@ko.Mano" target="_blank">@ko.Mano</a>
-								</td>
+			@if (Model.Resultados.KnockoutList.Count > 0)
+			{
+				<hr style="margin-top:3em;margin-bottom:3em;border: 3px solid black;width:100%;background-color:black" />
+				<div style="overflow:auto;width:100%">
+					<table id="koList" class="table">
+						<thead>
+							<tr style="text-align:center">
+								<th>
+									@Html.DisplayNameFor( model => model.Resultados.KnockoutList[0].Nombre )
+								</th>
+								<th>
+									@Html.DisplayNameFor( model => model.Resultados.KnockoutList[0].Eliminado )
+								</th>
+								<th>
+									@Html.DisplayNameFor( model => model.Resultados.KnockoutList[0].Mano )
+								</th>
 							</tr>
-						}
-					</tbody>
-				</table>
-			</div>
+						</thead>
+						<tbody>
+							@foreach (var ko in Model.Resultados.KnockoutList)
+							{
+								<tr>
+									<td>
+										@ko.Nombre
+									</td>
+									<td>
+										@ko.Eliminado
+									</td>
+									<td>
+										<a href="@ko.Mano" target="_blank">@ko.Mano</a>
+									</td>
+								</tr>
+							}
+						</tbody>
+					</table>
+				</div>
+			}
 		}
 
 	</div>
