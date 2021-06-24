@@ -38,7 +38,8 @@ namespace TorneosWeb.util.automapper
 			CreateMap<SqlDataReader, Knockouts>()
 				.ForMember( dest => dest.Nombre, opt => opt.MapFrom( src => src.GetString( 0 ) ) )
 				.ForMember( dest => dest.Eliminado, opt => opt.MapFrom( src => src.GetString( 1 ) ) )
-				.ForMember( dest => dest.EliminacionesNumber, opt => opt.MapFrom( src => src.GetDecimal( 2 ) ) );
+				.ForMember( dest => dest.EliminacionesNumber, opt => opt.MapFrom( src => src.GetDecimal( 2 ) ) )
+				.ForMember( dest => dest.Mano, opt => opt.MapFrom( src => MapNullString( src ) ) );
 
 			CreateMap<SqlDataReader, DetalleJugador>()
 				.ForMember( dest => dest.Id, opt => opt.MapFrom( src => src.GetGuid( 0 ) ) )
@@ -52,6 +53,18 @@ namespace TorneosWeb.util.automapper
 				.ForMember( dest => dest.Torneos, opt => opt.MapFrom( src => src.GetInt32( 8 ) ) )
 				.ForMember( dest => dest.Rebuys, opt => opt.MapFrom( src => src.GetInt32( 9 ) ) )
 				.IgnoreNoMap();
+		}
+
+		private string MapNullString(SqlDataReader reader)
+		{
+			string result = string.Empty;
+			try
+			{
+				result = reader.GetFieldValue<string>( reader.GetOrdinal( "mano" ) );
+			}
+			catch (Exception) { }
+
+			return result;
 		}
 
 	}

@@ -23,6 +23,7 @@ namespace TorneosWeb.service
 		List<DetalleJugador> GetAllDetalleJugador(Liga liga);
 
 		SortedList<string, Dictionary<string,Knockouts>> GetKnockoutsByTournamentId(Guid torneoId);
+		List<Knockouts> GetTournamentKOList(Guid torneoId);
 
 		List<Knockouts> GetKnockoutsByPlayer(Guid playerId);
 

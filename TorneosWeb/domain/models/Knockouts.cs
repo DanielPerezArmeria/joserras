@@ -13,6 +13,8 @@ namespace TorneosWeb.domain.models
 			get { return EliminacionesNumber.ToString( Constants.POINTS_FORMAT ); }
 		}
 
+		public string Mano { get; set; }
+
 	}
 
 }

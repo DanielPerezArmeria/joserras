@@ -183,6 +183,18 @@ namespace TorneosWeb.service.decorators
 			return cacheService.Get<Torneo>( key );
 		}
 
+		public List<Knockouts> GetTournamentKOList(Guid torneoId)
+		{
+			string key = string.Format( "{0}:{1}", nameof( GetTournamentKOList ), torneoId.ToString() );
+			if(!cacheService.ContainsKey( key ))
+			{
+				log.LogDebug( "Key '{0}' was not found in cache. Calling service.", key );
+				cacheService.Add( key, wrapped.GetTournamentKOList( torneoId ) );
+			}
+
+			return cacheService.Get<List<Knockouts>>( key );
+		}
+
 	}
 
 }
