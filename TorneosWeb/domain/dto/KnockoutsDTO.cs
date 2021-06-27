@@ -27,6 +27,7 @@ namespace TorneosWeb.domain.dto
 		[Default(1.0)]
 		public decimal Eliminaciones { get; set; }
 
+		[Default(null)]
 		public string Mano { get; set; }
 	}
 

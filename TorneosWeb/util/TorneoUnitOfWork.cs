@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 
 namespace TorneosWeb.util
@@ -34,6 +35,17 @@ namespace TorneosWeb.util
 			return new SqlCommand( query, Conn, Transaction ).ExecuteNonQuery();
 		}
 
+		public int ExecuteNonQuery(string query, IDictionary<string,object> parameters)
+		{
+			SqlCommand command = new SqlCommand( query, Conn, Transaction );
+			foreach(string key in parameters.Keys)
+			{
+				command.Parameters.AddWithValue( key, parameters[key] ?? DBNull.Value );
+			}
+
+			return command.ExecuteNonQuery();
+		}
+
 		public object ExecuteScalar(string query, params object[] list)
 		{
 			if( list != null && list.Length > 0 )
@@ -42,6 +54,17 @@ namespace TorneosWeb.util
 			}
 
 			return new SqlCommand( query, Conn, Transaction ).ExecuteScalar();
+		}
+
+		public object ExecuteScalar(string query, IDictionary<string, object> parameters)
+		{
+			SqlCommand command = new SqlCommand( query, Conn, Transaction );
+			foreach (string key in parameters.Keys)
+			{
+				command.Parameters.AddWithValue( key, parameters[key] ?? DBNull.Value );
+			}
+
+			return command.ExecuteNonQuery();
 		}
 
 		public void Commit()

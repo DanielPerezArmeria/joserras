@@ -175,14 +175,22 @@ namespace TorneosWeb.service.impl
 
 		private void InsertarKos(TorneoDTO torneo, List<ResultadosDTO> resultados, List<KnockoutsDTO> kos, TorneoUnitOfWork uow)
 		{
-			string query = "insert into knockouts (torneo_id, jugador_id, eliminado_id, eliminaciones, mano_url) values('{0}', "
-				+ "(select id from jugadores where nombre = '{1}'), (select id from jugadores where nombre = '{2}'), {3}, '{4}')";
+			string query = @"insert into knockouts (torneo_id, jugador_id, eliminado_id, eliminaciones, mano_url) values(@torneoId, "
+				+ @"(select id from jugadores where nombre = @jugador), (select id from jugadores where nombre = @eliminado), 1, @mano)";
 
 			foreach(KnockoutsDTO dto in kos )
 			{
 				try
 				{
-					uow.ExecuteNonQuery( query, torneo.Id, dto.Jugador, dto.Eliminado, dto.Eliminaciones, dto.Mano );
+					IDictionary<string, object> parameters = new Dictionary<string, object>
+					{
+						{ "@torneoId", torneo.Id },
+						{ "@jugador", dto.Jugador },
+						{ "@eliminado", dto.Eliminado },
+						{ "@mano", dto.Mano }
+					};
+
+					uow.ExecuteNonQuery( query, parameters );
 				}
 				catch( Exception e )
 				{
