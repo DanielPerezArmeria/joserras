@@ -6,26 +6,21 @@ namespace TorneosWeb.domain.dto
 	{
 		public KnockoutsDTO() { }
 
-		public KnockoutsDTO(string jugador, string eliminado, decimal kos)
+		public KnockoutsDTO(string jugador, string eliminado)
 		{
 			Jugador = jugador;
 			Eliminado = eliminado;
-			Eliminaciones = kos;
 		}
 
-		public KnockoutsDTO(string jugador, string eliminado, decimal kos, string manoUrl)
+		public KnockoutsDTO(string jugador, string eliminado, string manoUrl)
 		{
 			Jugador = jugador;
 			Eliminado = eliminado;
-			Eliminaciones = kos;
 			Mano = manoUrl;
 		}
 
 		public string Jugador { get; set; }
 		public string Eliminado { get; set; }
-
-		[Default(1.0)]
-		public decimal Eliminaciones { get; set; }
 
 		[Default(null)]
 		public string Mano { get; set; }
