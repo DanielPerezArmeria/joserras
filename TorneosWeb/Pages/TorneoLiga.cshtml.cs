@@ -26,6 +26,7 @@ namespace TorneosWeb.Pages
 		{
 			Torneo torneo = readService.GetAllTorneos().Where( t => t.Id == torneoId ).First();
 			Standings = ligaReader.GetStandings( torneo.Liga, torneo );
+			Standings.ForEach( s => s.Torneo = torneo );
 			Fecha = torneo.Fecha;
 		}
 

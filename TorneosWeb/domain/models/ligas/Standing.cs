@@ -15,6 +15,7 @@ namespace TorneosWeb.domain.models.ligas
 		}
 
 		public Liga Liga { get; set; }
+		public Torneo Torneo { get; set; }
 
 		public string Jugador { get; set; }
 		public Guid JugadorId { get; set; }
@@ -46,6 +47,26 @@ namespace TorneosWeb.domain.models.ligas
 
 		public decimal ProfitNumber { get; set; }
 
+		public decimal ProfitTotalNumber
+		{
+			get { return ProfitNumber - LigaCostos; }
+		}
+
+		public string ProfitTotal
+		{
+			get
+			{
+				if (ProfitTotalNumber != 0)
+				{
+					return ProfitTotalNumber.ToString( Constants.CURRENCY_FORMAT );
+				}
+				else
+				{
+					return "$0";
+				}
+			}
+		}
+
 		[Display( Name = "Premio Liga" )]
 		public string PremioLiga
 		{
@@ -63,6 +84,22 @@ namespace TorneosWeb.domain.models.ligas
 		}
 
 		public decimal PremioLigaNumber { get; set; }
+
+		public decimal LigaCostos
+		{
+			get
+			{
+				if (Liga != null)
+				{
+					int balas = 1;
+					Posicion pos = Torneo?.Resultados?.Posiciones?.Single( p => p.JugadorId == this.JugadorId );
+					balas += (pos == null) ? 0 : pos.Rebuys;
+					return balas * Liga.Fee;
+				}
+
+				return 0;
+			}
+		}
 
 	}
 

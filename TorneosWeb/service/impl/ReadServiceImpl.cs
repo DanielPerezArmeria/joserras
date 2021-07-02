@@ -285,7 +285,7 @@ namespace TorneosWeb.service.impl
 		{
 			List<Knockouts> kos = new List<Knockouts>();
 			string query = string.Format( "select j.nombre, elim.nombre as eliminado, 0.0 as eliminaciones, k.mano_url as mano from knockouts k, jugadores j, jugadores elim, torneos t"
-				+ " where k.jugador_id = j.id and k.eliminado_id = elim.id and k.torneo_id = t.id and t.id = '{0}' and k.mano_url != null", torneoId );
+				+ " where k.jugador_id = j.id and k.eliminado_id = elim.id and k.torneo_id = t.id and t.id = '{0}' and k.mano_url is not null", torneoId );
 
 			joserrasQuery.ExecuteQuery( query, reader =>
 			 {
