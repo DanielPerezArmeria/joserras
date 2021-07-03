@@ -127,6 +127,14 @@ namespace TorneosWeb.service.decorators
 			}
 		}
 
+		public List<Knockouts> GetTournamentKOList(Guid torneoId)
+		{
+			lock (locker)
+			{
+				return wrapped.GetTournamentKOList( torneoId );
+			}
+		}
+
 	}
 
 }

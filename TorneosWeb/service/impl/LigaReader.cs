@@ -184,7 +184,7 @@ namespace TorneosWeb.service.impl
 		public List<Standing> GetStandings(Liga liga, Torneo torneo)
 		{
 			List<Standing> standings = new List<Standing>();
-			Resultados results = readService.FindResultadosTorneo( torneo.Id );
+			Resultados results = torneo.Resultados;
 			foreach( Posicion pos in results.Posiciones )
 			{
 				Standing standing = new Standing

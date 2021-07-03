@@ -31,21 +31,6 @@ namespace TorneosWeb.service.impl
 
 		public Guid UploadTournament(TorneoDTO torneo, List<ResultadosDTO> resultados, List<KnockoutsDTO> kos)
 		{
-			try
-			{
-				kos =
-					(from ko in kos
-					 group ko by new { ko.Jugador, ko.Eliminado }
-					into grp
-					 select new KnockoutsDTO( grp.Key.Jugador, grp.Key.Eliminado, grp.Sum( k => k.Eliminaciones ) )
-					).ToList();
-			}
-			catch( Exception e )
-			{
-				log.LogError( e, e.Message );
-				throw new JoserrasException(e.Message, e);
-			}
-
 			if( torneo == null || resultados == null || resultados.Count == 0 )
 			{
 				string msg = string.Empty;
@@ -175,14 +160,22 @@ namespace TorneosWeb.service.impl
 
 		private void InsertarKos(TorneoDTO torneo, List<ResultadosDTO> resultados, List<KnockoutsDTO> kos, TorneoUnitOfWork uow)
 		{
-			string query = "insert into knockouts (torneo_id, jugador_id, eliminado_id, eliminaciones) values('{0}', "
-				+ "(select id from jugadores where nombre = '{1}'), (select id from jugadores where nombre = '{2}'), {3})";
+			string query = @"insert into knockouts (torneo_id, jugador_id, eliminado_id, eliminaciones, mano_url) values(@torneoId, "
+				+ @"(select id from jugadores where nombre = @jugador), (select id from jugadores where nombre = @eliminado), 1, @mano)";
 
 			foreach(KnockoutsDTO dto in kos )
 			{
 				try
 				{
-					uow.ExecuteNonQuery( query, torneo.Id, dto.Jugador, dto.Eliminado, dto.Eliminaciones );
+					IDictionary<string, object> parameters = new Dictionary<string, object>
+					{
+						{ "@torneoId", torneo.Id },
+						{ "@jugador", dto.Jugador },
+						{ "@eliminado", dto.Eliminado },
+						{ "@mano", dto.Mano }
+					};
+
+					uow.ExecuteNonQuery( query, parameters );
 				}
 				catch( Exception e )
 				{
@@ -196,7 +189,7 @@ namespace TorneosWeb.service.impl
 			// Insertar kos y bounties
 			query = @"update resultados set premio_bounties = {0}, kos = {1} where torneo_id = '{2}' and jugador_id = (select id from jugadores where nombre = '{3}')";
 			IEnumerable<Tuple<string, decimal>> tuples =
-				kos.GroupBy( k => k.Jugador ).Select( s => new Tuple<string, decimal>( s.First().Jugador, s.Sum( c => c.Eliminaciones ) ) );
+				kos.GroupBy( k => k.Jugador ).Select( s => new Tuple<string, decimal>( s.First().Jugador, s.Count() ) );
 			foreach( Tuple<string, decimal> t in tuples )
 			{
 				decimal bountyPrice = t.Item2 * torneo.PrecioBounty;

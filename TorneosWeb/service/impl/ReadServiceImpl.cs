@@ -186,6 +186,11 @@ namespace TorneosWeb.service.impl
 			
 			resultados.Knockouts = GetKnockoutsByTournamentId( conn, torneoId );
 
+			if(resultados.Knockouts.Count > 0)
+			{
+				resultados.KnockoutList = GetTournamentKOList( torneoId );
+			}
+
 			return resultados;
 		}
 
@@ -241,7 +246,7 @@ namespace TorneosWeb.service.impl
 		private SortedList<string, Dictionary<string, Knockouts>> GetKnockoutsByTournamentId(SqlConnection conn, Guid torneoId)
 		{
 			SortedList<string, Dictionary<string, Knockouts>> knockouts = new SortedList<string, Dictionary<string, Knockouts>>();
-			string query = string.Format( "select j.nombre, elim.nombre as eliminado, sum(e.eliminaciones) as eliminaciones from knockouts e, jugadores j, jugadores elim"
+			string query = string.Format( "select j.nombre, elim.nombre as eliminado, sum(e.eliminaciones) as eliminaciones, '' as mano from knockouts e, jugadores j, jugadores elim"
 					+ " where torneo_id = '{0}' and e.jugador_id = j.id and e.eliminado_id = elim.id group by j.nombre, elim.nombre", torneoId );
 
 			joserrasQuery.ExecuteQuery( conn, query, reader =>
@@ -272,6 +277,23 @@ namespace TorneosWeb.service.impl
 					kos.Add( mapper.Map<SqlDataReader, Knockouts>( reader ) );
 				}
 			} );
+
+			return kos;
+		}
+
+		public List<Knockouts> GetTournamentKOList(Guid torneoId)
+		{
+			List<Knockouts> kos = new List<Knockouts>();
+			string query = string.Format( "select j.nombre, elim.nombre as eliminado, 0.0 as eliminaciones, k.mano_url as mano from knockouts k, jugadores j, jugadores elim, torneos t"
+				+ " where k.jugador_id = j.id and k.eliminado_id = elim.id and k.torneo_id = t.id and t.id = '{0}' and k.mano_url is not null", torneoId );
+
+			joserrasQuery.ExecuteQuery( query, reader =>
+			 {
+				  while (reader.Read())
+				 {
+					 kos.Add( mapper.Map<SqlDataReader, Knockouts>( reader ) );
+				 }
+			 } );
 
 			return kos;
 		}
