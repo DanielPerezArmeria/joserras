@@ -7,14 +7,34 @@
 
 <h1>Ligas</h1>
 
-<div style="display:grid;grid-template-columns: max-content min-content;text-align: left;grid-gap:10px 20px">
-	@foreach( var liga in Model.Ligas )
-	{
-		<span>
-			@Html.DisplayFor( m => liga.FechaInicio )
-		</span>
-		<span>
-			@Html.ActionLink( liga.Nombre, "LigaNombre", "Home", new { nombreLiga = liga.Nombre } )
-		</span>
-	}
-</div>
+<table class="table" style="width:auto">
+	
+	<thead>
+		<tr>
+			<th>Liga</th>
+			<th>
+				@Html.DisplayNameFor( model => model.Ligas[ 0 ].FechaInicio )
+			</th>
+			<th>
+				@Html.DisplayNameFor( model => model.Ligas[ 0 ].FechaCierre )
+			</th>
+		</tr>
+	</thead>
+
+	<tbody>
+		@foreach( var liga in Model.Ligas )
+		{
+		<tr>
+			<td>
+				@Html.ActionLink( liga.Nombre, "LigaNombre", "Home", new { nombreLiga = liga.Nombre } )
+			</td>
+			<td>
+				@Html.DisplayFor( m => liga.FechaInicio )
+			</td>
+			<td>
+				@Html.DisplayFor( m => liga.FechaCierre )
+			</td>
+		</tr>
+		}
+	</tbody>
+</table>

@@ -1,6 +1,7 @@
 ﻿using Humanizer;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using TorneosWeb.util;
 using TorneosWeb.util.automapper;
 using TorneosWeb.util.PointRules;
@@ -26,6 +27,7 @@ namespace TorneosWeb.domain.models.ligas
 		public bool Abierta { get; set; }
 
 		[NoMap]
+		[Display( Name = "Inicio")]
 		public string FechaInicio
 		{
 			get { return FechaInicioDate.ToString( Constants.FECHA_LIGA_FORMAT ).Transform( To.SentenceCase ); }
@@ -33,6 +35,7 @@ namespace TorneosWeb.domain.models.ligas
 		public DateTime FechaInicioDate { get; set; }
 
 		[NoMap]
+		[Display( Name = "Cierre" )]
 		public string FechaCierre { get { return FechaCierreDate?.ToString( Constants.FECHA_LIGA_FORMAT ).Transform( To.SentenceCase ); } }
 		public DateTime? FechaCierreDate { get; set; }
 
