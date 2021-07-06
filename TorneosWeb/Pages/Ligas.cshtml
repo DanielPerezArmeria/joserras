@@ -7,9 +7,14 @@
 
 <h1>Ligas</h1>
 
-<ul>
+<div style="display:grid;grid-template-columns: max-content min-content;text-align: left;grid-gap:10px 20px">
 	@foreach( var liga in Model.Ligas )
 	{
-		<li>@Html.ActionLink( liga.Nombre, "LigaNombre", "Home", new { nombreLiga = liga.Nombre } )</li>
+		<span>
+			@Html.DisplayFor( m => liga.FechaInicio )
+		</span>
+		<span>
+			@Html.ActionLink( liga.Nombre, "LigaNombre", "Home", new { nombreLiga = liga.Nombre } )
+		</span>
 	}
-</ul>
+</div>

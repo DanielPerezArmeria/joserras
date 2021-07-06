@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Humanizer;
+using System;
 using System.Collections.Generic;
 using TorneosWeb.util;
 using TorneosWeb.util.automapper;
@@ -25,11 +26,14 @@ namespace TorneosWeb.domain.models.ligas
 		public bool Abierta { get; set; }
 
 		[NoMap]
-		public string FechaInicio { get; set; }
+		public string FechaInicio
+		{
+			get { return FechaInicioDate.ToString( Constants.FECHA_LIGA_FORMAT ).Transform( To.SentenceCase ); }
+		}
 		public DateTime FechaInicioDate { get; set; }
 
 		[NoMap]
-		public string FechaCierre { get; set; }
+		public string FechaCierre { get { return FechaCierreDate?.ToString( Constants.FECHA_LIGA_FORMAT ).Transform( To.SentenceCase ); } }
 		public DateTime? FechaCierreDate { get; set; }
 
 		public int Fee { get; set; }
