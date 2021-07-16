@@ -135,6 +135,8 @@ namespace TorneosWeb.service.impl
 		public void CerrarLiga()
 		{
 			Liga liga = ligaReader.GetCurrentLiga();
+			SetPremiosLiga( liga );
+
 			using( TorneoUnitOfWork uow = new TorneoUnitOfWork( config.GetConnectionString( Properties.Resources.joserrasDb ) ) )
 			{
 				try
@@ -177,8 +179,9 @@ namespace TorneosWeb.service.impl
 			}
 		}
 
-		private void SetPremiosLiga(Liga liga, List<Standing> standings)
+		private void SetPremiosLiga(Liga liga)
 		{
+			List<Standing> standings = liga.Standings;
 			string[] prizesString = liga.Premiacion.Split( "-" );
 			int placesAwarded = prizesString.Length;
 			decimal totalToSplit = liga.GetAcumulado();

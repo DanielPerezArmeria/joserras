@@ -45,14 +45,14 @@ namespace TorneosWeb.Controllers
 		[Route( "/TorneoResults" )]
 		public ActionResult TorneoResults(Guid torneoId, string listado)
 		{
-			Torneo torneo = readService.GetAllTorneos().Where(t=>t.Id == torneoId).First();
+			Torneo torneo = readService.GetAllTorneos().Where( t => t.Id == torneoId ).First();
 			if(listado == "Torneos" )
 			{
 				return RedirectToPage( "/Torneo", new { id = torneo.Id } );
 			}
 			else
 			{
-				return RedirectToPage( "/TorneoLiga", new { torneoId = torneoId } );
+				return RedirectToPage( "/TorneoLiga", new { torneoId } );
 			}
 		}
 
