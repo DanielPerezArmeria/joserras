@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using TorneosWeb.util;
 using TorneosWeb.util.automapper;
 using TorneosWeb.util.PointRules;
@@ -27,7 +28,7 @@ namespace TorneosWeb.domain.models.ligas
 		public bool Abierta { get; set; }
 
 		[NoMap]
-		[Display( Name = "Inicio")]
+		[Display( Name = "Inicio" )]
 		public string FechaInicio
 		{
 			get { return FechaInicioDate.ToString( Constants.FECHA_LIGA_FORMAT ).Transform( To.SentenceCase ); }
@@ -59,7 +60,7 @@ namespace TorneosWeb.domain.models.ligas
 		public int GetAcumulado()
 		{
 			int sum = 0;
-			foreach(Torneo t in Torneos )
+			foreach (Torneo t in Torneos)
 			{
 				sum = sum + (t.Entradas + t.Rebuys) * Fee;
 			}
@@ -89,6 +90,12 @@ namespace TorneosWeb.domain.models.ligas
 
 		[NoMap]
 		public Estadisticas Estadisticas { get; set; }
+
+		[NoMap]
+		public string Ganador { get { return Standings.FirstOrDefault()?.Jugador; } }
+
+		[NoMap]
+		public string GanadorId { get { return Standings.FirstOrDefault()?.JugadorId.ToString(); } }
 
 
 		private List<Standing> standings;

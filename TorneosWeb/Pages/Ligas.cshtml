@@ -13,10 +13,13 @@
 		<tr>
 			<th>Liga</th>
 			<th>
-				@Html.DisplayNameFor( model => model.Ligas[ 0 ].FechaInicio )
+				@Html.DisplayNameFor( model => model.Ligas[0].FechaInicio )
 			</th>
 			<th>
-				@Html.DisplayNameFor( model => model.Ligas[ 0 ].FechaCierre )
+				@Html.DisplayNameFor( model => model.Ligas[0].FechaCierre )
+			</th>
+			<th>
+				@Html.DisplayNameFor( model => model.Ligas[0].Ganador )
 			</th>
 		</tr>
 	</thead>
@@ -33,6 +36,9 @@
 			</td>
 			<td>
 				@Html.DisplayFor( m => liga.FechaCierre )
+			</td>
+			<td>
+				<a asp-page="./Jugador" asp-route-id="@liga.GanadorId">@Html.DisplayFor( modelItem => liga.Ganador )</a>
 			</td>
 		</tr>
 		}
