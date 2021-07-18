@@ -48,6 +48,14 @@ namespace TorneosWeb.domain.models
 		public int Victorias { get; set; }
 
 		[NoMap]
+		[Display( Name = "Último Lugar" )]
+		public int UltimoLugar { get; set; }
+
+		[NoMap]
+		[Display( Name = "Podios Negativos" )]
+		public int PodiosNegativos { get; set; }
+
+		[NoMap]
 		public string Premios
 		{
 			get { return PremiosNumber > 0 ? PremiosNumber.ToString( Constants.CURRENCY_FORMAT ) : "$0"; }

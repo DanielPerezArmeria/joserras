@@ -7,6 +7,7 @@ using System.Linq;
 using TorneosWeb.dao;
 using TorneosWeb.domain.models;
 using TorneosWeb.domain.models.ligas;
+using TorneosWeb.Properties;
 using TorneosWeb.util;
 
 namespace TorneosWeb.service.impl
@@ -216,6 +217,26 @@ namespace TorneosWeb.service.impl
 				{
 					detalle = new DetalleJugador();
 				}
+
+				query = string.Format( Queries.GetBundy, "and j.id = '" + playerId + "' " );
+				joserrasQuery.ExecuteQuery( conn, query, reader =>
+				 {
+					 if (reader.HasRows)
+					 {
+						 reader.Read();
+						 detalle.UltimoLugar = reader.GetInt32( 1 );
+					 }
+				 } );
+
+				query = string.Format( Queries.GetPodiosNegativos, "and j.id = '" + playerId + "' " );
+				joserrasQuery.ExecuteQuery( conn, query, reader =>
+				{
+					if (reader.HasRows)
+					{
+						reader.Read();
+						detalle.PodiosNegativos = reader.GetInt32( 1 );
+					}
+				} );
 
 				//Encontrar profits de ligas
 				LigaProfitsObject ligaProfits = ligaDao.GetTotalLigaProfitsByPlayerId( playerId );

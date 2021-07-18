@@ -8,3 +8,19 @@
 </head>
 
 <partial name="_Estadisticas" model="Model.Estadisticas"/>
+
+@section Scripts{ 
+	<script>
+		$(document).ready(function () {
+			$('#table_stats').DataTable({
+				paging: false,
+				order: [[2, 'desc']],
+				columnDefs: [
+					{ orderable: false, targets: 0 }
+				],
+				info: false,
+				searching: false
+			});
+		});
+	</script>
+}

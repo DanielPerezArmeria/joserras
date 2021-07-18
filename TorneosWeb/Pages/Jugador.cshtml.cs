@@ -30,7 +30,7 @@ namespace TorneosWeb.Pages
 		public void OnGet(Guid id)
 		{
 			DetalleJugador = readService.FindDetalleJugador( id );
-			List<Torneo> tournaments = readService.GetAllTorneos().Where( t => t.Resultados.Posiciones.Any( p => p.JugadorId.Equals( id ) ) ).Take( 15 ).ToList();
+			List<Torneo> tournaments = readService.GetAllTorneos().Where( t => t.Resultados.Posiciones.Any( p => p.JugadorId.Equals( id ) ) ).ToList();
 			Torneos = new List<JugadorTorneosViewModel>();
 			foreach (Torneo t in tournaments)
 			{
@@ -48,8 +48,7 @@ namespace TorneosWeb.Pages
 				Torneos.Add( m );
 			}
 
-			List <Torneo> torneosConPodio =
-				readService.GetAllTorneos().Where( t => t.Resultados.Posiciones.Any( p => p.JugadorId.Equals( id ) && p.Podio ) ).ToList();
+			List<Torneo> torneosConPodio = tournaments.Where( t => t.Resultados.Posiciones.Any( p => p.JugadorId.Equals( id ) && p.Podio ) ).ToList();
 
 			Podios = new Dictionary<int, int>();
 			foreach(Torneo t in torneosConPodio )
