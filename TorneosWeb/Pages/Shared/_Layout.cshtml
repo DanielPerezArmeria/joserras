@@ -5,11 +5,10 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>@ViewData[ "Title" ] - Torneos Joserras</title>
 	
-
 	<environment include="Development">
 		<link rel="stylesheet" type="text/css" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-		<link rel="stylesheet" type="text/css" href="~/css/site.css"/>
-		<script src="~/js/site.js" asp-append-version="true"></script>
+		<link rel="stylesheet" type="text/css" href="~/css/site.css" />
+		<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">
 	</environment>
 	<environment exclude="Development">
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -17,6 +16,7 @@
 					asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
 					crossorigin="anonymous"
 					integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" />
+		<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">
 	</environment>
 </head>
 <body style="width:100%">
@@ -62,6 +62,8 @@
 	<environment include="Development">
 		<script src="~/lib/jquery/dist/jquery.js"></script>
 		<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
+		<script src="~/js/site.js" asp-append-version="true"></script>
+		<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
 	</environment>
 	<environment exclude="Development">
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"
@@ -76,6 +78,7 @@
 						crossorigin="anonymous"
 						integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o">
 		</script>
+		<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
 	</environment>
 
 	@RenderSection( "Scripts", required: false )

@@ -47,6 +47,12 @@
 
 			<div class="statLabel">@Html.DisplayNameFor( model => model.DetalleJugador.Burbujas ):</div>
 			<div class="statValue">@Model.DetalleJugador.Burbujas</div>
+
+			<div class="statLabel">@Html.DisplayNameFor( model => model.DetalleJugador.UltimoLugar ):</div>
+			<div class="statValue">@Model.DetalleJugador.UltimoLugar</div>
+
+			<div class="statLabel">@Html.DisplayNameFor( model => model.DetalleJugador.PodiosNegativos ):</div>
+			<div class="statValue">@Model.DetalleJugador.PodiosNegativos</div>
 		</div>
 
 		<p />
@@ -96,10 +102,10 @@
 
 	<hr style="margin-top:3em;margin-bottom:3em;border: 3px solid black;background-color:black" />
 
-	<h3>Últimos 15 torneos jugados</h3>
+	<h3>Torneos jugados</h3>
 
 	<div style="overflow:auto;width:100%">
-		<table class="table" style="width:100%">
+		<table id="table_detalle_jugador" class="table dataTable" style="width:100%">
 
 			<thead>
 				<tr>
@@ -158,4 +164,18 @@
 	</div>
 
 </body>
+
+@section Scripts{
+	<script>
+		$(document).ready(function () {
+			$('#table_detalle_jugador').DataTable({
+				searching: false,
+				ordering: false,
+				lengthMenu: [10, 25, 50],
+				pageLength: 25
+			});
+		});
+	</script>
+}
+
 </html>

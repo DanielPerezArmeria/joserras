@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Collections.Generic;
-using System.Linq;
 using TorneosWeb.domain.models;
 using TorneosWeb.service;
 
@@ -19,7 +18,7 @@ namespace TorneosWeb.Pages
 
 		public void OnGet()
 		{
-			Torneos = readService.GetAllTorneos().Take( 20 ).ToList();
+			Torneos = readService.GetAllTorneos();
 		}
 
 	}

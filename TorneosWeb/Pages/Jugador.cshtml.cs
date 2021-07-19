@@ -1,12 +1,10 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using TorneosWeb.domain.models;
 using TorneosWeb.service;
-using TorneosWeb.util.automapper;
 
 namespace TorneosWeb.Pages
 {
@@ -18,19 +16,17 @@ namespace TorneosWeb.Pages
 		public IDictionary<int,int> Podios { get; set; }
 
 		private IReadService readService;
-		private IMapper mapper;
 
 
-		public JugadorModel(IReadService service, IMapper mapper)
+		public JugadorModel(IReadService service)
 		{
 			readService = service;
-			this.mapper = mapper;
 		}
 
 		public void OnGet(Guid id)
 		{
 			DetalleJugador = readService.FindDetalleJugador( id );
-			List<Torneo> tournaments = readService.GetAllTorneos().Where( t => t.Resultados.Posiciones.Any( p => p.JugadorId.Equals( id ) ) ).Take( 15 ).ToList();
+			List<Torneo> tournaments = readService.GetAllTorneos().Where( t => t.Resultados.Posiciones.Any( p => p.JugadorId.Equals( id ) ) ).ToList();
 			Torneos = new List<JugadorTorneosViewModel>();
 			foreach (Torneo t in tournaments)
 			{
@@ -48,8 +44,7 @@ namespace TorneosWeb.Pages
 				Torneos.Add( m );
 			}
 
-			List <Torneo> torneosConPodio =
-				readService.GetAllTorneos().Where( t => t.Resultados.Posiciones.Any( p => p.JugadorId.Equals( id ) && p.Podio ) ).ToList();
+			List<Torneo> torneosConPodio = tournaments.Where( t => t.Resultados.Posiciones.Any( p => p.JugadorId.Equals( id ) && p.Podio ) ).ToList();
 
 			Podios = new Dictionary<int, int>();
 			foreach(Torneo t in torneosConPodio )
