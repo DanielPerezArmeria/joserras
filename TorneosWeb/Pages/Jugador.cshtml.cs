@@ -6,7 +6,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using TorneosWeb.domain.models;
 using TorneosWeb.service;
-using TorneosWeb.util.automapper;
 
 namespace TorneosWeb.Pages
 {
