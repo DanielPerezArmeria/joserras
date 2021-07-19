@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -17,13 +16,11 @@ namespace TorneosWeb.Pages
 		public IDictionary<int,int> Podios { get; set; }
 
 		private IReadService readService;
-		private IMapper mapper;
 
 
-		public JugadorModel(IReadService service, IMapper mapper)
+		public JugadorModel(IReadService service)
 		{
 			readService = service;
-			this.mapper = mapper;
 		}
 
 		public void OnGet(Guid id)
