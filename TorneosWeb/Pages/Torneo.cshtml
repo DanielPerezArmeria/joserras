@@ -45,7 +45,7 @@
 						<th>
 							@Html.DisplayNameFor( model => model.Resultados.Posiciones[0].Premio )
 						</th>
-						@if (Model.Resultados.Torneo.Tipo == domain.models.TournamentType.BOUNTY)
+						@if (Model.Resultados.Torneo.Tipo == Joserras.Commons.Domain.TournamentType.BOUNTY)
 						{
 							<th>
 								@Html.DisplayNameFor( model => model.Resultados.Posiciones[0].PremioBounties )
@@ -75,7 +75,7 @@
 							<td style="text-align:right;margin-right:10em;">
 								@Html.DisplayFor( modelItem => posicion.Premio )
 							</td>
-							@if (Model.Resultados.Torneo.Tipo == domain.models.TournamentType.BOUNTY)
+							@if (Model.Resultados.Torneo.Tipo == Joserras.Commons.Domain.TournamentType.BOUNTY)
 							{
 								<td style="text-align:right;margin-right:10em;">
 									@Html.DisplayFor( modelItem => posicion.PremioBounties )
