@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using TorneosWeb.domain.models;
 using TorneosWeb.domain.models.ligas;
-using TorneosWeb.exception;
 
 namespace TorneosWeb.service.decorators
 {

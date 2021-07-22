@@ -1,6 +1,4 @@
-﻿using CsvHelper.Configuration.Attributes;
-
-namespace TorneosWeb.domain.dto
+﻿namespace Joserras.Commons.Dto
 {
 	public class KnockoutsDTO
 	{
@@ -22,7 +20,6 @@ namespace TorneosWeb.domain.dto
 		public string Jugador { get; set; }
 		public string Eliminado { get; set; }
 
-		[Default(null)]
 		public string Mano { get; set; }
 	}
 

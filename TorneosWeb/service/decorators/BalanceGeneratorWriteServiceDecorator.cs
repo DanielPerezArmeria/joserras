@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Joserras.Commons.Dto;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using TorneosWeb.domain.dto;
 using TorneosWeb.domain.models;
 
 namespace TorneosWeb.service.decorators

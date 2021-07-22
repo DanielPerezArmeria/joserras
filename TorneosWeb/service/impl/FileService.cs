@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using TorneosWeb.domain.models;
 
 namespace TorneosWeb.service.impl
 {
@@ -20,11 +19,6 @@ namespace TorneosWeb.service.impl
 		{
 			this.readService = readService;
 			this.log = logger;
-		}
-
-		public void ExportProfits(DateTime start, DateTime end)
-		{
-			List<DetalleJugador> detalles = readService.GetAllDetalleJugador( start, end );
 		}
 
 		public IEnumerable<T> GetFormFileItems<T>(IFormFile file) where T : class

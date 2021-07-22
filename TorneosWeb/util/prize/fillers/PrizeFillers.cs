@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Joserras.Commons.Domain;
+using Joserras.Commons.Dto;
+using System.Collections.Generic;
 using System.Linq;
-using TorneosWeb.domain.dto;
-using TorneosWeb.domain.models.dto;
 
 namespace TorneosWeb.util.prize.fillers
 {

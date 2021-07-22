@@ -1,12 +1,15 @@
-﻿using CsvHelper.Configuration.Attributes;
+﻿using Joserras.Commons.Domain;
 using System;
-using TorneosWeb.domain.models;
-using TorneosWeb.domain.models.dto;
 
-namespace TorneosWeb.domain.dto
+namespace Joserras.Commons.Dto
 {
 	public class TorneoDTO
 	{
+		public TorneoDTO()
+		{
+			Tipo = TournamentType.NORMAL;
+		}
+
 		public Guid Id { get; set; }
 		public DateTime Fecha { get; set; }
 		public int PrecioBuyin { get; set; }
@@ -15,13 +18,10 @@ namespace TorneosWeb.domain.dto
 		public int Rebuys { get; set; }
 		public Bolsa Bolsa { get; set; }
 
-		[Default( 0 )]
 		public int PrecioBounty { get; set; }
 
-		[Default( TournamentType.NORMAL )]
 		public TournamentType Tipo { get; set; }
 
-		[Default( false )]
 		public bool Liga { get; set; }
 
 		public string Premiacion { get; set; }

@@ -1,4 +1,5 @@
 ﻿using Humanizer;
+using Joserras.Commons.Domain;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

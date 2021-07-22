@@ -1,4 +1,4 @@
-﻿namespace TorneosWeb.domain.models.dto
+﻿namespace Joserras.Commons.Domain
 {
 	public class Bolsa
 	{

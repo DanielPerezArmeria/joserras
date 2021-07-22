@@ -2,24 +2,24 @@
 {
 	public static class Constants
 	{
-		public static string CURRENCY_FORMAT = "$###,##0.0#";
-		public static string ROI_FORMAT = "%###,##0.0";
-		public static string POINTS_FORMAT = "###,##0.##";
-		public static string FECHA_LIGA_FORMAT = "MMMM yyyy";
+		public const string CURRENCY_FORMAT = "$###,##0.0#";
+		public const string ROI_FORMAT = "%###,##0.0";
+		public const string POINTS_FORMAT = "###,##0.##";
+		public const string FECHA_LIGA_FORMAT = "MMMM yyyy";
 	}
 
 	public static class PrizeFill
 	{
-		public static string PERCENT_CHAR = "%";
-		public static string FIXED_PERCENT = "p";
-		public static string FACTOR = "x";
-		public static string SEPARATOR = "-";
+		public const string PERCENT_CHAR = "%";
+		public const string FIXED_PERCENT = "p";
+		public const string FACTOR = "x";
+		public const string SEPARATOR = "-";
 	}
 
 	public static class AzureTables
 	{
-		public static string PUNTOS_TORNEO_TABLE = "puntostorneo";
-		public static string PUNTOS_LIGA_TABLE = "puntosliga";
+		public const string PUNTOS_TORNEO_TABLE = "puntostorneo";
+		public const string PUNTOS_LIGA_TABLE = "puntosliga";
 	}
 
 }

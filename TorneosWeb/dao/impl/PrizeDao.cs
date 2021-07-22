@@ -1,18 +1,16 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Joserras.Commons.Db;
+using Joserras.Commons.Domain;
+using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
-using TorneosWeb.domain.dto;
-using TorneosWeb.util;
 
 namespace TorneosWeb.dao.impl
 {
 	public class PrizeDao : IPrizeDao
 	{
-		private readonly string ConnString;
 		private JoserrasQuery joserrasQuery;
 
 		public PrizeDao(IConfiguration conf, JoserrasQuery joserrasQuery)
 		{
-			ConnString = conf.GetConnectionString( Properties.Resources.joserrasDb );
 			this.joserrasQuery = joserrasQuery;
 		}
 

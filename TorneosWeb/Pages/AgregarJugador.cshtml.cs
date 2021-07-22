@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Joserras.Commons.Exceptions;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using TorneosWeb.exception;
 using TorneosWeb.service;
 
 namespace TorneosWeb.Pages
