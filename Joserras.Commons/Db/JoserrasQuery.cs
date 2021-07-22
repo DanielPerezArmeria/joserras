@@ -1,16 +1,15 @@
-﻿using Microsoft.Extensions.Configuration;
-using System;
+﻿using System;
 using System.Data.SqlClient;
 
-namespace TorneosWeb.util
+namespace Joserras.Commons.Db
 {
 	public class JoserrasQuery
 	{
 		private readonly string connectionString;
 
-		public JoserrasQuery(IConfiguration conf)
+		public JoserrasQuery(string conn)
 		{
-			connectionString = conf.GetConnectionString( Properties.Resources.joserrasDb);
+			connectionString = conn;
 		}
 
 		public void ExecuteQuery(SqlConnection conn, string query, Action<SqlDataReader> action, params object[] args)

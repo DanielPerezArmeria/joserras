@@ -1,4 +1,5 @@
 using AutoMapper;
+using Joserras.Commons.Db;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -17,10 +18,10 @@ using TorneosWeb.config;
 using TorneosWeb.dao;
 using TorneosWeb.dao.decorators;
 using TorneosWeb.dao.impl;
+using TorneosWeb.Properties;
 using TorneosWeb.service;
 using TorneosWeb.service.decorators;
 using TorneosWeb.service.impl;
-using TorneosWeb.util;
 using TorneosWeb.util.automapper;
 using TorneosWeb.util.prize;
 using TorneosWeb.util.schedule;
@@ -108,7 +109,9 @@ namespace TorneosWeb
 
 			container.Collection.Register<IPrizeFiller>( new[] { typeof( IPrizeFiller ).Assembly }, Lifestyle.Singleton );
 
-			container.RegisterSingleton<JoserrasQuery>();
+			container.RegisterSingleton(
+				() => new JoserrasQuery( container.GetInstance<IConfiguration>().GetConnectionString( Resources.joserrasDb ) )
+			);
 
 			container.RegisterDecorator<IReadService, CacheWrapperReadService>( Lifestyle.Singleton );
 			container.RegisterDecorator<IReadService, LockingReadServiceDecorator>( Lifestyle.Singleton );

@@ -30,6 +30,11 @@
 
 
   <ItemGroup>
+    <ProjectReference Include="..\Joserras.Commons\Joserras.Commons.csproj" />
+  </ItemGroup>
+
+
+  <ItemGroup>
     <Compile Update="Properties\Queries.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>

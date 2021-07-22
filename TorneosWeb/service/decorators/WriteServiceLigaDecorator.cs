@@ -1,22 +1,20 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Joserras.Commons.Dto;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using TorneosWeb.domain.dto;
 
 namespace TorneosWeb.service.decorators
 {
 	public class WriteServiceLigaDecorator : IWriteService
 	{
 		private IWriteService wrapped;
-		private ILigaReader ligaReader;
 		private ILigaWriter ligaWriter;
 		private ILogger<WriteServiceLigaDecorator> log;
 
-		public WriteServiceLigaDecorator(IWriteService wrapped, ILigaReader ligaReader, ILogger<WriteServiceLigaDecorator> logger,
+		public WriteServiceLigaDecorator(IWriteService wrapped, ILogger<WriteServiceLigaDecorator> logger,
 			ILigaWriter ligaWriter)
 		{
 			this.wrapped = wrapped;
-			this.ligaReader = ligaReader;
 			this.ligaWriter = ligaWriter;
 			log = logger;
 		}

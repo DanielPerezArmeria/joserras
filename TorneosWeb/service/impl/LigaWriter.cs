@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Joserras.Commons.Db;
+using Joserras.Commons.Dto;
+using Joserras.Commons.Exceptions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
@@ -6,10 +9,8 @@ using System.Collections.Generic;
 using System.Linq;
 using TorneosWeb.dao;
 using TorneosWeb.domain.azure;
-using TorneosWeb.domain.dto.ligas;
 using TorneosWeb.domain.models;
 using TorneosWeb.domain.models.ligas;
-using TorneosWeb.exception;
 using TorneosWeb.util;
 using TorneosWeb.util.PointRules;
 

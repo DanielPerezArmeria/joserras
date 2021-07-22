@@ -1,12 +1,13 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Joserras.Commons.Db;
+using Joserras.Commons.Domain;
+using Joserras.Commons.Dto;
+using Joserras.Commons.Exceptions;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using TorneosWeb.domain.dto;
-using TorneosWeb.domain.models;
-using TorneosWeb.exception;
 using TorneosWeb.util;
 
 namespace TorneosWeb.service.impl

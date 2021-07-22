@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using TorneosWeb.domain.dto;
+﻿using Joserras.Commons.Domain;
+using System.Collections.Generic;
 
 namespace TorneosWeb.dao
 {

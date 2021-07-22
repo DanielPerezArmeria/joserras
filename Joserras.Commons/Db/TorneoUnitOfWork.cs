@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 
-namespace TorneosWeb.util
+namespace Joserras.Commons.Db
 {
 	public class TorneoUnitOfWork : IDisposable
 	{
@@ -23,6 +23,7 @@ namespace TorneosWeb.util
 		{
 			Transaction.Dispose();
 			Conn.Close();
+			GC.SuppressFinalize( this );
 		}
 
 		public int ExecuteNonQuery(string query, params object[] list)

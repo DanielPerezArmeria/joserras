@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TorneosWeb.domain.dto
+namespace Joserras.Commons.Domain
 {
 	public class PrizeRange : IEquatable<PrizeRange>
 	{

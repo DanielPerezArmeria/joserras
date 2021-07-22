@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Joserras.Commons.Dto;
+using System;
 using System.Collections.Generic;
-using TorneosWeb.domain.dto;
 
 namespace TorneosWeb.service
 {

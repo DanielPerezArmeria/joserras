@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TorneosWeb.domain.dto.ligas
+namespace Joserras.Commons.Dto
 {
 	public class LigaDTO
 	{

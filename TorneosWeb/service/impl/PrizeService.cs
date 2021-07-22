@@ -1,11 +1,11 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Joserras.Commons.Domain;
+using Joserras.Commons.Dto;
+using Joserras.Commons.Exceptions;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using TorneosWeb.dao;
-using TorneosWeb.domain.dto;
-using TorneosWeb.domain.models.dto;
-using TorneosWeb.exception;
 using TorneosWeb.util;
 using TorneosWeb.util.prize;
 

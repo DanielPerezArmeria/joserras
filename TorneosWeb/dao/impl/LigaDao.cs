@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Joserras.Commons.Db;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,6 @@ using System.Data.SqlClient;
 using TorneosWeb.domain.models;
 using TorneosWeb.domain.models.ligas;
 using TorneosWeb.service;
-using TorneosWeb.util;
 
 namespace TorneosWeb.dao.impl
 {

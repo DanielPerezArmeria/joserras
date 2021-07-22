@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TorneosWeb.exception
+namespace Joserras.Commons.Exceptions
 {
 	public class JoserrasException : Exception
 	{

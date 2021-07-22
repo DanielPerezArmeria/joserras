@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace TorneosWeb.domain.models
+namespace Joserras.Commons.Domain
 {
 	public enum TournamentType
 	{
