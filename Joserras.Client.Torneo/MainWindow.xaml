@@ -4,9 +4,24 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Joserras.Client.Torneo"
+				xmlns:view="clr-namespace:Joserras.Client.Torneo.View"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
 
-    </Grid>
+	<TabControl>
+		
+		<TabItem Header="Torneo">
+			<view:TorneoControl DataContext="{Binding TorneoModel}"/>
+		</TabItem>
+
+		<TabItem Header="Resultados">
+			<view:ResultadosControl DataContext="{Binding ResModel}"/>
+		</TabItem>
+
+		<TabItem Header="Knockouts">
+			<ContentPresenter Content="{Binding KoControl}"/>
+		</TabItem>
+		
+	</TabControl>
+	
 </Window>

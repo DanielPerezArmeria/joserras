@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using TorneosWeb.domain.models;
 using TorneosWeb.service;
@@ -10,16 +12,19 @@ namespace TorneosWeb.Controllers.api
 	public class ClientController : ControllerBase
 	{
 		private readonly IReadService readService;
+		private ILogger<ClientController> log;
 
-		public ClientController(IReadService readService)
+		public ClientController(IReadService readService, ILogger<ClientController> log)
 		{
 			this.readService = readService;
+			this.log = log;
 		}
 
-		// GET: api/<ClientController>
+		// GET: api/<ClientController>/Jugadores
 		[HttpGet("Jugadores")]
 		public IEnumerable<Jugador> GetJugadores()
 		{
+			log.LogDebug( "Requesting Api: Jugadores" );
 			return readService.GetAllJugadores();
 		}
 
@@ -31,9 +36,10 @@ namespace TorneosWeb.Controllers.api
 		}
 
 		// POST api/<ClientController>
-		[HttpPost]
-		public void Post([FromBody] string value)
+		[HttpPost("Upload")]
+		public IActionResult Upload(IEnumerable<IFormFile> files)
 		{
+			return Ok();
 		}
 
 		// PUT api/<ClientController>/5
