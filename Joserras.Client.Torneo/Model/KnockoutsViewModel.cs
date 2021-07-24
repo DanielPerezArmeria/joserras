@@ -1,8 +1,8 @@
-﻿using Joserras.Client.Torneo.Model;
+﻿using Joserras.Client.Torneo.Domain;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace Joserras.Client.Torneo.Domain
+namespace Joserras.Client.Torneo.Model
 {
 	public class KnockoutsViewModel : ViewModel
 	{
@@ -18,7 +18,6 @@ namespace Joserras.Client.Torneo.Domain
 			set { SetProperty( ref jugadores, value ); }
 		}
 
-
 		private ObservableCollection<KO> kos;
 		public ObservableCollection<KO> Kos
 		{
@@ -26,6 +25,7 @@ namespace Joserras.Client.Torneo.Domain
 		}
 
 	}
+
 
 	public class KO : ViewModel
 	{

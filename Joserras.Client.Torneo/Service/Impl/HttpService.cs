@@ -4,9 +4,9 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
-namespace Joserras.Client.Torneo.Service
+namespace Joserras.Client.Torneo.Service.Impl
 {
-	public class HttpService
+	public class HttpService : IHttpService
 	{
 		private readonly Uri BaseAddress;
 
@@ -17,7 +17,7 @@ namespace Joserras.Client.Torneo.Service
 
 		public async Task<T> GetAsync<T>(string apiCall)
 		{
-			using( HttpClient client = new() )
+			using (HttpClient client = new())
 			{
 				client.BaseAddress = BaseAddress;
 				client.DefaultRequestHeaders.Accept.Clear();

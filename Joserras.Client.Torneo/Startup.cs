@@ -1,4 +1,4 @@
-﻿using Joserras.Client.Torneo.Service;
+﻿using Joserras.Client.Torneo.Service.Impl;
 using SimpleInjector;
 using System.Windows;
 

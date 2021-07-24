@@ -1,9 +1,9 @@
-﻿using Joserras.Client.Torneo.Model;
+﻿using Joserras.Client.Torneo.Domain;
 using Joserras.Commons.Domain;
 using System;
 using System.Collections.Generic;
 
-namespace Joserras.Client.Torneo.Domain
+namespace Joserras.Client.Torneo.Model
 {
 	public class TorneoViewModel : ViewModel<Guid>
 	{

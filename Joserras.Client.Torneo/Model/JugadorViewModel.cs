@@ -1,7 +1,7 @@
-﻿using Joserras.Client.Torneo.Model;
+﻿using Joserras.Client.Torneo.Domain;
 using System;
 
-namespace Joserras.Client.Torneo.Domain
+namespace Joserras.Client.Torneo.Model
 {
 	public class JugadorViewModel : ViewModel<Guid>
 	{

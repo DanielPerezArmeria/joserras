@@ -1,8 +1,8 @@
-﻿using Joserras.Client.Torneo.Model;
+﻿using Joserras.Client.Torneo.Domain;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace Joserras.Client.Torneo.Domain
+namespace Joserras.Client.Torneo.Model
 {
 	public class ResultadosViewModel : ViewModel
 	{
@@ -25,6 +25,7 @@ namespace Joserras.Client.Torneo.Domain
 		}
 
 	}
+
 
 	public class Resultado : ViewModel
 	{
@@ -68,7 +69,6 @@ namespace Joserras.Client.Torneo.Domain
 			get { return puntualidad; }
 			set { SetProperty( ref puntualidad, value ); }
 		}
-
 
 	}
 

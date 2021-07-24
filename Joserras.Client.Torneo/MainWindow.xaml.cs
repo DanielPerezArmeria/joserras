@@ -1,5 +1,7 @@
 ﻿using Joserras.Client.Torneo.Model;
 using System.Windows;
+using Microsoft.Win32;
+using Ookii.Dialogs.Wpf;
 
 namespace Joserras.Client.Torneo
 {
@@ -17,5 +19,21 @@ namespace Joserras.Client.Torneo
 			DataContext = appModel;
 			InitializeComponent();
 		}
+
+		private void Button_Click(object sender, RoutedEventArgs e)
+		{
+			VistaFolderBrowserDialog dialog = new VistaFolderBrowserDialog();
+			dialog.SelectedPath = AppModel.RootDir;
+
+			dialog.ShowDialog( this );
+
+			AppModel.ChangeRootDir( dialog.SelectedPath );
+		}
+
+		private void createButton_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
 	}
+
 }

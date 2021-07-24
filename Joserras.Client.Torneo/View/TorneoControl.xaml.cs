@@ -1,4 +1,4 @@
-﻿using Joserras.Client.Torneo.Domain;
+﻿using Joserras.Client.Torneo.Model;
 using System.Windows.Controls;
 
 namespace Joserras.Client.Torneo.View

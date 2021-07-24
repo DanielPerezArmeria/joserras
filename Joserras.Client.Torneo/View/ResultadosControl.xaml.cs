@@ -1,4 +1,5 @@
 ﻿using Joserras.Client.Torneo.Domain;
+using Joserras.Client.Torneo.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

@@ -8,20 +8,39 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
 
-	<TabControl>
-		
-		<TabItem Header="Torneo">
-			<view:TorneoControl DataContext="{Binding TorneoModel}"/>
-		</TabItem>
+	<DockPanel>
 
-		<TabItem Header="Resultados">
-			<view:ResultadosControl DataContext="{Binding ResModel}"/>
-		</TabItem>
+		<Border Padding="0,7" BorderThickness="0,0,0,2" BorderBrush="Black" DockPanel.Dock="Top">
+			<StackPanel Orientation="Horizontal">
+				<Label Content="Directorio Raíz: "/>
+				<TextBox Text="{Binding RootDir}" IsEnabled="False"
+								 VerticalContentAlignment="Center"/>
+				<Button Content="Cambiar" Click="Button_Click" Margin="20,0,0,0"/>
+			</StackPanel>
+		</Border>
 
-		<TabItem Header="Knockouts">
-			<ContentPresenter Content="{Binding KoControl}"/>
-		</TabItem>
-		
-	</TabControl>
-	
+		<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" DockPanel.Dock="Bottom" Margin="7">
+			<CheckBox Content="Listo?" IsChecked="{Binding IsReady}"/>
+			<Button x:Name="createButton" Content="Crear" IsEnabled="{Binding IsReady}" Click="createButton_Click"
+							Margin="8,0,0,0" Width="60"/>
+		</StackPanel>
+
+		<TabControl Margin="0,6">
+
+			<TabItem Header="Torneo">
+				<view:TorneoControl DataContext="{Binding TorneoModel}"/>
+			</TabItem>
+
+			<TabItem Header="Resultados">
+				<view:ResultadosControl DataContext="{Binding ResModel}"/>
+			</TabItem>
+
+			<TabItem Header="Knockouts">
+				<view:KnockoutsControl DataContext="{Binding KoModel}"/>
+			</TabItem>
+
+		</TabControl>
+
+	</DockPanel>
+
 </Window>

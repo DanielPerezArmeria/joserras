@@ -1,19 +1,28 @@
 ﻿using Joserras.Client.Torneo.Domain;
-using Joserras.Client.Torneo.View;
+using Joserras.Client.Torneo.Properties;
 
 namespace Joserras.Client.Torneo.Model
 {
-	public class ApplicationModel :ViewModel
+	public class ApplicationModel : ViewModel
 	{
 
-		public ApplicationModel(TorneoViewModel torneoModel, ResultadosViewModel resModel, KnockoutsControl koControl)
+		public ApplicationModel(TorneoViewModel torneoModel, ResultadosViewModel resModel, KnockoutsViewModel koModel)
 		{
 			TorneoModel = torneoModel;
-			KoControl = koControl;
+			KoModel = koModel;
 			ResModel = resModel;
+
+			RootDir = Settings.Default.RootDir;
 		}
 
-		
+
+		private string rootDir;
+		public string RootDir
+		{
+			get { return rootDir; }
+			set { SetProperty( ref rootDir, value ); }
+		}
+
 		private TorneoViewModel torneoModel;
 		public TorneoViewModel TorneoModel
 		{
@@ -21,11 +30,11 @@ namespace Joserras.Client.Torneo.Model
 			set { SetProperty( ref torneoModel, value ); }
 		}
 
-		private KnockoutsControl koControl;
-		public KnockoutsControl KoControl
+		private KnockoutsViewModel koModel;
+		public KnockoutsViewModel KoModel
 		{
-			get { return koControl; }
-			set { SetProperty( ref koControl, value ); }
+			get { return koModel; }
+			set { SetProperty( ref koModel, value ); }
 		}
 
 		private ResultadosViewModel resModel;
@@ -33,6 +42,22 @@ namespace Joserras.Client.Torneo.Model
 		{
 			get { return resModel; }
 			set { SetProperty( ref resModel, value ); }
+		}
+
+		private bool isReady;
+		public bool IsReady
+		{
+			get { return isReady; }
+			set { SetProperty( ref isReady, value ); }
+		}
+
+
+		public void ChangeRootDir(string newRootDir)
+		{
+			Settings.Default.RootDir = newRootDir;
+			Settings.Default.Save();
+
+			RootDir = Settings.Default.RootDir;
 		}
 
 	}

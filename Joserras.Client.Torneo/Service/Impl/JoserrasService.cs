@@ -1,14 +1,13 @@
-﻿using Joserras.Client.Torneo.Domain;
-using Joserras.Client.Torneo.Model;
+﻿using Joserras.Client.Torneo.Model;
 using Joserras.Client.Torneo.Properties;
 using System;
 using System.Collections.Generic;
 using System.Windows;
 
-namespace Joserras.Client.Torneo.Service
+namespace Joserras.Client.Torneo.Service.Impl
 {
 
-	public class JoserrasService
+	public class JoserrasService : IJoserrasService
 	{
 		private ApplicationModel Model;
 		private readonly HttpService httpService;
@@ -32,7 +31,7 @@ namespace Joserras.Client.Torneo.Service
 				ResModel.Jugadores = jugadores;
 				KoModel.Jugadores = jugadores;
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
 				MessageBox.Show( e.Message );
 			}

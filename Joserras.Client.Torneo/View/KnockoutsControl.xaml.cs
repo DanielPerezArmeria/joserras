@@ -1,5 +1,4 @@
-﻿using Joserras.Client.Torneo.Domain;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 
 namespace Joserras.Client.Torneo.View
 {
@@ -9,9 +8,8 @@ namespace Joserras.Client.Torneo.View
 	public partial class KnockoutsControl : UserControl
 	{
 
-		public KnockoutsControl(KnockoutsViewModel model)
+		public KnockoutsControl()
 		{
-			DataContext = model;
 			InitializeComponent();
 		}
 
