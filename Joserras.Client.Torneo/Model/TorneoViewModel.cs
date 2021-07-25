@@ -66,6 +66,11 @@ namespace Joserras.Client.Torneo.Model
 			}
 		}
 
+		public List<TorneoViewModel> AsList()
+		{
+			return new List<TorneoViewModel>() { this };
+		}
+
 
 	}
 

@@ -1,5 +1,6 @@
 ﻿using Joserras.Client.Torneo.Model;
 using Joserras.Client.Torneo.Properties;
+using Joserras.Client.Torneo.Utils;
 using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -9,32 +10,50 @@ namespace Joserras.Client.Torneo.Service.Impl
 
 	public class JoserrasService : IJoserrasService
 	{
-		private ApplicationModel Model;
-		private readonly HttpService httpService;
+		private ApplicationModel AppModel;
+		private readonly IHttpService httpService;
 		private KnockoutsViewModel KoModel;
 		private ResultadosViewModel ResModel;
+		private ITournamentCreator creator;
 
-		public JoserrasService(ApplicationModel model, KnockoutsViewModel koModel, ResultadosViewModel resModel,
-				HttpService service)
+		public JoserrasService(ApplicationModel model, IHttpService service, ITournamentCreator creator)
 		{
-			Model = model;
-			KoModel = koModel;
-			ResModel = resModel;
+			AppModel = model;
+			KoModel = AppModel.KoModel;
+			ResModel = AppModel.ResModel;
 			httpService = service;
+			this.creator = creator;
 		}
 
-		public async void Init()
+		public void Init()
 		{
 			try
 			{
-				List<JugadorViewModel> jugadores = await httpService.GetAsync<List<JugadorViewModel>>( Resources.API_GET_JUGADORES );
+				List<JugadorViewModel> jugadores = httpService.Get<List<JugadorViewModel>>( Resources.API_GET_JUGADORES );
 				ResModel.Jugadores = jugadores;
 				KoModel.Jugadores = jugadores;
+
+				AppModel.CrearTorneoCommand = new DelegateCommand( CrearTorneo, CanCrearTorneo );
 			}
 			catch (Exception e)
 			{
 				MessageBox.Show( e.Message );
 			}
+		}
+
+		private bool CanCrearTorneo(object arg)
+		{
+			return AppModel.IsReady;
+		}
+
+		private void CrearTorneo()
+		{
+			AppModel.IsEnabled = false;
+
+			creator.CreateTournamentAsync( AppModel.TorneoModel, ResModel.AsList(), KoModel.AsList() );
+
+			AppModel.IsEnabled = true;
+			AppModel.IsReady = false;
 		}
 
 	}

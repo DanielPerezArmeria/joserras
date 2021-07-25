@@ -1,4 +1,6 @@
-﻿using System.Windows.Controls;
+﻿using Joserras.Client.Torneo.Model;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace Joserras.Client.Torneo.View
 {
@@ -11,6 +13,17 @@ namespace Joserras.Client.Torneo.View
 		public KnockoutsControl()
 		{
 			InitializeComponent();
+		}
+
+		private void delButton_Click(object sender, RoutedEventArgs e)
+		{
+			KO ko = ((Button)sender).DataContext as KO;
+			if (ko == null)
+			{
+				return;
+			}
+
+			(DataContext as KnockoutsViewModel).Kos.Remove( ko );
 		}
 
 	}

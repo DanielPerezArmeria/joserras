@@ -70,6 +70,15 @@ namespace Joserras.Client.Torneo.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to api/Client/UploadFiles.
+        /// </summary>
+        internal static string API_POST_UPLOAD_FILES {
+            get {
+                return ResourceManager.GetString("API_POST_UPLOAD_FILES", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to https://joserras.azurewebsites.net/.
         /// </summary>
         internal static string PROD_BASE_ADDRESS {

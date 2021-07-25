@@ -1,6 +1,8 @@
 ﻿using Joserras.Client.Torneo.Domain;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.Linq;
 
 namespace Joserras.Client.Torneo.Model
 {
@@ -9,6 +11,15 @@ namespace Joserras.Client.Torneo.Model
 		public ResultadosViewModel()
 		{
 			resultados = new ObservableCollection<Resultado>();
+			resultados.CollectionChanged += Resultados_CollectionChanged;
+		}
+
+		private void Resultados_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+		{
+			foreach(Resultado resultado in Resultados)
+			{
+				resultado.Posicion = resultados.IndexOf( resultado ) + 1;
+			}
 		}
 
 		private List<JugadorViewModel> jugadores;
@@ -24,6 +35,11 @@ namespace Joserras.Client.Torneo.Model
 			get { return resultados; }
 		}
 
+		public List<Resultado> AsList()
+		{
+			return Resultados.ToList();
+		}
+
 	}
 
 
@@ -35,8 +51,8 @@ namespace Joserras.Client.Torneo.Model
 			Puntualidad = true;
 		}
 
-		private JugadorViewModel jugador;
-		public JugadorViewModel Jugador
+		private string jugador;
+		public string Jugador
 		{
 			get { return jugador; }
 			set { SetProperty( ref jugador, value ); }

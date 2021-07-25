@@ -156,6 +156,7 @@ namespace TorneosWeb.service.impl
 		private void SetBurbuja(List<ResultadosDTO> resultados)
 		{
 			int bubblePosition = resultados.Where( r => r.Premio.ToDecimal() > 0 ).Max( r => r.Posicion ) + 1;
+			log.LogDebug( "Posición de la Burbuja: ", bubblePosition );
 			resultados.First( r => r.Posicion == bubblePosition ).Burbuja = true;
 		}
 

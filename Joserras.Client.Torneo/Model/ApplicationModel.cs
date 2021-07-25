@@ -1,5 +1,6 @@
 ﻿using Joserras.Client.Torneo.Domain;
 using Joserras.Client.Torneo.Properties;
+using Joserras.Client.Torneo.Utils;
 
 namespace Joserras.Client.Torneo.Model
 {
@@ -12,7 +13,16 @@ namespace Joserras.Client.Torneo.Model
 			KoModel = koModel;
 			ResModel = resModel;
 
+			IsEnabled = true;
+
 			RootDir = Settings.Default.RootDir;
+		}
+
+		private bool isEnabled;
+		public bool IsEnabled
+		{
+			get { return isEnabled; }
+			set { SetProperty( ref isEnabled, value ); }
 		}
 
 
@@ -48,7 +58,11 @@ namespace Joserras.Client.Torneo.Model
 		public bool IsReady
 		{
 			get { return isReady; }
-			set { SetProperty( ref isReady, value ); }
+			set
+			{
+				SetProperty( ref isReady, value );
+				CrearTorneoCommand.RaiseCanExecuteChanged();
+			}
 		}
 
 
@@ -58,6 +72,13 @@ namespace Joserras.Client.Torneo.Model
 			Settings.Default.Save();
 
 			RootDir = Settings.Default.RootDir;
+		}
+
+		public DelegateCommand crearTorneoCommand;
+		public DelegateCommand CrearTorneoCommand
+		{
+			get { return crearTorneoCommand; }
+			set { SetProperty( ref crearTorneoCommand, value ); }
 		}
 
 	}

@@ -8,15 +8,21 @@
              d:DesignHeight="450" d:DesignWidth="800">
 	<UserControl.Resources>
 		<CollectionViewSource x:Key="jugadores" Source="{Binding Jugadores}"/>
+
+		<DataTemplate x:Key="delButton">
+			<Button Click="delButton_Click" Content=" - " DataContext="{Binding}" Margin="5,1"/>
+		</DataTemplate>
+		
 	</UserControl.Resources>
 
 	<Grid>
-		<DataGrid x:Name="dg" ItemsSource="{Binding Resultados}" AutoGenerateColumns="False" AllowDrop="True"
+		<DataGrid x:Name="dg" ItemsSource="{Binding Resultados}" AutoGenerateColumns="False" AllowDrop="True" CanUserSortColumns="False"
 							MouseLeftButtonDown="dg_PreviewMouseLeftButtonDown" Drop="dg_Drop" SelectionMode="Single">
 			<DataGrid.Columns>
-				<DataGridComboBoxColumn Header="Jugador" DisplayMemberPath="Nombre"
+				<DataGridTemplateColumn CellTemplate="{StaticResource delButton}"/>
+				<DataGridComboBoxColumn Header="Jugador" DisplayMemberPath="Nombre" SelectedValuePath="Nombre"
 															ItemsSource="{Binding Source={StaticResource jugadores}}"
-															SelectedItemBinding="{Binding Jugador}"/>
+															SelectedValueBinding="{Binding Jugador}"/>
 				<DataGridTextColumn Header="Rebuys" Binding="{Binding Rebuys}"/>
 				<DataGridCheckBoxColumn Header="Puntualidad" Binding="{Binding Puntualidad}"/>
 				<DataGridTextColumn Header="Premio" Binding="{Binding Premio}"/>

@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Joserras.Client.Torneo"
 				xmlns:view="clr-namespace:Joserras.Client.Torneo.View"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        mc:Ignorable="d" IsEnabled="{Binding IsEnabled}"
+        Title="MainWindow" Height="600" Width="900">
 
 	<DockPanel>
 
@@ -21,8 +21,8 @@
 
 		<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" DockPanel.Dock="Bottom" Margin="7">
 			<CheckBox Content="Listo?" IsChecked="{Binding IsReady}"/>
-			<Button x:Name="createButton" Content="Crear" IsEnabled="{Binding IsReady}" Click="createButton_Click"
-							Margin="8,0,0,0" Width="60"/>
+			<Button x:Name="createButton" Content="Crear"
+							Margin="8,0,0,0" Width="60" Command="{Binding CrearTorneoCommand}"/>
 		</StackPanel>
 
 		<TabControl Margin="0,6">

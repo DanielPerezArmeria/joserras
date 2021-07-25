@@ -1,7 +1,8 @@
 ﻿using Joserras.Client.Torneo.Model;
-using System.Windows;
-using Microsoft.Win32;
 using Ookii.Dialogs.Wpf;
+using System.ComponentModel;
+using System.Windows;
+using System.Windows.Input;
 
 namespace Joserras.Client.Torneo
 {
@@ -17,7 +18,23 @@ namespace Joserras.Client.Torneo
 			AppModel = appModel;
 
 			DataContext = appModel;
+			AppModel.PropertyChanged += AppModel_PropertyChanged;
 			InitializeComponent();
+		}
+
+		private void AppModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+		{
+			if (e.PropertyName.Equals( nameof( ApplicationModel.IsEnabled ) ))
+			{
+				if (AppModel.IsEnabled)
+				{
+					Mouse.OverrideCursor = Cursors.Arrow;
+				}
+				else
+				{
+					Mouse.OverrideCursor = Cursors.Wait;
+				}
+			}
 		}
 
 		private void Button_Click(object sender, RoutedEventArgs e)
@@ -30,10 +47,6 @@ namespace Joserras.Client.Torneo
 			AppModel.ChangeRootDir( dialog.SelectedPath );
 		}
 
-		private void createButton_Click(object sender, RoutedEventArgs e)
-		{
-
-		}
 	}
 
 }

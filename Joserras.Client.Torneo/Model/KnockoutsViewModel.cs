@@ -1,6 +1,7 @@
 ﻿using Joserras.Client.Torneo.Domain;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace Joserras.Client.Torneo.Model
 {
@@ -24,20 +25,25 @@ namespace Joserras.Client.Torneo.Model
 			get { return kos; }
 		}
 
+		public List<KO> AsList()
+		{
+			return Kos.ToList();
+		}
+
 	}
 
 
 	public class KO : ViewModel
 	{
-		private JugadorViewModel jugador;
-		public JugadorViewModel Jugador
+		private string jugador;
+		public string Jugador
 		{
 			get { return jugador; }
 			set { SetProperty( ref jugador, value ); }
 		}
 
-		private JugadorViewModel eliminado;
-		public JugadorViewModel Eliminado
+		private string eliminado;
+		public string Eliminado
 		{
 			get { return eliminado; }
 			set { SetProperty( ref eliminado, value ); }
