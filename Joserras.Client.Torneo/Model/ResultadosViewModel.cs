@@ -1,7 +1,9 @@
 ﻿using Joserras.Client.Torneo.Domain;
+using Joserras.Client.Torneo.Utils;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 
 namespace Joserras.Client.Torneo.Model
@@ -11,7 +13,19 @@ namespace Joserras.Client.Torneo.Model
 		public ResultadosViewModel()
 		{
 			resultados = new ObservableCollection<Resultado>();
-			resultados.CollectionChanged += Resultados_CollectionChanged;
+			Resultados.CollectionChanged += Resultados_CollectionChanged;
+
+			OcPropertyChangedListener<Resultado> rebuysListener =
+				OcPropertyChangedListener.Create( Resultados, nameof( Resultado.Rebuys ) );
+
+			rebuysListener.PropertyChanged += RebuysListener_PropertyChanged;
+			UpdateBolsa();
+		}
+
+		private void RebuysListener_PropertyChanged(object sender, PropertyChangedEventArgs e)
+		{
+			Rebuys = Resultados.Sum( r => r.Rebuys );
+			UpdateBolsa();
 		}
 
 		private void Resultados_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -20,7 +34,64 @@ namespace Joserras.Client.Torneo.Model
 			{
 				resultado.Posicion = resultados.IndexOf( resultado ) + 1;
 			}
+
+			switch (e.Action)
+			{
+				case NotifyCollectionChangedAction.Add:
+				case NotifyCollectionChangedAction.Remove:
+					Rebuys = Resultados.Sum( r => r.Rebuys );
+					UpdateBolsa();
+					break;
+
+				default:
+					break;
+			}
 		}
+
+		private void UpdateBolsa()
+		{
+			Bolsa = Resultados.Count * buyin + Resultados.Sum( r => r.Rebuys * Buyin );
+			Entradas = Resultados.Count + Resultados.Sum( r => r.Rebuys );
+		}
+
+		public void TorneoModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+		{
+			if (e.PropertyName.Equals( nameof( TorneoViewModel.PrecioBuyin ) ))
+			{
+				Buyin = (sender as TorneoViewModel).PrecioBuyin;
+			}
+		}
+
+		private int entradas;
+		public int Entradas
+		{
+			get { return entradas; }
+			set { SetProperty( ref entradas, value ); }
+		}
+
+
+		private int rebuys;
+		public int Rebuys
+		{
+			get { return rebuys; }
+			set { SetProperty( ref rebuys, value ); }
+		}
+
+
+		private int buyin;
+		public int Buyin
+		{
+			get { return buyin; }
+			set { SetProperty( ref buyin, value ); }
+		}
+
+		private int bolsa;
+		public int Bolsa
+		{
+			get { return bolsa; }
+			set { SetProperty( ref bolsa, value ); }
+		}
+
 
 		private List<JugadorViewModel> jugadores;
 		public List<JugadorViewModel> Jugadores

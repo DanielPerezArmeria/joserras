@@ -13,10 +13,14 @@ namespace Joserras.Client.Torneo.Model
 			KoModel = koModel;
 			ResModel = resModel;
 
+			ResModel.Buyin = TorneoModel.PrecioBuyin;
+			TorneoModel.PropertyChanged += ResModel.TorneoModel_PropertyChanged;
+
 			IsEnabled = true;
 
 			RootDir = Settings.Default.RootDir;
 		}
+
 
 		private bool isEnabled;
 		public bool IsEnabled

@@ -15,11 +15,19 @@
 		
 	</UserControl.Resources>
 
-	<Grid>
+	<DockPanel>
+		<StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+			<TextBlock Text="{Binding StringFormat=Jugadores: {0:#}, Path=Resultados.Count}"/>
+			<TextBlock Text="{Binding Rebuys, StringFormat=Rebuys: {0}}" Margin="20,0,0,0"/>
+			<TextBlock Text="{Binding Entradas, StringFormat=Entradas Totales: {0}}" Margin="20,0,0,0"/>
+			<TextBlock Text="{Binding Bolsa, StringFormat=Bolsa: {0:C}}" FontWeight="Bold" Margin="20,0,0,0"/>
+		</StackPanel>
+		
 		<DataGrid x:Name="dg" ItemsSource="{Binding Resultados}" AutoGenerateColumns="False" AllowDrop="True" CanUserSortColumns="False"
-							MouseLeftButtonDown="dg_PreviewMouseLeftButtonDown" Drop="dg_Drop" SelectionMode="Single">
+							MouseLeftButtonDown="dg_PreviewMouseLeftButtonDown" Drop="dg_Drop" SelectionMode="Extended">
 			<DataGrid.Columns>
 				<DataGridTemplateColumn CellTemplate="{StaticResource delButton}"/>
+				<DataGridTextColumn Header="Posicion" Binding="{Binding Posicion}" IsReadOnly="True" FontWeight="Bold"/>
 				<DataGridComboBoxColumn Header="Jugador" DisplayMemberPath="Nombre" SelectedValuePath="Nombre"
 															ItemsSource="{Binding Source={StaticResource jugadores}}"
 															SelectedValueBinding="{Binding Jugador}"/>
@@ -28,6 +36,6 @@
 				<DataGridTextColumn Header="Premio" Binding="{Binding Premio}"/>
 			</DataGrid.Columns>
 		</DataGrid>
-	</Grid>
+	</DockPanel>
 
 </UserControl>

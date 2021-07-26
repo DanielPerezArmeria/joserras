@@ -46,11 +46,11 @@ namespace Joserras.Client.Torneo.Service.Impl
 			return AppModel.IsReady;
 		}
 
-		private void CrearTorneo()
+		private async void CrearTorneo()
 		{
 			AppModel.IsEnabled = false;
 
-			creator.CreateTournamentAsync( AppModel.TorneoModel, ResModel.AsList(), KoModel.AsList() );
+			await creator.CreateTournamentAsync( AppModel.TorneoModel, ResModel.AsList(), KoModel.AsList() );
 
 			AppModel.IsEnabled = true;
 			AppModel.IsReady = false;

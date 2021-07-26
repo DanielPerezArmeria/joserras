@@ -32,7 +32,7 @@ namespace Joserras.Client.Torneo
 			container.RegisterSingleton( () => GetMapper( container ) );
 
 			container.RegisterSingleton<IJoserrasService, JoserrasService>();
-			container.RegisterSingleton<IHttpService>( () => new HttpService( @"https://localhost:5001/" ) );
+			container.RegisterSingleton<IHttpService>( () => new HttpService( @"https://joserras.azurewebsites.net/" ) );
 
 			container.RegisterSingleton<Startup>();
 			container.Register<MainWindow>();
