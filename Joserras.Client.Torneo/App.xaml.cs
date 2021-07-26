@@ -1,7 +1,5 @@
-﻿using AutoMapper;
-using Joserras.Client.Torneo.Service;
+﻿using Joserras.Client.Torneo.Service;
 using Joserras.Client.Torneo.Service.Impl;
-using Joserras.Client.Torneo.Utils;
 using SimpleInjector;
 using System;
 using System.Collections.Generic;
@@ -28,9 +26,6 @@ namespace Joserras.Client.Torneo
 			RegisterNamespace( "Joserras.Client.Torneo.Service.Writers" );
 			RegisterNamespace( "Joserras.Client.Torneo.Service.Senders" );
 
-			container.RegisterSingleton<MapperProvider>();
-			container.RegisterSingleton( () => GetMapper( container ) );
-
 			container.RegisterSingleton<IJoserrasService, JoserrasService>();
 			container.RegisterSingleton<IHttpService>( () => new HttpService( @"https://joserras.azurewebsites.net/" ) );
 
@@ -40,12 +35,6 @@ namespace Joserras.Client.Torneo
 			container.Verify();
 
 			container.GetInstance<Startup>().Run();
-		}
-
-		private IMapper GetMapper(Container container)
-		{
-			var mp = container.GetInstance<MapperProvider>();
-			return mp.GetMapper();
 		}
 
 		private void RegisterNamespace(string nameSpace)
