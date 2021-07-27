@@ -16,7 +16,7 @@
 	</UserControl.Resources>
 
 	<DockPanel>
-		<StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+		<StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="1,6,0,1" TextBlock.FontSize="14">
 			<TextBlock Text="{Binding StringFormat=Jugadores: {0:#}, Path=Resultados.Count}"/>
 			<TextBlock Text="{Binding Rebuys, StringFormat=Rebuys: {0}}" Margin="20,0,0,0"/>
 			<TextBlock Text="{Binding Entradas, StringFormat=Entradas Totales: {0}}" Margin="20,0,0,0"/>
