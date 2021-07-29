@@ -29,7 +29,7 @@
 		
 		<DataGrid x:Name="dg" ItemsSource="{Binding Resultados}" AutoGenerateColumns="False" AllowDrop="True" CanUserSortColumns="False"
 							MouseLeftButtonDown="dg_PreviewMouseLeftButtonDown" Drop="dg_Drop" SelectionMode="Single"
-							SelectionUnit="Cell" AddingNewItem="dg_AddingNewItem" LoadingRow="dg_LoadingRow">
+							SelectionUnit="Cell">
 			<DataGrid.Columns>
 				<DataGridTemplateColumn CellTemplate="{StaticResource delButton}"/>
 				<DataGridTextColumn Header="Posicion" Binding="{Binding Posicion}" IsReadOnly="True" FontWeight="Bold"/>
