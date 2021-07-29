@@ -12,7 +12,11 @@
 		<DataTemplate x:Key="delButton">
 			<Button Click="delButton_Click" Content=" - " DataContext="{Binding}" Margin="5,1"/>
 		</DataTemplate>
-		
+
+		<Style TargetType="DataGridColumnHeader">
+			<Setter Property="FontWeight" Value="Bold"/>
+		</Style>
+
 	</UserControl.Resources>
 
 	<DockPanel>
@@ -24,7 +28,8 @@
 		</StackPanel>
 		
 		<DataGrid x:Name="dg" ItemsSource="{Binding Resultados}" AutoGenerateColumns="False" AllowDrop="True" CanUserSortColumns="False"
-							MouseLeftButtonDown="dg_PreviewMouseLeftButtonDown" Drop="dg_Drop" SelectionMode="Extended">
+							MouseLeftButtonDown="dg_PreviewMouseLeftButtonDown" Drop="dg_Drop" SelectionMode="Single"
+							SelectionUnit="Cell" AddingNewItem="dg_AddingNewItem" LoadingRow="dg_LoadingRow">
 			<DataGrid.Columns>
 				<DataGridTemplateColumn CellTemplate="{StaticResource delButton}"/>
 				<DataGridTextColumn Header="Posicion" Binding="{Binding Posicion}" IsReadOnly="True" FontWeight="Bold"/>
