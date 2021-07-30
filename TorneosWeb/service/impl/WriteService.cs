@@ -163,7 +163,7 @@ namespace TorneosWeb.service.impl
 		private void InsertarKos(TorneoDTO torneo, List<ResultadosDTO> resultados, List<KnockoutsDTO> kos, TorneoUnitOfWork uow)
 		{
 			string query = @"insert into knockouts (torneo_id, jugador_id, eliminado_id, eliminaciones, mano_url) values(@torneoId, "
-				+ @"(select id from jugadores where nombre = @jugador), (select id from jugadores where nombre = @eliminado), 1, @mano)";
+				+ @"(select id from jugadores where nombre = @jugador), (select id from jugadores where nombre = @eliminado), @kos, @mano)";
 
 			foreach(KnockoutsDTO dto in kos )
 			{
@@ -174,6 +174,7 @@ namespace TorneosWeb.service.impl
 						{ "@torneoId", torneo.Id },
 						{ "@jugador", dto.Jugador },
 						{ "@eliminado", dto.Eliminado },
+						{ "@kos", dto.Eliminaciones },
 						{ "@mano", dto.Mano }
 					};
 

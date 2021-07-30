@@ -13,18 +13,43 @@
 			<Button Click="delButton_Click" Content=" - " DataContext="{Binding}" Margin="5,1"/>
 		</DataTemplate>
 	</UserControl.Resources>
-	
+
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="2*"/>
+			<ColumnDefinition Width="*"/>
+		</Grid.ColumnDefinitions>
+		
 		<DataGrid ItemsSource="{Binding Kos}" AutoGenerateColumns="False" CanUserSortColumns="False">
 			<DataGrid.Columns>
 				<DataGridTemplateColumn CellTemplate="{StaticResource delButton}"/>
 				<DataGridComboBoxColumn Header="Jugador" DisplayMemberPath="Nombre" SelectedValuePath="Nombre"
-																SelectedValueBinding="{Binding Jugador}"
-																ItemsSource="{Binding Source={StaticResource jugadores}}"/>
+																	SelectedValueBinding="{Binding Jugador}"
+																	ItemsSource="{Binding Source={StaticResource jugadores}}"/>
 				<DataGridComboBoxColumn Header="Eliminado" DisplayMemberPath="Nombre" SelectedValuePath="Nombre"
-																	SelectedValueBinding="{Binding Eliminado}"
-																	ItemsSource="{Binding Source={StaticResource jugadores}}">
+																		SelectedValueBinding="{Binding Eliminado}"
+																		ItemsSource="{Binding Source={StaticResource jugadores}}">
 				</DataGridComboBoxColumn>
+				<DataGridTextColumn Header="KO's" Binding="{Binding Eliminaciones}"/>
 				<DataGridTextColumn Header="Mano" Binding="{Binding Mano}" Width="*"/>
-		</DataGrid.Columns>
+			</DataGrid.Columns>
 		</DataGrid>
+
+		<ListView Grid.Column="1" ItemsSource="{Binding Totales}">
+			<ListView.ItemTemplate>
+				<DataTemplate>
+					<TextBlock>
+						<TextBlock.Text>
+							<MultiBinding StringFormat="{}{0}: {1}">
+								<Binding Path="Key"/>
+								<Binding Path="Value"/>
+							</MultiBinding>
+						</TextBlock.Text>
+					</TextBlock>
+				</DataTemplate>
+			</ListView.ItemTemplate>
+		</ListView>
+
+	</Grid>
+		
 </UserControl>

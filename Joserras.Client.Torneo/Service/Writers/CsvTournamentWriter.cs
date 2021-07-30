@@ -37,6 +37,7 @@ namespace Joserras.Client.Torneo.Service.Writers
 			{
 				using (CsvWriter csv = new( writer, config ))
 				{
+					csv.Context.RegisterClassMap<ResultadoMap>();
 					csv.WriteRecords( resultados );
 				}
 			}
@@ -56,6 +57,17 @@ namespace Joserras.Client.Torneo.Service.Writers
 		public async Task WriteTournamentFilesAsync(TorneoViewModel torneo, List<Resultado> resultados, List<KO> kos)
 		{
 			throw new NotImplementedException();
+		}
+
+		
+		
+		private class ResultadoMap : ClassMap<Resultado>
+		{
+			public ResultadoMap()
+			{
+				AutoMap( CultureInfo.CurrentCulture );
+				Map( m => m.IsOver ).Ignore();
+			}
 		}
 
 	}

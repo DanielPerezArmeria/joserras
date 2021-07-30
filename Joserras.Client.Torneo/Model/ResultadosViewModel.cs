@@ -157,6 +157,13 @@ namespace Joserras.Client.Torneo.Model
 			set { SetProperty( ref puntualidad, value ); }
 		}
 
+		private bool isOver;
+		public bool IsOver
+		{
+			get { return isOver; }
+			set { SetProperty( ref isOver, value ); }
+		}
+
 	}
 
 }

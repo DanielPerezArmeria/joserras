@@ -1,5 +1,7 @@
 ﻿using Joserras.Client.Torneo.Model;
+using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -29,22 +31,22 @@ namespace Joserras.Client.Torneo.View
 			return posBounds.Contains( theMousePos );
 		}
 
-		private DataGridRow GetDataGridRowItem(int index)
+		private DataGridRow GetDataGridRowItem(int index, bool countContainerGenerated)
 		{
 			if(dg.ItemContainerGenerator.Status != GeneratorStatus.ContainersGenerated)
 			{
-				return null;
+				return countContainerGenerated ? dg.ItemContainerGenerator.ContainerFromIndex( index ) as DataGridRow : null;
 			}
 
 			return dg.ItemContainerGenerator.ContainerFromIndex( index ) as DataGridRow;
 		}
 
-		private int GetDataGridItemCurrentRowIndex(GetDragDropPosition pos)
+		private int GetDataGridItemCurrentRowIndex(GetDragDropPosition pos, bool countContainerGenerated=false)
 		{
 			int curIndex = -1;
 			for(int i = 0; i < dg.Items.Count; i++)
 			{
-				DataGridRow item = GetDataGridRowItem( i );
+				DataGridRow item = GetDataGridRowItem( i, countContainerGenerated );
 				if (IsTheMouseOnTargetRow( item, pos ))
 				{
 					curIndex = i;
@@ -55,7 +57,7 @@ namespace Joserras.Client.Torneo.View
 			return curIndex;
 		}
 
-		private void dg_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+		private void dg_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
 			prevRowIndex = GetDataGridItemCurrentRowIndex( e.GetPosition );
 			if(prevRowIndex < 0)
@@ -66,7 +68,7 @@ namespace Joserras.Client.Torneo.View
 			dg.SelectedIndex = prevRowIndex;
 
 			Resultado resultado = dg.Items[prevRowIndex] as Resultado;
-			if(resultado == null)
+			if(resultado == null || resultado.IsOver)
 			{
 				return;
 			}
