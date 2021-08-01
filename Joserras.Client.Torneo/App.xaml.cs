@@ -1,5 +1,8 @@
 ﻿using Joserras.Client.Torneo.Service;
 using Joserras.Client.Torneo.Service.Impl;
+using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Events;
 using SimpleInjector;
 using System;
 using System.Collections.Generic;
@@ -19,6 +22,8 @@ namespace Joserras.Client.Torneo
 		private void Application_Startup(object sender, StartupEventArgs e)
 		{
 			container = new();
+
+			ConfigureLogging();
 
 			RegisterConcreteNamespace( "Joserras.Client.Torneo.Model" );
 			
@@ -71,6 +76,28 @@ namespace Joserras.Client.Torneo
 			{
 				container.Register( reg.implementation, reg.implementation, Lifestyle.Singleton );
 			}
+		}
+
+		private void ConfigureLogging()
+		{
+			container.RegisterSingleton<ILoggerFactory>( CreateLoggerFactory );
+			container.Register( typeof( ILogger<> ), typeof( Logger<> ), Lifestyle.Singleton );
+		}
+
+		private ILoggerFactory CreateLoggerFactory()
+		{
+			LoggerFactory factory = new LoggerFactory();
+
+			Serilog.ILogger logger = new LoggerConfiguration()
+				.MinimumLevel.Debug()
+				.WriteTo.Console()
+				.WriteTo.File( "logs/joserras-.log", rollingInterval: RollingInterval.Month )
+				.MinimumLevel.Override( "Microsoft.AspNetCore", LogEventLevel.Warning )
+				.CreateLogger();
+
+			factory.AddSerilog( logger );
+
+			return factory;
 		}
 
 	}

@@ -9,9 +9,9 @@ Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "JoserrasDatabase", "Joserra
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TorneosWebTesting", "TorneosWebTesting\TorneosWebTesting.csproj", "{BB86370F-4EF0-43E2-B92B-49E33232A1F1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Joserras.Commons", "Joserras.Commons\Joserras.Commons.csproj", "{FCD87BC1-E7B7-49D7-B82E-5B2CEE36AB34}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Joserras.Commons", "Joserras.Commons\Joserras.Commons.csproj", "{FCD87BC1-E7B7-49D7-B82E-5B2CEE36AB34}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Joserras.Client.Torneo", "Joserras.Client.Torneo\Joserras.Client.Torneo.csproj", "{9E84E9A8-A4D4-4BD4-987F-182BC1197617}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Joserras.Client.Torneo", "Joserras.Client.Torneo\Joserras.Client.Torneo.csproj", "{9E84E9A8-A4D4-4BD4-987F-182BC1197617}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

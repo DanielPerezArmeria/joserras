@@ -51,13 +51,13 @@
 					</DataGridTemplateColumn.CellTemplate>
 					<DataGridTemplateColumn.CellEditingTemplate>
 						<DataTemplate>
-							<ComboBox x:Name="cb" ItemsSource="{Binding Source={StaticResource jugadores}}"
+							<ComboBox x:Name="cb" ItemsSource="{Binding Source={StaticResource jugadores}}" IsEnabled="{Binding IsOver}"
 												DisplayMemberPath="Nombre" SelectedValuePath="Nombre" SelectedValue="{Binding Jugador}"/>
 						</DataTemplate>
 					</DataGridTemplateColumn.CellEditingTemplate>
 				</DataGridTemplateColumn>
-				<DataGridTextColumn Header="Rebuys" Binding="{Binding Rebuys}"/>
-				<DataGridCheckBoxColumn Header="Puntualidad" Binding="{Binding Puntualidad}"/>
+				<DataGridTextColumn Header="Rebuys" Binding="{Binding Rebuys}" IsReadOnly="{Binding IsOver}"/>
+				<DataGridCheckBoxColumn Header="Puntualidad" Binding="{Binding Puntualidad}" IsReadOnly="{Binding IsOver}"/>
 				<DataGridTextColumn Header="Premio" Binding="{Binding Premio}"/>
 				<DataGridCheckBoxColumn Binding="{Binding IsOver}"/>
 			</DataGrid.Columns>
