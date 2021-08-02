@@ -32,7 +32,9 @@ namespace Joserras.Client.Torneo
 			RegisterNamespace( "Joserras.Client.Torneo.Service.Senders" );
 
 			container.RegisterSingleton<IJoserrasService, JoserrasService>();
-			container.RegisterSingleton<IHttpService>( () => new HttpService( @"https://joserras.azurewebsites.net/" ) );
+			//container.RegisterSingleton<IHttpService>( () => new HttpService( @"https://joserras.azurewebsites.net/" ) );
+			container.RegisterSingleton<IHttpService>( () => new HttpService( @"https://localhost:5001/",
+				container.GetInstance<ILogger<HttpService>>() ) );
 
 			container.RegisterSingleton<Startup>();
 			container.Register<MainWindow>();
@@ -80,7 +82,7 @@ namespace Joserras.Client.Torneo
 
 		private void ConfigureLogging()
 		{
-			container.RegisterSingleton<ILoggerFactory>( CreateLoggerFactory );
+			container.RegisterSingleton( CreateLoggerFactory );
 			container.Register( typeof( ILogger<> ), typeof( Logger<> ), Lifestyle.Singleton );
 		}
 

@@ -16,11 +16,11 @@
 
 	<Grid>
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="2*"/>
+			<ColumnDefinition Width="4*"/>
 			<ColumnDefinition Width="*"/>
 		</Grid.ColumnDefinitions>
 		
-		<DataGrid ItemsSource="{Binding Kos}" AutoGenerateColumns="False" CanUserSortColumns="False">
+		<DataGrid ItemsSource="{Binding Kos}" AutoGenerateColumns="False" CanUserSortColumns="False" KeyDown="DataGrid_KeyDown">
 			<DataGrid.Columns>
 				<DataGridTemplateColumn CellTemplate="{StaticResource delButton}"/>
 				<DataGridComboBoxColumn Header="Jugador" DisplayMemberPath="Nombre" SelectedValuePath="Nombre"

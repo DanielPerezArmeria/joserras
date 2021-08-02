@@ -70,11 +70,38 @@ namespace Joserras.Client.Torneo.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to api/Client/PrizeRanges.
+        /// </summary>
+        internal static string API_GET_PRIZE_RANGES {
+            get {
+                return ResourceManager.GetString("API_GET_PRIZE_RANGES", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to api/Client/GetPrizes/{0}/{1}/{2}/{3}.
+        /// </summary>
+        internal static string API_GET_PRIZES {
+            get {
+                return ResourceManager.GetString("API_GET_PRIZES", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to api/Client/UploadFiles.
         /// </summary>
         internal static string API_POST_UPLOAD_FILES {
             get {
                 return ResourceManager.GetString("API_POST_UPLOAD_FILES", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to api/Client/UploadJson.
+        /// </summary>
+        internal static string API_POST_UPLOAD_JSON {
+            get {
+                return ResourceManager.GetString("API_POST_UPLOAD_JSON", resourceCulture);
             }
         }
         

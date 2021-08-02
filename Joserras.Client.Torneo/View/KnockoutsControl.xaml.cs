@@ -1,6 +1,7 @@
 ﻿using Joserras.Client.Torneo.Model;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace Joserras.Client.Torneo.View
 {
@@ -24,6 +25,20 @@ namespace Joserras.Client.Torneo.View
 			}
 
 			(DataContext as KnockoutsViewModel).Kos.Remove( ko );
+		}
+
+		private void DataGrid_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+		{
+			if (e.Key == Key.Enter)
+			{
+				return;
+			}
+
+			DataGrid dg = (sender as DataGrid);
+			if (dg.CurrentColumn is DataGridComboBoxColumn)
+			{
+				dg.BeginEdit();
+			}
 		}
 
 	}

@@ -120,8 +120,17 @@
   <data name="API_GET_JUGADORES" xml:space="preserve">
     <value>api/Client/Jugadores</value>
   </data>
+  <data name="API_GET_PRIZES" xml:space="preserve">
+    <value>api/Client/GetPrizes/{0}/{1}/{2}/{3}</value>
+  </data>
+  <data name="API_GET_PRIZE_RANGES" xml:space="preserve">
+    <value>api/Client/PrizeRanges</value>
+  </data>
   <data name="API_POST_UPLOAD_FILES" xml:space="preserve">
     <value>api/Client/UploadFiles</value>
+  </data>
+  <data name="API_POST_UPLOAD_JSON" xml:space="preserve">
+    <value>api/Client/UploadJson</value>
   </data>
   <data name="PROD_BASE_ADDRESS" xml:space="preserve">
     <value>https://joserras.azurewebsites.net/</value>

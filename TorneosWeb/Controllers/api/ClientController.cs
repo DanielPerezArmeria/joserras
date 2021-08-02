@@ -1,4 +1,4 @@
-﻿using Humanizer;
+﻿using Joserras.Commons.Domain;
 using Joserras.Commons.Dto;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using TorneosWeb.domain.models;
 using TorneosWeb.service;
 
@@ -19,14 +20,16 @@ namespace TorneosWeb.Controllers.api
 		private ILogger<ClientController> log;
 		private IFileService tourneyReader;
 		private IWriteService writeService;
+		private IPrizeService prizeService;
 
 		public ClientController(IReadService readService, ILogger<ClientController> log, IFileService tourneyReader,
-				IWriteService service)
+				IWriteService service, IPrizeService prizeService)
 		{
 			this.readService = readService;
 			this.log = log;
 			this.tourneyReader = tourneyReader;
 			writeService = service;
+			this.prizeService = prizeService;
 		}
 
 		// GET: api/<ClientController>/Jugadores
@@ -37,11 +40,48 @@ namespace TorneosWeb.Controllers.api
 			return readService.GetAllJugadores();
 		}
 
-		// GET api/<ClientController>/5
-		[HttpGet( "{id}" )]
-		public string Get(int id)
+		// GET api/<ClientController>/PrizeRanges
+		[HttpGet( "PrizeRanges" )]
+		public IEnumerable<PrizeRange> GetPrizeRanges()
 		{
-			return "value";
+			log.LogDebug( "Requesting Api: PrizeRanges" );
+			return prizeService.GetPrizeRanges();
+		}
+
+		[HttpGet( "GetPrizes/{premiacion}/{buyin}/{liga}/{bolsa}" )]
+		public IDictionary<int, string> GetPrizes(string premiacion, int buyin, bool liga, int bolsa)
+		{
+			log.LogDebug( "Requesting Api: GetPrizes" );
+			log.LogDebug( "Premiacion: {0}, Buyin: {1}, Liga:{2}, Bolsa:{3}", premiacion, buyin, liga, bolsa );
+
+			TorneoDTO torneo = new()
+			{
+				Premiacion = premiacion,
+				PrecioBuyin = buyin,
+				Liga = liga,
+				Bolsa = new Bolsa( bolsa )
+			};
+
+			IDictionary<int, string> premios = new Dictionary<int, string>();
+
+			try
+			{
+				log.LogDebug( "Calling GetTorneos" );
+				premios = prizeService.GetPremios( torneo, null );
+			}
+			catch (Exception e)
+			{
+				log.LogError( e.Message, e );
+				return null;
+			}
+
+			return premios;
+		}
+
+		[HttpPost("UploadJson")]
+		public IActionResult UploadJson(string json)
+		{
+			return null;
 		}
 
 		// POST api/<ClientController>

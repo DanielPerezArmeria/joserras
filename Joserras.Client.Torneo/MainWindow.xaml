@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Joserras.Client.Torneo"
 				xmlns:view="clr-namespace:Joserras.Client.Torneo.View"
         mc:Ignorable="d" IsEnabled="{Binding IsEnabled}"
-        Title="MainWindow" Height="600" Width="900">
+        Title="MainWindow" Height="700" Width="1000">
 
 	<DockPanel>
 

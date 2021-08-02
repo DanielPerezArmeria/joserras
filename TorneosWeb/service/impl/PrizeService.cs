@@ -24,8 +24,10 @@ namespace TorneosWeb.service.impl
 			this.fillers = fillers;
 		}
 
-		public void SetPremiosTorneo(TorneoDTO torneo, IEnumerable<ResultadosDTO> resultados)
+		public IDictionary<int, string> GetPremios(TorneoDTO torneo, IEnumerable<ResultadosDTO> resultados)
 		{
+			IDictionary<int, string> finalPrizes = new Dictionary<int, string>();
+
 			IEnumerable<string> premios = torneo.Premiacion.Split( PrizeFill.SEPARATOR );
 
 			int placesAwarded = premios.Count();
@@ -33,7 +35,6 @@ namespace TorneosWeb.service.impl
 			{
 				try
 				{
-					ResultadosDTO res = resultados.First( r => r.Posicion == i );
 					string premio = premios.ElementAt( i - 1 );
 
 					IPrizeFiller selectedFiller = fillers.SingleOrDefault( f => f.CanHandle( torneo, resultados, torneo.Bolsa, premio ) );
@@ -42,7 +43,7 @@ namespace TorneosWeb.service.impl
 						throw new JoserrasException( "No se pudo seleccionar un Prize Filler para la posición: " + i );
 					}
 
-					res.Premio = selectedFiller.AssignPrize( torneo, resultados, torneo.Bolsa, premio );
+					finalPrizes.Add( i, selectedFiller.AssignPrize( torneo, resultados, torneo.Bolsa, premio ) );
 				}
 				catch( JoserrasException je )
 				{
@@ -67,13 +68,21 @@ namespace TorneosWeb.service.impl
 					throw new JoserrasException( "Error desconocido. No se pudo asignar el premio de la posición: " + i, e );
 				}
 			}
+
+			List<KeyValuePair<int,string>> noPrizes = finalPrizes.Where( p => decimal.Parse( p.Value ) == 0 ).ToList();
+			foreach (KeyValuePair<int,string> pair in noPrizes)
+			{
+				finalPrizes.Remove( pair );
+			}
+
+			return finalPrizes;
 		}
 
-		public string SetPremiacionString(TorneoDTO torneo, IEnumerable<ResultadosDTO> resultados)
+		public string GetPremiacionString(TorneoDTO torneo, IEnumerable<ResultadosDTO> resultados)
 		{
 			string premiacion = string.Empty;
 			int entradas = torneo.Entradas + torneo.Rebuys;
-			if( resultados.Any( r => !r.Premio.IsNullEmptyOrZero() ) ) {
+			if( resultados != null && resultados.Any( r => !r.Premio.IsNullEmptyOrZero() ) ) {
 				List<string> list = resultados.Where( r => !r.Premio.IsNullEmptyOrZero() )
 						.OrderBy( r => r.Posicion ).Select( r => r.Premio ).ToList();
 				premiacion = string.Join( PrizeFill.SEPARATOR, list );
@@ -97,6 +106,11 @@ namespace TorneosWeb.service.impl
 		public Bolsa GetBolsaTorneo(int entradas, int rebuys, int buyinPrice, int rebuyPrice)
 		{
 			return new Bolsa( (entradas * buyinPrice) + (rebuys * rebuyPrice) );
+		}
+
+		public IEnumerable<PrizeRange> GetPrizeRanges()
+		{
+			return prizeDao.GetPrizeRanges();
 		}
 
 	}

@@ -6,11 +6,13 @@ namespace TorneosWeb.service
 {
 	public interface IPrizeService
 	{
-		void SetPremiosTorneo(TorneoDTO torneo, IEnumerable<ResultadosDTO> resultados);
+		IDictionary<int,string> GetPremios(TorneoDTO torneo, IEnumerable<ResultadosDTO> resultados);
 
 		Bolsa GetBolsaTorneo(int entradas, int rebuys, int buyinPrice, int rebuyPrice);
 
-		string SetPremiacionString(TorneoDTO torneo, IEnumerable<ResultadosDTO> resultados);
+		string GetPremiacionString(TorneoDTO torneo, IEnumerable<ResultadosDTO> resultados);
+
+		IEnumerable<PrizeRange> GetPrizeRanges();
 	}
 
 }

@@ -1,6 +1,7 @@
 ﻿using Joserras.Client.Torneo.Model;
 using Joserras.Client.Torneo.Properties;
 using Joserras.Client.Torneo.Utils;
+using Joserras.Commons.Domain;
 using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -32,6 +33,8 @@ namespace Joserras.Client.Torneo.Service.Impl
 				List<JugadorViewModel> jugadores = httpService.Get<List<JugadorViewModel>>( Resources.API_GET_JUGADORES );
 				ResModel.Jugadores = jugadores;
 				KoModel.Jugadores = jugadores;
+
+				ResModel.PrizeRanges = httpService.Get<IEnumerable<PrizeRange>>( Resources.API_GET_PRIZE_RANGES );
 
 				AppModel.CrearTorneoCommand = new DelegateCommand( CrearTorneo, CanCrearTorneo );
 			}

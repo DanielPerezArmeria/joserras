@@ -116,6 +116,20 @@ namespace Joserras.Client.Torneo.View
 			(DataContext as ResultadosViewModel).Resultados.Remove( resultado );
 		}
 
+		private void DG_KeyDown(object sender, KeyEventArgs e)
+		{
+			if(e.Key == Key.Enter)
+			{
+				return;
+			}
+
+			DataGrid dg = (sender as DataGrid);
+			if (dg.CurrentColumn is DataGridComboBoxColumn)
+			{
+				dg.BeginEdit();
+			}
+		}
+
 	}
 
 }

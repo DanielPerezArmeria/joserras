@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using TorneosWeb.Properties;
 using TorneosWeb.util;
 
 namespace TorneosWeb.service.impl
@@ -106,9 +107,9 @@ namespace TorneosWeb.service.impl
 			torneo.Rebuys = resultados.Sum( d => d.Rebuys );
 			torneo.Bolsa = prizeService.GetBolsaTorneo( torneo.Entradas, torneo.Rebuys, torneo.PrecioBuyin, torneo.PrecioRebuy);
 
-			torneo.Premiacion = prizeService.SetPremiacionString( torneo, resultados );
+			torneo.Premiacion = prizeService.GetPremiacionString( torneo, resultados );
 
-			Guid torneoId = Guid.Parse( uow.ExecuteScalar( Properties.Queries.InsertTorneo, torneo.Fecha.ToString( "yyyy-MM-dd" ),
+			Guid torneoId = Guid.Parse( uow.ExecuteScalar( Queries.InsertTorneo, torneo.Fecha.ToString( "yyyy-MM-dd" ),
 					torneo.PrecioBuyin, torneo.PrecioRebuy, torneo.Entradas, torneo.Rebuys, torneo.Bolsa.Total,
 					torneo.Tipo.ToString(), torneo.PrecioBounty, torneo.Premiacion )
 					.ToString() );
@@ -121,7 +122,11 @@ namespace TorneosWeb.service.impl
 			string query = "insert into resultados (torneo_id, jugador_id, rebuys, posicion, podio, premio, burbuja, puntualidad) values('{0}', (select id from jugadores where nombre='{1}'), "
 				+ "{2}, {3}, '{4}', {5}, '{6}', '{7}')";
 
-			prizeService.SetPremiosTorneo( torneo, resultados );
+			IDictionary<int, string> prizes = prizeService.GetPremios( torneo, resultados );
+			foreach(int key in prizes.Keys)
+			{
+				resultados.Single( r => r.Posicion == key ).Premio = prizes[key];
+			}
 
 			SetBurbuja( resultados );
 

@@ -1,17 +1,22 @@
 ﻿using Joserras.Client.Torneo.Domain;
 using Joserras.Client.Torneo.Properties;
 using Joserras.Client.Torneo.Utils;
+using Microsoft.Extensions.Logging;
 
 namespace Joserras.Client.Torneo.Model
 {
 	public class ApplicationModel : ViewModel
 	{
 
-		public ApplicationModel(TorneoViewModel torneoModel, ResultadosViewModel resModel, KnockoutsViewModel koModel)
+		private ILogger<ApplicationModel> log;
+
+		public ApplicationModel(TorneoViewModel torneoModel, ResultadosViewModel resModel, KnockoutsViewModel koModel,
+			ILogger<ApplicationModel> logger)
 		{
 			TorneoModel = torneoModel;
 			KoModel = koModel;
 			ResModel = resModel;
+			log = logger;
 
 			ResModel.Buyin = TorneoModel.PrecioBuyin;
 			TorneoModel.PropertyChanged += ResModel.TorneoModel_PropertyChanged;
@@ -19,6 +24,8 @@ namespace Joserras.Client.Torneo.Model
 			IsEnabled = true;
 
 			RootDir = Settings.Default.RootDir;
+
+			log.LogDebug( "ApplicationMode initialized" );
 		}
 
 
