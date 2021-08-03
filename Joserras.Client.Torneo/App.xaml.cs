@@ -1,5 +1,9 @@
-﻿using Joserras.Client.Torneo.Service;
+﻿using AutoMapper;
+using Joserras.Client.Torneo.Service;
+using Joserras.Client.Torneo.Service.Creators;
 using Joserras.Client.Torneo.Service.Impl;
+using Joserras.Client.Torneo.Service.Senders;
+using Joserras.Client.Torneo.Utils;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
@@ -25,11 +29,13 @@ namespace Joserras.Client.Torneo
 
 			ConfigureLogging();
 
+			container.RegisterSingleton<MapperProvider>();
+			container.RegisterSingleton( () => GetMapper( container ) );
+
 			RegisterConcreteNamespace( "Joserras.Client.Torneo.Model" );
-			
-			RegisterNamespace( "Joserras.Client.Torneo.Service.Creators" );
-			RegisterNamespace( "Joserras.Client.Torneo.Service.Writers" );
-			RegisterNamespace( "Joserras.Client.Torneo.Service.Senders" );
+
+			container.RegisterSingleton<ITournamentCreator, JsonTournamentCreator>();
+			container.RegisterSingleton<ITournamentSender, JsonTournamentSender>();
 
 			container.RegisterSingleton<IJoserrasService, JoserrasService>();
 			//container.RegisterSingleton<IHttpService>( () => new HttpService( @"https://joserras.azurewebsites.net/" ) );
@@ -100,6 +106,12 @@ namespace Joserras.Client.Torneo
 			factory.AddSerilog( logger );
 
 			return factory;
+		}
+
+		private IMapper GetMapper(Container container)
+		{
+			var mp = container.GetInstance<MapperProvider>();
+			return mp.GetMapper();
 		}
 
 	}

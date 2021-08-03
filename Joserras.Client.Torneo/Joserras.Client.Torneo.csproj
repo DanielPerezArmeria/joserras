@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="CsvHelper" Version="27.1.1" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
@@ -23,6 +24,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Joserras.Commons\Joserras.Commons.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <SplashScreen Include="Images\joserras_splash.jpg" />
   </ItemGroup>
 
   <ItemGroup>

@@ -6,7 +6,6 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using TorneosWeb.domain.models;
 using TorneosWeb.service;
 
@@ -79,9 +78,22 @@ namespace TorneosWeb.Controllers.api
 		}
 
 		[HttpPost("UploadJson")]
-		public IActionResult UploadJson(string json)
+		public IActionResult UploadJson(TorneoUploadWrapper wrapper)
 		{
-			return null;
+			log.LogDebug( "Post Api: UploadJson:'{0}'", wrapper );
+
+			try
+			{
+				writeService.UploadTournament( wrapper.Torneo, wrapper.Resultados, wrapper.Knockouts );
+			}
+			catch (Exception e)
+			{
+				log.LogError( e, e.Message );
+				return BadRequest();
+			}
+
+			log.LogDebug( "Api Tournament successfully uploaded!!!!" );
+			return Ok();
 		}
 
 		// POST api/<ClientController>
