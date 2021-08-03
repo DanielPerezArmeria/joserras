@@ -10,19 +10,10 @@
 
 	<DockPanel>
 
-		<Border Padding="0,7" BorderThickness="0,0,0,2" BorderBrush="Black" DockPanel.Dock="Top">
-			<StackPanel Orientation="Horizontal">
-				<Label Content="Directorio Raíz: "/>
-				<TextBox Text="{Binding RootDir}" IsEnabled="False"
-								 VerticalContentAlignment="Center"/>
-				<Button Content="Cambiar" Click="Button_Click" Margin="20,0,0,0"/>
-			</StackPanel>
-		</Border>
-
 		<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" DockPanel.Dock="Bottom" Margin="7">
-			<CheckBox Content="Listo?" IsChecked="{Binding IsReady}"/>
-			<Button x:Name="createButton" Content="Crear"
-							Margin="8,0,0,0" Width="60" Command="{Binding CrearTorneoCommand}"/>
+			<CheckBox Content="¿Torneo listo para subir?" IsChecked="{Binding IsReady}"/>
+			<Button x:Name="createButton" Content="Subir"
+							Margin="10,0,0,0" Width="60" Command="{Binding CrearTorneoCommand}"/>
 		</StackPanel>
 
 		<TabControl Margin="0,6">

@@ -1,4 +1,5 @@
-﻿using Joserras.Client.Torneo.Domain;
+﻿using Humanizer;
+using Joserras.Client.Torneo.Domain;
 using Joserras.Client.Torneo.Properties;
 using Joserras.Client.Torneo.Service;
 using Joserras.Client.Torneo.Utils;
@@ -187,7 +188,9 @@ namespace Joserras.Client.Torneo.Model
 			string apiCall = string.Format( Resources.API_GET_PRIZES, range.Premiacion, Buyin, Liga, Bolsa );
 
 			IDictionary<int, string> prizes = await httpService.GetAsync<IDictionary<int, string>>( apiCall );
-			List<PrizeEntry> list = prizes.Select( p => new PrizeEntry { Lugar = p.Key, Premio = p.Value } ).ToList();
+			List<PrizeEntry> list = prizes.Select( p =>
+					new PrizeEntry { Lugar = p.Key, LugarString = p.Key.Ordinalize(),
+						Premio = string.Format( decimal.Parse( p.Value ).ToString( "$###,##0.0#" ) ) } ).ToList();
 			list.Sort();
 			Premios = list;
 		}
@@ -250,6 +253,7 @@ namespace Joserras.Client.Torneo.Model
 	public class PrizeEntry : IComparable<PrizeEntry>
 	{
 		public int Lugar { get; set; }
+		public string LugarString { get; set; }
 		public string Premio { get; set; }
 
 		public int CompareTo(PrizeEntry other)
