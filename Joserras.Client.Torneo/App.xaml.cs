@@ -38,9 +38,10 @@ namespace Joserras.Client.Torneo
 			container.RegisterSingleton<ITournamentSender, JsonTournamentSender>();
 
 			container.RegisterSingleton<IJoserrasService, JoserrasService>();
-			//container.RegisterSingleton<IHttpService>( () => new HttpService( @"https://joserras.azurewebsites.net/" ) );
-			container.RegisterSingleton<IHttpService>( () => new HttpService( @"https://localhost:5001/",
+			container.RegisterSingleton<IHttpService>( () => new HttpService( @"https://joserras.azurewebsites.net/",
 				container.GetInstance<ILogger<HttpService>>() ) );
+			/*container.RegisterSingleton<IHttpService>( () => new HttpService( @"https://localhost:5001/",
+				container.GetInstance<ILogger<HttpService>>() ) );*/
 
 			container.RegisterSingleton<Startup>();
 			container.Register<MainWindow>();
