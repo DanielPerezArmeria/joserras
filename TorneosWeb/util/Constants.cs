@@ -11,7 +11,7 @@
 	public static class PrizeFill
 	{
 		public const string PERCENT_CHAR = "%";
-		public const string FIXED_PERCENT = "p";
+		public const string PERCENT_AND_REMOVE = "&";
 		public const string FACTOR = "x";
 		public const string SEPARATOR = "-";
 	}

@@ -112,6 +112,26 @@ namespace TorneosWeb.service.impl
 				log.LogDebug( jugadoresInactividad.Humanize() );
 				estadisticas.Detalles.RemoveAll( d => jugadoresMenosDiezPorCiento.Contains( d.Id ) && jugadoresInactividad.Contains( d.Id ) );
 			}
+
+			//Quita a los jugadores que no han jugado en 6 meses
+			jugadoresInactividad = new List<Guid>();
+			foreach (DetalleJugador det in estadisticas.Detalles.ToList())
+			{
+				string qu = string.Format( Queries.FindLastPlayedTournament, det.Id );
+				joserrasQuery.ExecuteQuery( conn, qu, reader =>
+				{
+					while (reader.Read())
+					{
+						DateTime lastTourney = (DateTime)reader["fecha"];
+						if ((lastDate - lastTourney).TotalDays > 180)
+						{
+							jugadoresInactividad.Add( det.Id );
+						}
+					}
+				} );
+			}
+
+			estadisticas.Detalles.RemoveAll( d => jugadoresInactividad.Contains( d.Id ) );
 		}
 
 		private Estadisticas GetStats(Estadisticas estadisticas, string q, SqlConnection conn)

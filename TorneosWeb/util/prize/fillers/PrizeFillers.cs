@@ -2,12 +2,14 @@
 using Joserras.Commons.Dto;
 using System.Collections.Generic;
 using System.Linq;
+using TorneosWeb.dao;
+using TorneosWeb.domain.models.ligas;
 
 namespace TorneosWeb.util.prize.fillers
 {
 	#region Floating prize fillers. No afectan el FizedForPercent
 
-	public class SinglePercentPrizeFiller : IPrizeFiller
+	public class PercentPrizeFiller : IPrizeFiller
 	{
 		public string AssignPrize(TorneoDTO torneo, IEnumerable<ResultadosDTO> resultados, Bolsa bolsa, string premio)
 		{
@@ -58,15 +60,15 @@ namespace TorneosWeb.util.prize.fillers
 
 		public bool CanHandle(TorneoDTO torneo, IEnumerable<ResultadosDTO> resultados, Bolsa bolsa, string premio)
 		{
-			return decimal.TryParse( premio, out decimal d );
+			return decimal.TryParse( premio, out _ );
 		}
 	}
 
-	public class FixedPercentPrizeFiller : IPrizeFiller
+	public class PercentAndRemovePrizeFiller : IPrizeFiller
 	{
 		public string AssignPrize(TorneoDTO torneo, IEnumerable<ResultadosDTO> resultados, Bolsa bolsa, string premio)
 		{
-			decimal factor = decimal.Parse( premio.Replace( PrizeFill.FIXED_PERCENT, "" ) ) / 100;
+			decimal factor = decimal.Parse( premio.Replace( PrizeFill.PERCENT_AND_REMOVE, "" ) ) / 100;
 			decimal otorgado = bolsa.FixedForPercent * factor;
 			bolsa.Otorgar( otorgado, true );
 			return otorgado.ToString();
@@ -74,17 +76,30 @@ namespace TorneosWeb.util.prize.fillers
 
 		public bool CanHandle(TorneoDTO torneo, IEnumerable<ResultadosDTO> resultados, Bolsa bolsa, string premio)
 		{
-			return premio.Contains( PrizeFill.FIXED_PERCENT );
+			return premio.Contains( PrizeFill.PERCENT_AND_REMOVE );
 		}
 	}
 
 
 	public class FactorPrizeFiller : IPrizeFiller
 	{
+		private ILigaDao ligaDao;
+
+		public FactorPrizeFiller(ILigaDao ligaDao)
+		{
+			this.ligaDao = ligaDao;
+		}
+
 		public string AssignPrize(TorneoDTO torneo, IEnumerable<ResultadosDTO> resultados, Bolsa bolsa, string premio)
 		{
 			decimal factor = decimal.Parse( premio.Replace( PrizeFill.FACTOR, "" ) );
-			decimal otorgado = torneo.PrecioBuyin * factor;
+			int ligaFee = 0;
+			if (torneo.Liga)
+			{
+				Liga liga = ligaDao.FindCurrentLiga();
+				ligaFee = liga == null ? 0 : liga.Fee;
+			}
+			decimal otorgado = (torneo.PrecioBuyin + ligaFee) * factor;
 			bolsa.Otorgar( otorgado, true );
 			return otorgado.ToString();
 		}

@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using TorneosWeb.Properties;
 using TorneosWeb.util;
 
 namespace TorneosWeb.service.impl
@@ -106,9 +107,9 @@ namespace TorneosWeb.service.impl
 			torneo.Rebuys = resultados.Sum( d => d.Rebuys );
 			torneo.Bolsa = prizeService.GetBolsaTorneo( torneo.Entradas, torneo.Rebuys, torneo.PrecioBuyin, torneo.PrecioRebuy);
 
-			torneo.Premiacion = prizeService.SetPremiacionString( torneo, resultados );
+			torneo.Premiacion = prizeService.GetPremiacionString( torneo, resultados );
 
-			Guid torneoId = Guid.Parse( uow.ExecuteScalar( Properties.Queries.InsertTorneo, torneo.Fecha.ToString( "yyyy-MM-dd" ),
+			Guid torneoId = Guid.Parse( uow.ExecuteScalar( Queries.InsertTorneo, torneo.Fecha.ToString( "yyyy-MM-dd" ),
 					torneo.PrecioBuyin, torneo.PrecioRebuy, torneo.Entradas, torneo.Rebuys, torneo.Bolsa.Total,
 					torneo.Tipo.ToString(), torneo.PrecioBounty, torneo.Premiacion )
 					.ToString() );
@@ -121,7 +122,11 @@ namespace TorneosWeb.service.impl
 			string query = "insert into resultados (torneo_id, jugador_id, rebuys, posicion, podio, premio, burbuja, puntualidad) values('{0}', (select id from jugadores where nombre='{1}'), "
 				+ "{2}, {3}, '{4}', {5}, '{6}', '{7}')";
 
-			prizeService.SetPremiosTorneo( torneo, resultados );
+			IDictionary<int, string> prizes = prizeService.GetPremios( torneo, resultados );
+			foreach(int key in prizes.Keys)
+			{
+				resultados.Single( r => r.Posicion == key ).Premio = prizes[key];
+			}
 
 			SetBurbuja( resultados );
 
@@ -156,13 +161,14 @@ namespace TorneosWeb.service.impl
 		private void SetBurbuja(List<ResultadosDTO> resultados)
 		{
 			int bubblePosition = resultados.Where( r => r.Premio.ToDecimal() > 0 ).Max( r => r.Posicion ) + 1;
+			log.LogDebug( "Posición de la Burbuja: {0}", bubblePosition );
 			resultados.First( r => r.Posicion == bubblePosition ).Burbuja = true;
 		}
 
 		private void InsertarKos(TorneoDTO torneo, List<ResultadosDTO> resultados, List<KnockoutsDTO> kos, TorneoUnitOfWork uow)
 		{
 			string query = @"insert into knockouts (torneo_id, jugador_id, eliminado_id, eliminaciones, mano_url) values(@torneoId, "
-				+ @"(select id from jugadores where nombre = @jugador), (select id from jugadores where nombre = @eliminado), 1, @mano)";
+				+ @"(select id from jugadores where nombre = @jugador), (select id from jugadores where nombre = @eliminado), @kos, @mano)";
 
 			foreach(KnockoutsDTO dto in kos )
 			{
@@ -173,6 +179,7 @@ namespace TorneosWeb.service.impl
 						{ "@torneoId", torneo.Id },
 						{ "@jugador", dto.Jugador },
 						{ "@eliminado", dto.Eliminado },
+						{ "@kos", dto.Eliminaciones },
 						{ "@mano", dto.Mano }
 					};
 

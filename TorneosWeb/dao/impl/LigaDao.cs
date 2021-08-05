@@ -37,6 +37,11 @@ namespace TorneosWeb.dao.impl
 			return ExecuteLigaQuery( query );
 		}
 
+		public Liga FindCurrentLiga()
+		{
+			return ExecuteLigaQuery( "select * from ligas where abierta = true" );
+		}
+
 		private Liga ExecuteLigaQuery(string query)
 		{
 			Liga liga = null;

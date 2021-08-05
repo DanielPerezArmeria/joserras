@@ -6,8 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TorneosWeb.dao;
+using TorneosWeb.domain.models.ligas;
 using TorneosWeb.service.impl;
-using TorneosWeb.util;
 using TorneosWeb.util.prize;
 using TorneosWeb.util.prize.fillers;
 using Xunit;
@@ -20,102 +20,71 @@ namespace TorneosWebTesting.service.impl
 
 		private Mock<ILogger<PrizeService>> logger;
 		private Mock<IPrizeDao> dao;
+		private Mock<ILigaDao> ligaDao;
 		private IEnumerable<IPrizeFiller> fillers;
 
 		public PrizeServiceTest()
 		{
 			logger = new Mock<ILogger<PrizeService>>();
 			dao = new Mock<IPrizeDao>();
+			ligaDao = new Mock<ILigaDao>();
 			fillers = new IPrizeFiller[] {
-				new SinglePercentPrizeFiller(),
+				new PercentPrizeFiller(),
 				new AllPercentPrizeFiller(),
-				new FixedPercentPrizeFiller(),
-				new FactorPrizeFiller(),
+				new PercentAndRemovePrizeFiller(),
+				new FactorPrizeFiller( ligaDao.Object ),
 				new SetAmountPrizeFiller()
 			};
 
 			service = new PrizeService( fillers, dao.Object, logger.Object );
 		}
 
-		[Fact]
-		public void TestPrizesDao()
+		[Theory]
+		[InlineData( "55%-30%-15%", 3, 5225, 2850, 1425 )]
+		[InlineData( "50%-50%-1000", 3, 4250, 4250, 1000 )]
+		[InlineData( "50%-50%-2x", 3, 4250, 4250, 1000 )]
+		[InlineData( "55%-45%-15&", 3, 4441.25, 3633.75, 1425 )]
+		public void TestGetPremios(string premioString, int expectedPrizes, decimal first, decimal second, decimal third )
 		{
-			dao.Setup( d => d.GetPrizeRanges() ).Returns( CreatePrizeRange( "55%-30%-15%" ) );
-
 			TorneoDTO torneo = CreateTorneo( 11, 8, 500, false );
-			IEnumerable<ResultadosDTO> resultados = CreateResultados( 11, 8 );
+			torneo.Premiacion = premioString;
 
-			Assert.Equal( 8, resultados.Sum( r => r.Rebuys ) );
+			IDictionary<int,string> premios = service.GetPremios( torneo, null );
 
-			service.SetPremiosTorneo( torneo, resultados );
+			Assert.Equal( expectedPrizes, premios.Count );
 
-			Assert.Equal( 3, resultados.Where( r => !string.IsNullOrEmpty( r.Premio ) ).Count() );
-
-			Assert.Equal( 5225m, resultados.Single( r => r.Posicion == 1 ).Premio.ToDecimal() );
-			Assert.Equal( 1425m, resultados.Single( r => r.Posicion == 3 ).Premio.ToDecimal() );
+			Assert.Equal( first, decimal.Parse( premios[1] ) );
+			Assert.Equal( second, decimal.Parse( premios[2] ) );
+			Assert.Equal( third, decimal.Parse( premios[3] ) );
 		}
 
-		[Fact]
-		public void TestPremiosInResultados()
+		[Theory]
+		[InlineData( "55%-30%-15%-2x", 4, 4510, 2460, 1230, 1300 )]
+		[InlineData( "50%-50%-15&-2x", 4, 3485, 3485, 1230, 1300 )]
+		public void TestGetPremiosLiga(string premioString, int expectedPrizes, decimal first, decimal second,
+				decimal third, decimal fourth)
 		{
-			TorneoDTO torneo = CreateTorneo( 11, 9, 500, false );
-			IEnumerable<ResultadosDTO> resultados = CreateResultados( 11, 9 );
+			Liga liga = new();
+			liga.Fee = 150;
+			ligaDao.Setup( d => d.FindCurrentLiga() ).Returns( liga );
 
-			resultados.Single( r => r.Posicion == 1 ).Premio = "50%";
-			resultados.Single( r => r.Posicion == 2 ).Premio = "50%";
-			resultados.Single( r => r.Posicion == 3 ).Premio = "1000";
+			TorneoDTO torneo = CreateTorneo( 11, 8, 500, true );
+			torneo.Premiacion = premioString;
 
-			service.SetPremiosTorneo( torneo, resultados );
+			IDictionary<int, string> premios = service.GetPremios( torneo, null );
 
-			Assert.Equal( 3, resultados.Where( r => !string.IsNullOrEmpty( r.Premio ) ).Count() );
+			Assert.Equal( expectedPrizes, premios.Count );
 
-			Assert.Equal( 4500m, resultados.Single( r => r.Posicion == 1 ).Premio.ToDecimal() );
-			Assert.Equal( 4500m, resultados.Single( r => r.Posicion == 2 ).Premio.ToDecimal() );
-			Assert.Equal( 1000m, resultados.Single( r => r.Posicion == 3 ).Premio.ToDecimal() );
-		}
-
-		[Fact]
-		public void TestPrizes2()
-		{
-			TorneoDTO torneo = CreateTorneo( 11, 9, 500, false );
-			torneo.Premiacion = "55%-45%-15p-2x";
-			IEnumerable<ResultadosDTO> resultados = CreateResultados( 11, 9 );
-
-			Assert.Equal( 9, resultados.Sum( r => r.Rebuys ) );
-
-			service.SetPremiosTorneo( torneo, resultados );
-
-			Assert.Equal( 4, resultados.Where( r => !string.IsNullOrEmpty( r.Premio ) ).Count() );
-
-			Assert.Equal( 4207.5m, resultados.Single( r => r.Posicion == 1 ).Premio.ToDecimal() );
-			Assert.Equal( 3442.5m, resultados.Single( r => r.Posicion == 2 ).Premio.ToDecimal() );
-			Assert.Equal( 1350m, resultados.Single( r => r.Posicion == 3 ).Premio.ToDecimal() );
-			Assert.Equal( 1000m, resultados.Single( r => r.Posicion == 4 ).Premio.ToDecimal() );
-		}
-
-		[Fact]
-		public void TestPrizes3()
-		{
-			TorneoDTO torneo = CreateTorneo( 11, 9, 500, false );
-			torneo.Premiacion = "55%-30%-15%-2x";
-			IEnumerable<ResultadosDTO> resultados = CreateResultados( 11, 9 );
-
-			Assert.Equal( 9, resultados.Sum( r => r.Rebuys ) );
-
-			service.SetPremiosTorneo( torneo, resultados );
-
-			Assert.Equal( 4, resultados.Where( r => !string.IsNullOrEmpty( r.Premio ) ).Count() );
-
-			Assert.Equal( 4950m, resultados.Single( r => r.Posicion == 1 ).Premio.ToDecimal() );
-			Assert.Equal( 2700m, resultados.Single( r => r.Posicion == 2 ).Premio.ToDecimal() );
-			Assert.Equal( 1350m, resultados.Single( r => r.Posicion == 3 ).Premio.ToDecimal() );
-			Assert.Equal( 1000m, resultados.Single( r => r.Posicion == 4 ).Premio.ToDecimal() );
+			Assert.Equal( first, decimal.Parse( premios[1] ) );
+			Assert.Equal( second, decimal.Parse( premios[2] ) );
+			Assert.Equal( third, decimal.Parse( premios[3] ) );
+			Assert.Equal( fourth, decimal.Parse( premios[4] ) );
 		}
 
 
 		private TorneoDTO CreateTorneo(int entradas, int rebuys, int buyin, bool isLiga)
 		{
-			TorneoDTO torneo = new TorneoDTO();
+			TorneoDTO torneo = new();
 			torneo.Liga = isLiga;
 			torneo.PrecioBuyin = buyin;
 			torneo.Fecha = DateTime.Now;

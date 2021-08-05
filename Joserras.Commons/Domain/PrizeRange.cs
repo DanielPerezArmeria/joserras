@@ -8,6 +8,8 @@ namespace Joserras.Commons.Domain
 		public int Mayor { get; set; }
 		public string Premiacion { get; set; }
 
+		public PrizeRange() { }
+
 		public PrizeRange(int menor, int mayor, string premiacion)
 		{
 			Menor = menor;
@@ -28,6 +30,16 @@ namespace Joserras.Commons.Domain
 		public override string ToString()
 		{
 			return string.Format( "{0} - {1}: {2}", Menor, Mayor, Premiacion );
+		}
+
+		public override bool Equals(object obj)
+		{
+			return Equals( obj as PrizeRange );
+		}
+
+		public override int GetHashCode()
+		{
+			return base.GetHashCode();
 		}
 
 	}
