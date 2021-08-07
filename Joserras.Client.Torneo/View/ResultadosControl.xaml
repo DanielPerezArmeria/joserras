@@ -53,9 +53,14 @@
 			</StackPanel>
 		</Grid>
 
-		<StackPanel DockPanel.Dock="Right" TextBlock.FontSize="14" Margin="5">
+		<Grid DockPanel.Dock="Right" TextBlock.FontSize="14" Margin="5">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="auto"/>
+				<RowDefinition Height="*"/>
+			</Grid.RowDefinitions>
+			
 			<TextBlock Text="{Binding Bolsa, StringFormat=Bolsa: {0:C}}" FontWeight="Bold" Margin="20,0,0,5"/>
-			<ListBox ItemsSource="{Binding Premios}">
+			<ListBox Grid.Row="1" ItemsSource="{Binding Premios}" Background="{x:Null}" IsEnabled="False">
 				<ListBox.ItemTemplate>
 					<DataTemplate>
 						<TextBlock>
@@ -69,7 +74,7 @@
 					</DataTemplate>
 				</ListBox.ItemTemplate>
 			</ListBox>
-		</StackPanel>
+		</Grid>
 
 		<DataGrid x:Name="dg" ItemsSource="{Binding Resultados}" AutoGenerateColumns="False" AllowDrop="True" CanUserSortColumns="False"
 							MouseLeftButtonDown="dg_MouseLeftButtonDown" Drop="dg_Drop" SelectionMode="Single"

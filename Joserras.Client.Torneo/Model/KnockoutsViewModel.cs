@@ -56,8 +56,17 @@ namespace Joserras.Client.Torneo.Model
 			List<KeyValuePair<string, decimal>> list = Kos.ToList().GroupBy( k => k.Jugador ).Select( s =>
 							new KeyValuePair<string, decimal>( s.Key, s.Sum( c => c.Eliminaciones ) ) ).ToList();
 
-			Totales = new Dictionary<string, decimal>( list.OrderBy( k=>k.Value ) );
+			Totales = new Dictionary<string, decimal>( list.OrderByDescending( k=>k.Value ) );
+			KosTotales = Totales.Count;
 		}
+
+		private int kosTotales;
+		public int KosTotales
+		{
+			get { return kosTotales; }
+			set { SetProperty( ref kosTotales, value ); }
+		}
+
 
 		private List<JugadorViewModel> jugadores;
 		public List<JugadorViewModel> Jugadores

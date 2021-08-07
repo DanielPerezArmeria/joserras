@@ -35,20 +35,28 @@
 			</DataGrid.Columns>
 		</DataGrid>
 
-		<ListView Grid.Column="1" ItemsSource="{Binding Totales}">
-			<ListView.ItemTemplate>
-				<DataTemplate>
-					<TextBlock>
-						<TextBlock.Text>
-							<MultiBinding StringFormat="{}{0}: {1}">
-								<Binding Path="Key"/>
-								<Binding Path="Value"/>
-							</MultiBinding>
-						</TextBlock.Text>
-					</TextBlock>
-				</DataTemplate>
-			</ListView.ItemTemplate>
-		</ListView>
+		<Grid Grid.Column="1">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="auto"/>
+				<RowDefinition Height="*"/>
+			</Grid.RowDefinitions>
+
+			<TextBlock Grid.Row="0" Text="{Binding KosTotales, StringFormat=Totales: {0}}" Margin="3,1"/>
+			<ListView Grid.Row="1" ItemsSource="{Binding Totales}" Background="{x:Null}" IsEnabled="False">
+				<ListView.ItemTemplate>
+					<DataTemplate>
+						<TextBlock>
+							<TextBlock.Text>
+								<MultiBinding StringFormat="{}{0}: {1}">
+									<Binding Path="Key"/>
+									<Binding Path="Value"/>
+								</MultiBinding>
+							</TextBlock.Text>
+						</TextBlock>
+					</DataTemplate>
+				</ListView.ItemTemplate>
+			</ListView>
+		</Grid>
 
 	</Grid>
 		
