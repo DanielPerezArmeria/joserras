@@ -60,7 +60,7 @@
 			</Grid.RowDefinitions>
 			
 			<TextBlock Text="{Binding Bolsa, StringFormat=Bolsa: {0:C}}" FontWeight="Bold" Margin="20,0,0,5"/>
-			<ListBox Grid.Row="1" ItemsSource="{Binding Premios}" Background="{x:Null}" IsEnabled="False">
+			<ListBox Grid.Row="1" ItemsSource="{Binding Premios}" Background="{x:Null}" IsEnabled="False" BorderThickness="0">
 				<ListBox.ItemTemplate>
 					<DataTemplate>
 						<TextBlock>
