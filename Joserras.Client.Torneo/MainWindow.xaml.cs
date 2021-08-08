@@ -1,6 +1,7 @@
 ﻿using Joserras.Client.Torneo.Model;
 using Ookii.Dialogs.Wpf;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 

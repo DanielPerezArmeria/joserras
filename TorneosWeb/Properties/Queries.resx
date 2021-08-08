@@ -182,12 +182,19 @@ where liga_fees.jugador_id = premios_liga.id</value>
   <data name="GetPodiosNegativos" xml:space="preserve">
     <value>select res.nombre, count(res.nombre) as podios_neg
 from
-(select t.fecha, j.nombre, sum(d.premio) as premio, sum((t.precio_rebuy * d.rebuys) + t.precio_buyin ) as costos
+(select torneoPremios.id, fecha, nombre, premio,
+( (precio_rebuy * rebuys) + (rebuys * coalesce(fee, 0) ) + precio_buyin + coalesce(fee, 0) ) as costos
+from
+(select t.id, t.fecha, j.nombre, d.premio, t.precio_rebuy, d.rebuys, t.precio_buyin
 from jugadores j, resultados d, torneos t
-where d.podio = 1 and j.id = d.jugador_id and t.id = d.torneo_id {0} group by t.fecha, j.nombre
+where d.podio = 1 and j.id = d.jugador_id and t.id = d.torneo_id {0} ) as torneoPremios
+left outer join
+(select t.id, l.fee from ligas l, torneos_liga tl, torneos t
+where t.id = tl.torneo_id and tl.liga_id = l.id group by t.id, l.fee) as ligaFees
+on torneoPremios.id = ligaFees.id
 ) as res
 where res.premio - res.costos &lt; 0
-group by res.nombre order by podios_neg desc</value>
+group by res.nombre order by podios_neg desc;</value>
   </data>
   <data name="GetStats" xml:space="preserve">
     <value>select detalles.id, detalles.nombre, detalles.costo_total, detalles.premios, detalles.podios, detalles.victorias, detalles.burbujas, detalles.kos,
