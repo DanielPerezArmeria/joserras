@@ -71,7 +71,6 @@ namespace TorneosWeb.Controllers.api
 			catch (Exception e)
 			{
 				log.LogError( e.Message, e );
-				return null;
 			}
 
 			return premios;
@@ -89,7 +88,8 @@ namespace TorneosWeb.Controllers.api
 			catch (Exception e)
 			{
 				log.LogError( e, e.Message );
-				return BadRequest();
+				log.LogError( "Sending back: " + e.Message );
+				return BadRequest( e.Message );
 			}
 
 			log.LogDebug( "Api Tournament successfully uploaded!!!!" );
@@ -116,23 +116,11 @@ namespace TorneosWeb.Controllers.api
 			catch (Exception e)
 			{
 				log.LogError( e, e.Message );
-				return BadRequest();
+				return BadRequest( e.Message );
 			}
 
 			log.LogDebug( "Api Tournament successfully uploaded!!!!" );
 			return Ok();
-		}
-
-		// PUT api/<ClientController>/5
-		[HttpPut( "{id}" )]
-		public void Put(int id, [FromBody] string value)
-		{
-		}
-
-		// DELETE api/<ClientController>/5
-		[HttpDelete( "{id}" )]
-		public void Delete(int id)
-		{
 		}
 
 	}

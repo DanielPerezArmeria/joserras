@@ -40,7 +40,7 @@ namespace TorneosWeb.service.impl
 					IPrizeFiller selectedFiller = fillers.SingleOrDefault( f => f.CanHandle( torneo, resultados, torneo.Bolsa, premio ) );
 					if( selectedFiller == null )
 					{
-						throw new JoserrasException( "No se pudo seleccionar un Prize Filler para la posición: " + i );
+						throw new JoserrasException( string.Format( "La posición {0} tiene asignada un premio que no se puede leer: '{1}'", i, premio ) );
 					}
 
 					finalPrizes.Add( i, selectedFiller.AssignPrize( torneo, resultados, torneo.Bolsa, premio ) );
@@ -52,7 +52,7 @@ namespace TorneosWeb.service.impl
 				}
 				catch( ArgumentOutOfRangeException e )
 				{
-					string msg = string.Format( "No se pudieron asignaron los premios. Index out of bounds: {0}", i );
+					string msg = string.Format( "No se pudieron asignaron los premios. Posición fuera de rango: {0}", i );
 					log.LogError( e, msg );
 					throw new JoserrasException( msg );
 				}

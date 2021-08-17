@@ -50,7 +50,7 @@ namespace Joserras.Client.Torneo.Service.Senders
 				return "El torneo fue agregado con éxito.";
 			}
 
-			return "No se pudo crear el torneo." + "\n" + message.Content.ReadAsStringAsync();
+			return "No se pudo crear el torneo." + "\n" + message.Content.ReadAsStringAsync().Result;
 		}
 
 		private HttpContent CreateContent(TorneoUploadWrapper wrapper)
