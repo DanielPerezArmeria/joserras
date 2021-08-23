@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+		 xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+	<?include Variables.wxi ?>
+	<Product Id="*" Name="SetupProject" Language="1034" Codepage="1252" Version="1.0.0" Manufacturer="Joserramones" UpgradeCode="c882db0c-e7b4-4a55-b3b1-4399b7ba602e">
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+		<MediaTemplate EmbedCab="yes"/>
+
+		<Feature Id="Complete" Title="TorneosJoserras" Level="1" Description="Paquete completo de instalación" Display="expand">
+      <ComponentGroupRef Id="ClientComponents" />
+      <ComponentRef Id="ApplicationShortcutDesktop"/>
+      <ComponentRef Id="ClientDir_Permission"/>
+		</Feature>
+	
+	</Product>
+
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			
+			<Directory Id="DesktopFolder" Name="Desktop">
+				<Component Id="ApplicationShortcutDesktop" Guid="*">
+					<Shortcut Id="ApplicationDesktopShortcut"
+              Name="Torneos Joserras"
+              Target="[INSTALLDIR]Joserras.Client.Torneo.exe"
+              WorkingDirectory="INSTALLDIR"/>
+					<RemoveFolder Id="DesktopFolder" On="uninstall"/>
+					<RegistryValue Root="HKCU"
+                         Key="Software/JoserrasTorneos"
+                         Name="installed"
+                         Type="integer"
+                         Value="1"
+                         KeyPath="yes"/>
+					<RemoveRegistryKey Key="Software/JoserrasTorneos" Action="removeOnUninstall" Root="HKCU"/>
+				</Component>
+			</Directory>
+			
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="INSTALLDIR" Name="Joserras">
+					<Component Id="ClientDir_Permission" Guid="*">
+						<CreateFolder>
+							<util:PermissionEx User="Everyone" GenericAll="yes"/>
+						</CreateFolder>
+						<RegistryValue Root="HKCU"
+                         Key="Software/JoserrasTorneos"
+                         Name="folderPermissions"
+                         Type="integer"
+                         Value="1"
+                         KeyPath="yes"/>
+					</Component>
+				</Directory>
+			</Directory>
+			
+		</Directory>
+	</Fragment>
+	
+</Wix>

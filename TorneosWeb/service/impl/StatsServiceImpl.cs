@@ -234,11 +234,9 @@ namespace TorneosWeb.service.impl
 					props[ reader.GetString( 0 ) ] = reader.GetInt32( 1 );
 				}
 			} );
-			if( props.Count > 0 )
-			{
-				mayor = props.Aggregate( (pair1, pair2) => pair1.Value > pair2.Value ? pair1 : pair2 ).Value;
-				piedra.Participantes.AddRange( from b in props where b.Value == mayor select new StatProps( b.Key, b.Value.ToString() ) ); 
-			}
+
+			List<KeyValuePair<string, int>> negPodiosList = props.OrderByDescending( p => p.Value ).ToList();
+			piedra.Participantes.AddRange( negPodiosList.Take( 3 ).Select( s => new StatProps( s.Key, s.Value.ToString() ) ) );
 
 			estadisticas.Stats.Add( joserramon );
 			estadisticas.Stats.Add( brailovsky );

@@ -19,7 +19,7 @@ namespace TorneosWeb.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Queries {
@@ -157,12 +157,14 @@ namespace TorneosWeb.Properties {
         /// <summary>
         ///   Looks up a localized string similar to select res.nombre, count(res.nombre) as podios_neg
         ///from
-        ///(select t.fecha, j.nombre, sum(d.premio) as premio, sum((t.precio_rebuy * d.rebuys) + t.precio_buyin ) as costos
+        ///(select torneoPremios.id, fecha, nombre, premio,
+        ///( (precio_rebuy * rebuys) + (rebuys * coalesce(fee, 0) ) + precio_buyin + coalesce(fee, 0) ) as costos
+        ///from
+        ///(select t.id, t.fecha, j.nombre, d.premio, t.precio_rebuy, d.rebuys, t.precio_buyin
         ///from jugadores j, resultados d, torneos t
-        ///where d.podio = 1 and j.id = d.jugador_id and t.id = d.torneo_id {0} group by t.fecha, j.nombre
-        ///) as res
-        ///where res.premio - res.costos &lt; 0
-        ///group by res.nombre order by podios_neg desc.
+        ///where d.podio = 1 and j.id = d.jugador_id and t.id = d.torneo_id {0} ) as torneoPremios
+        ///left outer join
+        ///(select t.id, l.fee from ligas l, torneos_liga tl, torneos t [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string GetPodiosNegativos {
             get {
