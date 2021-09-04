@@ -1,5 +1,8 @@
 ﻿@page
 @model TorneosWeb.Pages.EstadisticasModel
+@{
+	ViewData["StatsLevel"] = 1;
+}
 
 <head>
 	<meta name="viewport" content="width=device-width" />
@@ -7,9 +10,9 @@
 	<title>Estadisticas</title>
 </head>
 
-<partial name="_Estadisticas" model="Model.Estadisticas"/>
+<partial name="_Estadisticas" model="Model.Estadisticas" />
 
-@section Scripts{ 
+@section Scripts{
 	<script>
 		$(document).ready(function () {
 			$('#table_stats').DataTable({
