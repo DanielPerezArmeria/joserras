@@ -38,6 +38,7 @@ namespace TorneosWeb.domain.models
 		public string Imagen { get; set; }
 		public string Descripcion { get; set; }
 		public string Valor { get; set; }
+		public int Level { get; set; }
 
 		private List<StatProps> participantes;
 		public List<StatProps> Participantes { get { return participantes; } }
@@ -49,8 +50,19 @@ namespace TorneosWeb.domain.models
 			Titulo = titulo;
 			Descripcion = desc;
 			Imagen = imagen;
+			Level = 0;
 			participantes = new List<StatProps>();
 		}
+
+		public Stat(string titulo, string desc, string imagen, int level)
+		{
+			Titulo = titulo;
+			Descripcion = desc;
+			Imagen = imagen;
+			Level = level;
+			participantes = new List<StatProps>();
+		}
+
 	}
 
 }

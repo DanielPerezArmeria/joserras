@@ -141,6 +141,11 @@
 <div class="cardContainer">
 	@foreach( var stat in Model.Stats )
 	{
+		if(stat.Level > (int)ViewData["StatsLevel"])
+		{
+			continue;
+		}
+
 		<div class="card statCard">
 			<div class="statTitle">
 				<h3 class="statTitle">@stat.Titulo</h3>

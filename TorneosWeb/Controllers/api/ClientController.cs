@@ -79,7 +79,7 @@ namespace TorneosWeb.Controllers.api
 		[HttpPost("UploadJson")]
 		public IActionResult UploadJson(TorneoUploadWrapper wrapper)
 		{
-			log.LogDebug( "Post Api: UploadJson:'{0}'", wrapper );
+			log.LogDebug( "Post Api: Torneo:'{0}'", wrapper.Torneo );
 
 			try
 			{

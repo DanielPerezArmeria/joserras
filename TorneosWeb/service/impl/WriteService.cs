@@ -128,6 +128,15 @@ namespace TorneosWeb.service.impl
 				resultados.Single( r => r.Posicion == key ).Premio = prizes[key];
 			}
 
+			if(resultados.Sum( r => decimal.Parse( r.Premio ) ) != torneo.Bolsa.Total)
+			{
+				string msg = string.Format( "Los premios otorgados suman {0} pero la Bolsa es igual a {1}",
+					resultados.Sum( r => decimal.Parse( r.Premio ) ).ToString( Constants.CURRENCY_FORMAT ),
+					torneo.Bolsa.Total.ToString( Constants.CURRENCY_FORMAT ) );
+
+				throw new JoserrasException( msg );
+			}
+
 			SetBurbuja( resultados );
 
 			foreach( ResultadosDTO dto in resultados )

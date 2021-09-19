@@ -8,6 +8,7 @@ namespace Joserras.Commons.Dto
 		{
 			Premio = "0";
 			Puntualidad = true;
+			Rebuys = 0;
 		}
 
 		public Guid TorneoId { get; set; }

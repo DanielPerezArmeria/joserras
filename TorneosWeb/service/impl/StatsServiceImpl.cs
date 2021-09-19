@@ -81,12 +81,12 @@ namespace TorneosWeb.service.impl
 
 		private void RemoveInactivePlayers(DateTime lastDate, Estadisticas estadisticas, SqlConnection conn)
 		{
-			// Quita los jugadores q han jugado menos del 10% de los juegos
+			// Selecciona los jugadores q han jugado menos del 10% de los juegos
 			int maxTorneos = estadisticas.Detalles.Max( d => d.Torneos );
 			List<Guid> jugadoresMenosDiezPorCiento =
 					estadisticas.Detalles.Where( d => d.Torneos < maxTorneos * 0.15  ).Select( d => d.Id ).ToList();
 
-			// Quita los jugadores q no han jugado en 3 meses
+			// Selecciona los jugadores q no han jugado en 2 meses
 			List<Guid> jugadoresInactividad = new List<Guid>();
 			foreach( DetalleJugador det in estadisticas.Detalles.ToList() )
 			{
@@ -96,7 +96,7 @@ namespace TorneosWeb.service.impl
 					while( reader.Read() )
 					{
 						DateTime lastTourney = (DateTime)reader[ "fecha" ];
-						if( (lastDate - lastTourney).TotalDays > 90 )
+						if( (lastDate - lastTourney).TotalDays > 60 )
 						{
 							jugadoresInactividad.Add( det.Id );
 						}
@@ -104,6 +104,7 @@ namespace TorneosWeb.service.impl
 				} );
 			}
 
+			// Quita a los jugadores que han jugado menos del 10% de torneos y que además no han jugado en 2 meses
 			if( jugadoresMenosDiezPorCiento.Count > 0 && jugadoresInactividad.Count > 0 )
 			{
 				log.LogDebug( "{0} jugadores con menos del 15% de los {1} torneos jugados:", jugadoresMenosDiezPorCiento.Count, maxTorneos );
@@ -156,6 +157,10 @@ namespace TorneosWeb.service.impl
 			DetalleJugador dj = estadisticas.Detalles.OrderByDescending( p => p.ROINumber ).First();
 			brailovsky.Participantes.Add( new StatProps( dj.Nombre, dj.ROI, dj.ROINumber > 0 ? true : false ) );
 
+			Stat orvañanos = new Stat( "Orvañanos", "Peor ROI", "orvañanos_t.png" );
+			dj = estadisticas.Detalles.OrderBy( p => p.ROINumber ).First();
+			orvañanos.Participantes.Add( new StatProps( dj.Nombre, dj.ROI, dj.ROINumber > 0 ? true : false ) );
+
 			Stat victorias = new Stat( "Medalla de Oro", "Más 1ros lugares", "medalla_t.png" );
 			IEnumerable<DetalleJugador> dets = estadisticas.Detalles.OrderByDescending( p => p.Victorias );
 			mayor = dets.First().Victorias;
@@ -166,7 +171,7 @@ namespace TorneosWeb.service.impl
 			mayor = dets.First().Podios;
 			podios.Participantes.AddRange( from d in dets where d.Podios == mayor select new StatProps( d.Nombre, d.Podios.ToString() ) );
 
-			Stat coyote = new Stat( "Wile E. Coyote", "Menos podios", "coyote_t.png" );
+			Stat coyote = new Stat( "Juan Ga", "Menos podios", "juan_ga.jpg" );
 			dets = estadisticas.Detalles.OrderBy( p => p.Podios );
 			mayor = dets.First().Podios;
 			coyote.Participantes.AddRange( from d in dets where d.Podios == mayor select new StatProps( d.Nombre, d.Podios.ToString() ) );
@@ -235,12 +240,25 @@ namespace TorneosWeb.service.impl
 				}
 			} );
 
+			Stat bejarano = new Stat( "Bejarano", "El Señor de las Ligas", "bejarano_t.png", 1 );
+			dets = estadisticas.Detalles.OrderByDescending( d => d.PremiosLigaNumber );
+			mayor = dets.First().PremiosLigaNumber;
+			bejarano.Participantes.AddRange( from d in dets where d.PremiosLigaNumber == mayor select new StatProps( d.Nombre, d.PremiosLiga ) );
+
+			Stat juanito = new Stat( "Juanito", "Menos premios de Liga", "juanito_t.png", 1 );
+			dets = estadisticas.Detalles.OrderBy( d => d.PremiosLigaNumber );
+			mayor = dets.First().PremiosLigaNumber;
+			juanito.Participantes.AddRange( from d in dets where d.PremiosLigaNumber == mayor select new StatProps( d.Nombre, d.PremiosLiga ) );
+
 			List<KeyValuePair<string, int>> negPodiosList = props.OrderByDescending( p => p.Value ).ToList();
 			piedra.Participantes.AddRange( negPodiosList.Take( 3 ).Select( s => new StatProps( s.Key, s.Value.ToString() ) ) );
 
 			estadisticas.Stats.Add( joserramon );
 			estadisticas.Stats.Add( brailovsky );
+			estadisticas.Stats.Add( orvañanos );
 			estadisticas.Stats.Add( pichon );
+			estadisticas.Stats.Add( bejarano );
+			estadisticas.Stats.Add( juanito );
 			estadisticas.Stats.Add( victorias );
 			estadisticas.Stats.Add( podios );
 			estadisticas.Stats.Add( coyote );

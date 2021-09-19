@@ -2,6 +2,7 @@
 using Joserras.Client.Torneo.Model;
 using Joserras.Client.Torneo.Properties;
 using Joserras.Commons.Dto;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -14,16 +15,18 @@ namespace Joserras.Client.Torneo.Service.Senders
 	{
 		private IHttpService httpService;
 		private IMapper mapper;
+		private ILogger<JsonTournamentSender> log;
 
-		public JsonTournamentSender(IHttpService httpService, IMapper mapper)
+		public JsonTournamentSender(IHttpService httpService, IMapper mapper, ILogger<JsonTournamentSender> logger)
 		{
 			this.httpService = httpService;
 			this.mapper = mapper;
+			this.log = logger;
 		}
 
 		public string SendTournament(TorneoViewModel torneo, List<Resultado> resultados, List<KO> kos)
 		{
-			TorneoUploadWrapper wrapper = new TorneoUploadWrapper( mapper.Map<TorneoDTO>(torneo),
+			TorneoUploadWrapper wrapper = new TorneoUploadWrapper( mapper.Map<TorneoDTO>( torneo ),
 				mapper.Map<List<ResultadosDTO>>( resultados ), mapper.Map<List<KnockoutsDTO>>( kos ) );
 
 			HttpContent content = CreateContent( wrapper );
@@ -39,7 +42,12 @@ namespace Joserras.Client.Torneo.Service.Senders
 
 		public async Task<string> SendTournamentAsync(TorneoViewModel torneo, List<Resultado> resultados, List<KO> kos)
 		{
-			TorneoUploadWrapper wrapper = new TorneoUploadWrapper( mapper.Map<TorneoDTO>( torneo ),
+			log.LogDebug( "Torneo: {0}", torneo );
+
+			TorneoDTO torneoDto = mapper.Map<TorneoDTO>( torneo );
+			log.LogDebug( "Torneo DTO: {0}", torneoDto );
+
+			TorneoUploadWrapper wrapper = new TorneoUploadWrapper( torneoDto,
 				mapper.Map<List<ResultadosDTO>>( resultados ), mapper.Map<List<KnockoutsDTO>>( kos ) );
 
 			HttpContent content = CreateContent( wrapper );

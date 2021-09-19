@@ -1,5 +1,6 @@
 ﻿using Joserras.Client.Torneo.Domain;
 using Joserras.Commons.Domain;
+using Joserras.Commons.Utils;
 using System;
 using System.Collections.Generic;
 
@@ -71,6 +72,10 @@ namespace Joserras.Client.Torneo.Model
 			return new List<TorneoViewModel>() { this };
 		}
 
+		public override string ToString()
+		{
+			return this.PropertyList();
+		}
 
 	}
 
