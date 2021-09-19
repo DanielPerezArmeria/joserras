@@ -1,4 +1,5 @@
 ﻿using Joserras.Commons.Domain;
+using Joserras.Commons.Utils;
 using System;
 
 namespace Joserras.Commons.Dto
@@ -25,6 +26,12 @@ namespace Joserras.Commons.Dto
 		public bool Liga { get; set; }
 
 		public string Premiacion { get; set; }
+
+		public override string ToString()
+		{
+			return this.PropertyList();
+		}
+
 	}
 
 }
