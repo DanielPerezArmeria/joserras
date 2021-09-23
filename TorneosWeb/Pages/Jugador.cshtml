@@ -13,7 +13,7 @@
 <head>
 	<link rel="stylesheet" type="text/css" href="~/css/site.css" />
 	<link rel="stylesheet" type="text/css" href="~/charts_js/Chart.css" />
-	<script src="~/charts_js/Chart.bundle.js"></script>
+	<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 	<meta name="viewport" content="width=device-width" />
 	<title>Jugador</title>
 </head>
@@ -163,6 +163,10 @@
 		</table>
 	</div>
 
+	<hr style="margin-top:3em;margin-bottom:3em;border: 3px solid black;background-color:black" />
+
+	<div id="chartContainer"></div>
+
 </body>
 
 @section Scripts{
@@ -175,6 +179,39 @@
 				pageLength: 25
 			});
 		});
+
+		window.onload = function () {
+			var chart = new CanvasJS.Chart("chartContainer", {
+				theme: "light2",
+				animationEnabled: true,
+				title: {
+					text: "PROFIT"
+				},
+				data: [
+					{
+						type: "line", //change type to bar, line, area, pie, etc
+						color: "grey",
+						markerColor: "green",
+						dataPoints: @Html.Raw(Model.DataPoints)
+					}
+				]
+			});
+
+			setColor(chart);
+			chart.render();
+
+			function setColor(chart) {
+				for (var i = 0; i < chart.options.data.length; i++) {
+					dataSeries = chart.options.data[i];
+					for (var j = 0; j < dataSeries.dataPoints.length; j++) {
+						if (dataSeries.dataPoints[j].y <= 0) {
+							dataSeries.dataPoints[j].markerColor = 'red';
+							dataSeries.dataPoints[j].color = 'red';
+						}
+					}
+				}
+			}
+		};
 	</script>
 }
 
