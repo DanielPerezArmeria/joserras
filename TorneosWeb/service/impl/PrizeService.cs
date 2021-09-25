@@ -1,4 +1,5 @@
-﻿using Joserras.Commons.Domain;
+﻿using Humanizer;
+using Joserras.Commons.Domain;
 using Joserras.Commons.Dto;
 using Joserras.Commons.Exceptions;
 using Microsoft.Extensions.Logging;
@@ -43,7 +44,8 @@ namespace TorneosWeb.service.impl
 						throw new JoserrasException( string.Format( "La posición {0} tiene asignada un premio que no se puede leer: '{1}'", i, premio ) );
 					}
 
-					finalPrizes.Add( i, selectedFiller.AssignPrize( torneo, resultados, torneo.Bolsa, premio ) );
+					string finalPrize = selectedFiller.AssignPrize( torneo, resultados, torneo.Bolsa, premio );
+					finalPrizes.Add( i, finalPrize );
 				}
 				catch( JoserrasException je )
 				{
@@ -75,6 +77,7 @@ namespace TorneosWeb.service.impl
 				finalPrizes.Remove( pair );
 			}
 
+			log.LogDebug( "Premios: {0}", finalPrizes.Humanize() );
 			return finalPrizes;
 		}
 
