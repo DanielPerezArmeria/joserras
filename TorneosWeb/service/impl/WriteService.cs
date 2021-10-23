@@ -213,7 +213,7 @@ namespace TorneosWeb.service.impl
 			// Insertar kos y bounties
 			query = @"update resultados set premio_bounties = {0}, kos = {1} where torneo_id = '{2}' and jugador_id = (select id from jugadores where nombre = '{3}')";
 			IEnumerable<Tuple<string, decimal>> tuples =
-				kos.GroupBy( k => k.Jugador ).Select( s => new Tuple<string, decimal>( s.First().Jugador, s.Count() ) );
+				kos.GroupBy( k => k.Jugador ).Select( s => new Tuple<string, decimal>( s.First().Jugador, s.Sum( j => j.Eliminaciones ) ) );
 			foreach( Tuple<string, decimal> t in tuples )
 			{
 				decimal bountyPrice = t.Item2 * torneo.PrecioBounty;

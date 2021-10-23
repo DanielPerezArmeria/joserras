@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using TorneosWeb.util.csvreader;
 
 namespace TorneosWeb.service.impl
 {
@@ -38,6 +39,8 @@ namespace TorneosWeb.service.impl
 			using( StreamReader streamReader = new StreamReader( file.OpenReadStream() ) )
 			{
 				CsvReader csv = new CsvReader( streamReader, config );
+				csv.Context.RegisterClassMap<KnockoutsMap>();
+				csv.Context.RegisterClassMap<ResultadosMap>();
 				try
 				{
 					items = csv.GetRecords<T>().ToList();
