@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using TorneosWeb.domain;
 using TorneosWeb.domain.models;
 using TorneosWeb.service;
 
@@ -13,14 +15,16 @@ namespace TorneosWeb.Pages
 	{
 		public DetalleJugador DetalleJugador { get; set; }
 		public List<JugadorTorneosViewModel> Torneos { get; set; }
-		public IDictionary<int,int> Podios { get; set; }
+		public IDictionary<int, int> Podios { get; set; }
+		public string DataPoints { get; set; }
 
 		private IReadService readService;
+		private IChartService chartService;
 
-
-		public JugadorModel(IReadService service)
+		public JugadorModel(IReadService service, IChartService chartService)
 		{
 			readService = service;
+			this.chartService = chartService;
 		}
 
 		public void OnGet(Guid id)
@@ -57,6 +61,9 @@ namespace TorneosWeb.Pages
 
 				Podios[ pos.Lugar ] += 1;
 			}
+
+			List<ChartDataPoint> points = chartService.GetPlayerProfitChartData( id );
+			DataPoints = JsonConvert.SerializeObject( points );
 		}
 
 

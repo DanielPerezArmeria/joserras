@@ -1,4 +1,5 @@
-﻿using Joserras.Commons.Db;
+﻿using Humanizer;
+using Joserras.Commons.Db;
 using Joserras.Commons.Domain;
 using Joserras.Commons.Dto;
 using Joserras.Commons.Exceptions;
@@ -123,9 +124,15 @@ namespace TorneosWeb.service.impl
 				+ "{2}, {3}, '{4}', {5}, '{6}', '{7}')";
 
 			IDictionary<int, string> prizes = prizeService.GetPremios( torneo, resultados );
+
 			foreach(int key in prizes.Keys)
 			{
 				resultados.Single( r => r.Posicion == key ).Premio = prizes[key];
+			}
+
+			foreach(ResultadosDTO res in resultados)
+			{
+				log.LogDebug( "Posición: {0} - Premio: {1}", res.Posicion, res.Premio );
 			}
 
 			if(resultados.Sum( r => decimal.Parse( r.Premio ) ) != torneo.Bolsa.Total)
@@ -206,7 +213,7 @@ namespace TorneosWeb.service.impl
 			// Insertar kos y bounties
 			query = @"update resultados set premio_bounties = {0}, kos = {1} where torneo_id = '{2}' and jugador_id = (select id from jugadores where nombre = '{3}')";
 			IEnumerable<Tuple<string, decimal>> tuples =
-				kos.GroupBy( k => k.Jugador ).Select( s => new Tuple<string, decimal>( s.First().Jugador, s.Count() ) );
+				kos.GroupBy( k => k.Jugador ).Select( s => new Tuple<string, decimal>( s.First().Jugador, s.Sum( j => j.Eliminaciones ) ) );
 			foreach( Tuple<string, decimal> t in tuples )
 			{
 				decimal bountyPrice = t.Item2 * torneo.PrecioBounty;

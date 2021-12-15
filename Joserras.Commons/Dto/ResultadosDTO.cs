@@ -20,7 +20,22 @@ namespace Joserras.Commons.Dto
 
 		public bool Podio { get; set; }
 
-		public string Premio { get; set; }
+		private string premio;
+		public string Premio
+		{
+			get
+			{
+				if (string.IsNullOrWhiteSpace( premio ))
+				{
+					return "0";
+				}
+				return premio;
+			}
+			set
+			{
+				premio = value;
+			}
+		}
 
 		public bool Burbuja { get; set; }
 
