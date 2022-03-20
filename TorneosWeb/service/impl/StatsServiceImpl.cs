@@ -171,7 +171,7 @@ namespace TorneosWeb.service.impl
 			mayor = dets.First().Podios;
 			podios.Participantes.AddRange( from d in dets where d.Podios == mayor select new StatProps( d.Nombre, d.Podios.ToString() ) );
 
-			Stat coyote = new Stat( "Juan Ga", "Menos podios", "juan_ga.jpg" );
+			Stat coyote = new Stat( "Juanga", "Menos podios", "juan_ga.jpg" );
 			dets = estadisticas.Detalles.OrderBy( p => p.Podios );
 			mayor = dets.First().Podios;
 			coyote.Participantes.AddRange( from d in dets where d.Podios == mayor select new StatProps( d.Nombre, d.Podios.ToString() ) );
