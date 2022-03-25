@@ -83,12 +83,13 @@ namespace TorneosWeb.domain.models
 			get { return  KosNumber.ToString( Constants.POINTS_FORMAT ); }
 		}
 
+		[Display( Name = "ROI" )]
 		[NoMap]
 		public string ROI
 		{
 			get
 			{
-				return ROINumber != 0 ? ((float)ProfitNumber / (float)CostosTotalesNumber).ToString( Constants.ROI_FORMAT ) : "%0.0";
+				return ROINumber != 0 ? ROINumber.ToString( Constants.ROI_FORMAT ) : "%0.0";
 			}
 		}
 

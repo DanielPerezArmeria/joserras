@@ -67,19 +67,19 @@
 				<td style="text-align:center">
 					@Html.DisplayFor( modelItem => detalle.Torneos )
 				</td>
-				<td style="text-align:right;margin-right:10em;color:@(detalle.ProfitNumber < 0 ? "red" : "black")">
+				<td style="text-align:right;color:@(detalle.ProfitNumber < 0 ? "red" : "black")">
 					@Html.DisplayFor( modelItem => detalle.Profit )
 				</td>
 				@if( !"Liga".Equals( ViewData[ "Listado" ] ) )
 				{
-					<td style="font-size:small;text-align:right;margin-right:10em;color:@(detalle.ProfitTorneosNumber < 0 ? "red" : "black")">
+					<td style="font-size:small;text-align:right;color:@(detalle.ProfitTorneosNumber < 0 ? "red" : "black")">
 						@Html.DisplayFor( modelItem => detalle.ProfitTorneos )
 					</td>
-					<td style="font-size:small;text-align:right;margin-right:10em;color:@(detalle.ProfitLigasNumber < 0 ? "red" : "black")">
+					<td style="font-size:small;text-align:right;color:@(detalle.ProfitLigasNumber < 0 ? "red" : "black")">
 						@Html.DisplayFor( modelItem => detalle.ProfitLigas )
 					</td>
 				}
-				<td style="text-align:right;margin-right:10em;color:@(detalle.ROINumber < 0 ? "red" : "black")">
+				<td style="text-align:right;min-width:55px;color:@(detalle.ROINumber < 0 ? "red" : "black")">
 					@Html.DisplayFor( modelItem => detalle.ROI )
 				</td>
 				<td style="text-align:center">
