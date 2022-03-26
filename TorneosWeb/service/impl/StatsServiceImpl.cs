@@ -146,20 +146,19 @@ namespace TorneosWeb.service.impl
 			}
 
 			Stat joserramon = new Stat( "Joserramón", "Más Profit", "joseramon_t.png" );
-			joserramon.Participantes.Add( new StatProps( estadisticas.Detalles[ 0 ].Nombre, estadisticas.Detalles[ 0 ].Profit,
-				estadisticas.Detalles[ 0 ].ProfitNumber > 0 ? true : false ) );
+			joserramon.Participantes.Add( new StatProps( estadisticas.Detalles[ 0 ].Nombre, estadisticas.Detalles[ 0 ].Profit, estadisticas.Detalles[ 0 ].ProfitNumber > 0 ) );
 
 			Stat pichon = new Stat( "Pichón", "Mayores pérdidas", "pichon_t.png" );
 			decimal mayor = estadisticas.Detalles.Last().ProfitNumber;
-			pichon.Participantes.AddRange( from d in estadisticas.Detalles where d.ProfitNumber == mayor select new StatProps( d.Nombre, d.Profit, d.ProfitNumber > 0 ? true : false ) );
+			pichon.Participantes.AddRange( from d in estadisticas.Detalles where d.ProfitNumber == mayor select new StatProps( d.Nombre, d.Profit, d.ProfitNumber > 0 ) );
 
 			Stat brailovsky = new Stat( "Brailovsky", "Mayor ROI", "brailovsky_t.png" );
 			DetalleJugador dj = estadisticas.Detalles.OrderByDescending( p => p.ROINumber ).First();
-			brailovsky.Participantes.Add( new StatProps( dj.Nombre, dj.ROI, dj.ROINumber > 0 ? true : false ) );
+			brailovsky.Participantes.Add( new StatProps( dj.Nombre, dj.ROI, dj.ROINumber > 0 ) );
 
 			Stat orvañanos = new Stat( "Orvañanos", "Peor ROI", "orvañanos_t.png" );
 			dj = estadisticas.Detalles.OrderBy( p => p.ROINumber ).First();
-			orvañanos.Participantes.Add( new StatProps( dj.Nombre, dj.ROI, dj.ROINumber > 0 ? true : false ) );
+			orvañanos.Participantes.Add( new StatProps( dj.Nombre, dj.ROI, dj.ROINumber > 0 ) );
 
 			Stat victorias = new Stat( "Medalla de Oro", "Más 1ros lugares", "medalla_t.png" );
 			IEnumerable<DetalleJugador> dets = estadisticas.Detalles.OrderByDescending( p => p.Victorias );
@@ -201,7 +200,7 @@ namespace TorneosWeb.service.impl
 			mayor = bundies.Aggregate( (pair1, pair2) => pair1.Value > pair2.Value ? pair1 : pair2 ).Value;
 			bundy.Participantes.AddRange( from p in bundies where p.Value == mayor select new StatProps( p.Key, p.Value.ToString() ) );
 
-			Stat bubbleBoy = new Stat( "Eterno 4to", "Más burbujas", "bubbleboy_t.png" );
+			Stat bubbleBoy = new Stat( "Bubble Boy", "Más burbujas", "bubbleboy_t.png" );
 			query = string.Format( Queries.GetBurbuja, q );
 			Dictionary<string, int> burbujas = new Dictionary<string, int>();
 			joserrasQuery.ExecuteQuery( conn, query, reader =>
