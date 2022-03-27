@@ -1,9 +1,7 @@
 ﻿using Joserras.Commons.Db;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
 using TorneosWeb.dao;
 using TorneosWeb.domain.models;
@@ -17,12 +15,11 @@ namespace TorneosWeb.service.impl
 	{
 		private readonly JoserrasQuery joserrasQuery;
 		private readonly ILogger<LigaReader> Log;
-		private readonly string ConnString;
 		private readonly IReadService readService;
 		private readonly IStatsService statsService;
 		private readonly ILigaDao ligaDao;
 
-		public LigaReader(IConfiguration conf, IReadService readService, JoserrasQuery joserrasQuery,
+		public LigaReader(IReadService readService, JoserrasQuery joserrasQuery,
 			IStatsService statsService, ILogger<LigaReader> log, ILigaDao ligaDao)
 		{
 			this.joserrasQuery = joserrasQuery;
@@ -30,30 +27,24 @@ namespace TorneosWeb.service.impl
 			this.statsService = statsService;
 			this.ligaDao = ligaDao;
 			Log = log;
-			ConnString = conf.GetConnectionString( Properties.Resources.joserrasDb );
 		}
 
 		public Liga FindLigaByNombre(string nombre)
 		{
 			Liga liga = null;
-			using( SqlConnection conn = new SqlConnection( ConnString ) )
+			liga = ligaDao.FindLigaByNombre( nombre );
+
+			string query = string.Format( "select torneo_id from torneos_liga where liga_id = '{0}'", liga.Id );
+			List<Guid> torneosIds = new List<Guid>();
+			joserrasQuery.ExecuteQuery( query, reader =>
 			{
-				conn.Open();
-
-				liga = ligaDao.FindLigaByNombre( nombre );
-
-				string query = string.Format( "select torneo_id from torneos_liga where liga_id = '{0}'", liga.Id );
-				List<Guid> torneosIds = new List<Guid>();
-				joserrasQuery.ExecuteQuery( conn, query, reader =>
+				while( reader.Read() )
 				{
-					while( reader.Read() )
-					{
-						torneosIds.Add( (Guid)reader[ "torneo_id" ] );
-					}
-				} );
+					torneosIds.Add( (Guid)reader[ "torneo_id" ] );
+				}
+			} );
 
-				liga.Torneos = readService.GetAllTorneos().Where( t => torneosIds.Contains( t.Id ) ).ToList();
-			}
+			liga.Torneos = readService.GetAllTorneos().Where( t => torneosIds.Contains( t.Id ) ).ToList();
 
 			liga.Estadisticas = statsService.GetStats( liga );
 			liga.Standings = GetStandings( liga );

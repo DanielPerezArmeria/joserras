@@ -28,6 +28,12 @@ namespace TorneosWeb.dao.impl
 		public Liga GetLigaByTorneoId(Guid torneoId)
 		{
 			string query = string.Format( "select * from ligas where id = (select liga_id from torneos_liga where torneo_id = '{0}')", torneoId );
+			return ExecuteLigaQuery( query );
+		}
+
+		public Liga GetLigaById(Guid ligaId)
+		{
+			string query = string.Format( "select * from ligas where id = '{0}'", ligaId );
 			return ExecuteLigaQuery( query ); ;
 		}
 
@@ -124,6 +130,36 @@ namespace TorneosWeb.dao.impl
 			} );
 
 			return profitObjects;
+		}
+
+		public IDictionary<Guid, List<Guid>> GetTorneosInLigas()
+		{
+			Dictionary<Guid, List<Guid>> ligas = new();
+			string query = "select * from torneos_liga";
+
+			joserrasQuery.ExecuteQuery( query, reader =>
+			{
+				while( reader.Read() )
+				{
+					try
+					{
+						Guid ligaId = (Guid)reader["liga_id"];
+						if( !ligas.ContainsKey( ligaId ) )
+						{
+							ligas.Add( ligaId, new List<Guid>() );
+						}
+
+						ligas[ligaId].Add( (Guid)reader["torneo_id"] );
+					}
+					catch( Exception e )
+					{
+						log.LogError( e, e.Message );
+						throw;
+					}
+				}
+			} );
+
+			return ligas;
 		}
 
 	}

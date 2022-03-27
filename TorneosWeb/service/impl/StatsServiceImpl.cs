@@ -1,11 +1,10 @@
 ﻿using Humanizer;
 using Joserras.Commons.Db;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
+using TorneosWeb.dao;
 using TorneosWeb.domain.models;
 using TorneosWeb.domain.models.ligas;
 using TorneosWeb.Properties;
@@ -15,47 +14,39 @@ namespace TorneosWeb.service.impl
 {
 	public class StatsServiceImpl : IStatsService
 	{
-		private readonly string connString;
 		private JoserrasQuery joserrasQuery;
 		private IReadService readService;
+		private ITournamentDao tournamentDao;
 		private ILogger<StatsServiceImpl> log;
 
-		public StatsServiceImpl(IConfiguration conf, IReadService readService, JoserrasQuery joserrasQuery, ILogger<StatsServiceImpl> logger)
+		public StatsServiceImpl(IReadService readService, JoserrasQuery joserrasQuery, ITournamentDao tournamentDao, ILogger<StatsServiceImpl> logger)
 		{
-			connString = conf.GetConnectionString( Properties.Resources.joserrasDb );
 			this.joserrasQuery = joserrasQuery;
 			this.readService = readService;
+			this.tournamentDao = tournamentDao;
 			log = logger;
 		}
 
 		public Estadisticas GetStats()
 		{
 			Estadisticas estadisticas = new Estadisticas();
-			using( SqlConnection conn = new SqlConnection( connString ) )
-			{
-				conn.Open();
-				estadisticas.Knockouts = readService.GetAllKnockouts();
-				estadisticas.Detalles = readService.GetAllDetalleJugador();
+			estadisticas.Knockouts = readService.GetAllKnockouts();
+			estadisticas.Detalles = readService.GetAllDetalleJugador();
 
-				RemoveInactivePlayers( DateTime.Now, estadisticas, conn );
+			RemoveInactivePlayers( DateTime.Now, estadisticas );
 
-				return GetStats( estadisticas, string.Empty, conn );
-			}
+			return GetStats( estadisticas, string.Empty );
 		}
 
 		public Estadisticas GetStats(DateTime start, DateTime end)
 		{
 			Estadisticas estadisticas = new Estadisticas();
-			using( SqlConnection conn = new SqlConnection( connString ) )
-			{
-				conn.Open();
-				estadisticas.Knockouts = readService.GetAllKnockouts( start, end );
-				estadisticas.Detalles = readService.GetAllDetalleJugador( start, end );
+			estadisticas.Knockouts = readService.GetAllKnockouts( start, end );
+			estadisticas.Detalles = readService.GetAllDetalleJugador( start, end );
 
-				RemoveInactivePlayers( end, estadisticas, conn );
+			RemoveInactivePlayers( end, estadisticas );
 
-				return GetStats( estadisticas, QueryUtils.FormatTorneoBetween( start, end ), conn );
-			}
+			return GetStats( estadisticas, QueryUtils.FormatTorneoBetween( start, end ) );
 		}
 
 		public Estadisticas GetStats(Liga liga)
@@ -67,22 +58,18 @@ namespace TorneosWeb.service.impl
 				return estadisticas;
 			}
 
-			using( SqlConnection conn = new SqlConnection( connString ) )
-			{
-				conn.Open();
-				estadisticas.Knockouts = readService.GetAllKnockouts( liga );
-				estadisticas.Detalles = readService.GetAllDetalleJugador( liga );
+			estadisticas.Knockouts = readService.GetAllKnockouts( liga );
+			estadisticas.Detalles = readService.GetAllDetalleJugador( liga );
 
-				RemoveInactivePlayers( liga.Torneos[0].FechaDate, estadisticas, conn );
+			RemoveInactivePlayers( liga.Torneos[0].FechaDate, estadisticas );
 
-				return GetStats( estadisticas, QueryUtils.FormatTorneoIdIn( liga ), conn );
-			}
+			return GetStats( estadisticas, QueryUtils.FormatTorneoIdIn( liga ) );
 		}
 
-		private void RemoveInactivePlayers(DateTime lastDate, Estadisticas estadisticas, SqlConnection conn)
+		private void RemoveInactivePlayers(DateTime lastDate, Estadisticas estadisticas)
 		{
 			// Selecciona los jugadores q han jugado menos del 10% de los juegos
-			int maxTorneos = estadisticas.Detalles.Max( d => d.Torneos );
+			int maxTorneos = tournamentDao.GetTotalTournaments();
 			List<Guid> jugadoresMenosDiezPorCiento =
 					estadisticas.Detalles.Where( d => d.Torneos < maxTorneos * 0.15  ).Select( d => d.Id ).ToList();
 
@@ -91,7 +78,7 @@ namespace TorneosWeb.service.impl
 			foreach( DetalleJugador det in estadisticas.Detalles.ToList() )
 			{
 				string qu = string.Format( Queries.FindLastPlayedTournament, det.Id );
-				joserrasQuery.ExecuteQuery( conn, qu, reader =>
+				joserrasQuery.ExecuteQuery( qu, reader =>
 				{
 					while( reader.Read() )
 					{
@@ -119,7 +106,7 @@ namespace TorneosWeb.service.impl
 			foreach (DetalleJugador det in estadisticas.Detalles.ToList())
 			{
 				string qu = string.Format( Queries.FindLastPlayedTournament, det.Id );
-				joserrasQuery.ExecuteQuery( conn, qu, reader =>
+				joserrasQuery.ExecuteQuery( qu, reader =>
 				{
 					while (reader.Read())
 					{
@@ -135,7 +122,7 @@ namespace TorneosWeb.service.impl
 			estadisticas.Detalles.RemoveAll( d => jugadoresInactividad.Contains( d.Id ) );
 		}
 
-		private Estadisticas GetStats(Estadisticas estadisticas, string q, SqlConnection conn)
+		private Estadisticas GetStats(Estadisticas estadisticas, string q)
 		{
 			estadisticas.Jugadores = new SortedSet<string>( from e in estadisticas.Detalles orderby e.Nombre ascending select e.Nombre );
 
@@ -190,7 +177,7 @@ namespace TorneosWeb.service.impl
 			Stat bundy = new Stat( "Al Bundy", "Más últimos lugares", "albundy_t.jpg" );
 			string query = string.Format( Queries.GetBundy, q );
 			Dictionary<string, int> bundies = new Dictionary<string, int>();
-			joserrasQuery.ExecuteQuery( conn, query, reader =>
+			joserrasQuery.ExecuteQuery( query, reader =>
 			{
 				while( reader.Read() )
 				{
@@ -203,7 +190,7 @@ namespace TorneosWeb.service.impl
 			Stat bubbleBoy = new Stat( "Bubble Boy", "Más burbujas", "bubbleboy_t.png" );
 			query = string.Format( Queries.GetBurbuja, q );
 			Dictionary<string, int> burbujas = new Dictionary<string, int>();
-			joserrasQuery.ExecuteQuery( conn, query, reader =>
+			joserrasQuery.ExecuteQuery( query, reader =>
 			{
 				while( reader.Read() )
 				{
@@ -216,7 +203,7 @@ namespace TorneosWeb.service.impl
 			Stat sniper = new Stat( "Sniper", "Más KO's a un jugador", "sniper_t.png" );
 			query = string.Format( Queries.GetAllKOs, q );
 			List<Tuple<string, string, decimal>> tuples = new List<Tuple<string, string, decimal>>();
-			joserrasQuery.ExecuteQuery( conn, query, reader =>
+			joserrasQuery.ExecuteQuery( query, reader =>
 			{
 				while( reader.Read() )
 				{
@@ -231,7 +218,7 @@ namespace TorneosWeb.service.impl
 			Stat piedra = new Stat( "Piedra de la Victoria", "Más podios negativos", "piedra_t.png" );
 			query = string.Format( Queries.GetPodiosNegativos, q );
 			Dictionary<string, int> props = new Dictionary<string, int>();
-			joserrasQuery.ExecuteQuery( conn, query, reader =>
+			joserrasQuery.ExecuteQuery( query, reader =>
 			{
 				while( reader.Read() )
 				{
