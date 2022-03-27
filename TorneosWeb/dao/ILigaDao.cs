@@ -9,6 +9,8 @@ namespace TorneosWeb.dao
 	{
 		Liga GetLigaByTorneoId(Guid torneoId);
 
+		Liga GetLigaById(Guid ligaId);
+
 		Liga FindLigaByNombre(string nombre);
 
 		Liga FindCurrentLiga();
@@ -18,6 +20,8 @@ namespace TorneosWeb.dao
 		IEnumerable<LigaProfitsObject> GetTotalLigaProfits();
 
 		IEnumerable<LigaProfitsObject> GetLigaProfitsByLiga(Liga liga);
+
+		IDictionary<Guid, List<Guid>> GetTorneosInLigas();
 	}
 
 }

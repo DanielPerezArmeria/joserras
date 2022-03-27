@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 
 namespace Joserras.Commons.Db
@@ -12,52 +13,59 @@ namespace Joserras.Commons.Db
 			connectionString = conn;
 		}
 
-		public void ExecuteQuery(SqlConnection conn, string query, Action<SqlDataReader> action, params object[] args)
+		public void ExecuteQuery(string query, Action<SqlDataReader> action)
 		{
-			using( SqlCommand command = new SqlCommand( query, conn ) )
+			ExecuteQuery( query, null, action );
+		}
+
+		public void ExecuteQuery(string query, IDictionary<string, object> parameters, Action<SqlDataReader> action)
+		{
+			using( SqlConnection conn = new( connectionString ) )
 			{
-				if(args != null && args.Length > 0 )
+				using (SqlCommand command = new( query, conn ))
 				{
-					command.Parameters.AddRange( args );
-				}
-				using( SqlDataReader reader = command.ExecuteReader() )
-				{
-					action.Invoke( reader );
+					conn.Open();
+					if (parameters != null)
+					{
+						foreach (string key in parameters.Keys)
+						{
+							command.Parameters.AddWithValue( key, parameters[key] );
+						}
+					}
+
+					using (SqlDataReader reader = command.ExecuteReader())
+					{
+						action.Invoke( reader );
+					}
 				}
 			}
 		}
 
-		public void ExecuteQuery(string query, Action<SqlDataReader> action, params object[] args)
+		public T ExecuteQuery<T>(string query, Func<SqlDataReader, T> func)
 		{
-			using( SqlConnection conn = new SqlConnection( connectionString ) )
-			{
-				conn.Open();
-				ExecuteQuery( conn, query, action, args );
-			}
+			return ExecuteQuery( query, null, func );
 		}
 
-		public T ExecuteQuery<T>(SqlConnection conn, string query, Func<SqlDataReader,T> func, params object[] args)
+		public T ExecuteQuery<T>(string query, IDictionary<string, object> parameters, Func<SqlDataReader, T> func)
 		{
-			using( SqlCommand command = new SqlCommand( query, conn ) )
+			using( SqlConnection conn = new( connectionString ) )
 			{
-				if( args != null && args.Length > 0 )
+				using (SqlCommand command = new( query, conn ))
 				{
-					command.Parameters.AddRange( args );
-				}
+					conn.Open();
+					if (parameters != null)
+					{
+						foreach (string key in parameters.Keys)
+						{
+							command.Parameters.AddWithValue( key, parameters[key] );
+						}
+					}
 
-				using( SqlDataReader reader = command.ExecuteReader() )
-				{
-					return func.Invoke( reader );
+					using (SqlDataReader reader = command.ExecuteReader())
+					{
+						return func.Invoke( reader );
+					}
 				}
-			}
-		}
-
-		public T ExecuteQuery<T>(string query, Func<SqlDataReader, T> func, params object[] args)
-		{
-			using( SqlConnection conn = new SqlConnection( connectionString ) )
-			{
-				conn.Open();
-				return ExecuteQuery( conn, query, func, args );
 			}
 		}
 
