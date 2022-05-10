@@ -48,7 +48,15 @@ namespace Joserras.Client.Torneo
 			container.RegisterSingleton<Startup>();
 			container.Register<MainWindow>();
 
-			container.Verify();
+			try
+			{
+				container.Verify();
+			}
+			catch( InvalidOperationException ioe )
+			{
+				Log.Error( "{0}", ioe );
+				throw;
+			}
 
 			container.GetInstance<Startup>().Run();
 		}

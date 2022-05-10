@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Joserras.Commons", "Joserra
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Joserras.Client.Torneo", "Joserras.Client.Torneo\Joserras.Client.Torneo.csproj", "{9E84E9A8-A4D4-4BD4-987F-182BC1197617}"
 EndProject
-Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "SetupProject", "SetupProject\SetupProject.wixproj", "{67392DE4-ED30-442C-B350-AB30832A90EA}"
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "SetupJoserras", "SetupProject\SetupJoserras.wixproj", "{67392DE4-ED30-442C-B350-AB30832A90EA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

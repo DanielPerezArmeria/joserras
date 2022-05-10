@@ -17,10 +17,12 @@ namespace Joserras.Client.Torneo.Service.Impl
 		{
 			BaseAddress = new Uri( baseAddress );
 			log = logger;
+			log.LogDebug( "Joserras URL: {0}", baseAddress );
 		}
 
 		public T Get<T>(string apiCall)
 		{
+			log.LogDebug( "Get: {0}", apiCall );
 			using (HttpClient client = new())
 			{
 				client.BaseAddress = BaseAddress;
@@ -30,12 +32,15 @@ namespace Joserras.Client.Torneo.Service.Impl
 				Task<HttpResponseMessage> response = client.GetAsync( apiCall );
 				response.Result.EnsureSuccessStatusCode();
 				Task<string> body = response.Result.Content.ReadAsStringAsync();
-				return JsonConvert.DeserializeObject<T>( body.Result );
+				T result = JsonConvert.DeserializeObject<T>( body.Result );
+				log.LogDebug( "{0}", result );
+				return result;
 			}
 		}
 
 		public async Task<T> GetAsync<T>(string apiCall)
 		{
+			log.LogDebug( "GetAsync: {0}", apiCall );
 			try
 			{
 				using (HttpClient client = new())
@@ -47,7 +52,9 @@ namespace Joserras.Client.Torneo.Service.Impl
 					HttpResponseMessage response = await client.GetAsync( apiCall );
 					response.EnsureSuccessStatusCode();
 					string body = await response.Content.ReadAsStringAsync();
-					return JsonConvert.DeserializeObject<T>( body );
+					T result = JsonConvert.DeserializeObject<T>( body );
+					log.LogDebug( "{0}", result );
+					return result;
 				}
 			}
 			catch (Exception e)
