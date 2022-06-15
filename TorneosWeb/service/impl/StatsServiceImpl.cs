@@ -157,10 +157,10 @@ namespace TorneosWeb.service.impl
 			mayor = dets.First().Podios;
 			podios.Participantes.AddRange( from d in dets where d.Podios == mayor select new StatProps( d.Nombre, d.Podios.ToString() ) );
 
-			Stat coyote = new Stat( "Juanga", "Menos podios", "juan_ga.jpg" );
+			Stat juanga = new Stat( "Juanga", "Menos podios", "juan_ga.jpg" );
 			dets = estadisticas.Detalles.OrderBy( p => p.Podios );
 			mayor = dets.First().Podios;
-			coyote.Participantes.AddRange( from d in dets where d.Podios == mayor select new StatProps( d.Nombre, d.Podios.ToString() ) );
+			juanga.Participantes.AddRange( from d in dets where d.Podios == mayor select new StatProps( d.Nombre, d.Podios.ToString() ) );
 
 			Stat ribeyes = new Stat( "Rey del Rib-eye", "Más rebuys", "ribeye_t.png" );
 			dets = estadisticas.Detalles.OrderByDescending( p => p.Rebuys );
@@ -225,19 +225,17 @@ namespace TorneosWeb.service.impl
 					props[ reader.GetString( 0 ) ] = reader.GetInt32( 1 );
 				}
 			} );
-
-			Stat bejarano = new Stat( "Bejarano", "El Señor de las Ligas", "bejarano_t.png", 1 );
-			dets = estadisticas.Detalles.OrderByDescending( d => d.PremiosLigaNumber );
-			mayor = dets.First().PremiosLigaNumber;
-			bejarano.Participantes.AddRange( from d in dets where d.PremiosLigaNumber == mayor select new StatProps( d.Nombre, d.PremiosLiga ) );
-
-			Stat juanito = new Stat( "Juanito", "Menos premios de Liga", "juanito_t.png", 1 );
-			dets = estadisticas.Detalles.OrderBy( d => d.PremiosLigaNumber );
-			mayor = dets.First().PremiosLigaNumber;
-			juanito.Participantes.AddRange( from d in dets where d.PremiosLigaNumber == mayor select new StatProps( d.Nombre, d.PremiosLiga ) );
-
 			List<KeyValuePair<string, int>> negPodiosList = props.OrderByDescending( p => p.Value ).ToList();
 			piedra.Participantes.AddRange( negPodiosList.Take( 3 ).Select( s => new StatProps( s.Key, s.Value.ToString() ) ) );
+
+			Stat bejarano = new( "Bejarano", "El Señor de las Ligas", "bejarano_t.png", 1 );
+			dets = estadisticas.Detalles.OrderByDescending( d => d.ProfitLigasNumber );
+			bejarano.Participantes.AddRange( dets.Take( 3 ).Select( d => new StatProps( d.Nombre, d.ProfitLigas ) ) );
+
+			Stat juanito = new Stat( "Juanito", "Más pérdidas de Liga", "juanito_t.png", 1 );
+			dets = estadisticas.Detalles.OrderBy( d => d.ProfitLigasNumber );
+			juanito.Participantes.AddRange( dets.Take( 3 ).Select( d => new StatProps( d.Nombre, d.ProfitLigas, d.ProfitLigasNumber > 0 ) ) );
+			
 
 			estadisticas.Stats.Add( joserramon );
 			estadisticas.Stats.Add( brailovsky );
@@ -247,7 +245,7 @@ namespace TorneosWeb.service.impl
 			estadisticas.Stats.Add( juanito );
 			estadisticas.Stats.Add( victorias );
 			estadisticas.Stats.Add( podios );
-			estadisticas.Stats.Add( coyote );
+			estadisticas.Stats.Add( juanga );
 			estadisticas.Stats.Add( bubbleBoy );
 			estadisticas.Stats.Add( ribeyes );
 			estadisticas.Stats.Add( kos );
