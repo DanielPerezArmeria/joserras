@@ -1,14 +1,12 @@
-﻿using Humanizer;
-using Joserras.Commons.Db;
-using Microsoft.Extensions.Logging;
+﻿using Joserras.Commons.Db;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using TorneosWeb.dao;
 using TorneosWeb.domain.models;
 using TorneosWeb.domain.models.ligas;
 using TorneosWeb.Properties;
 using TorneosWeb.util;
+using TorneosWeb.util.disqualifiers;
 
 namespace TorneosWeb.service.impl
 {
@@ -16,15 +14,13 @@ namespace TorneosWeb.service.impl
 	{
 		private JoserrasQuery joserrasQuery;
 		private IReadService readService;
-		private ITournamentDao tournamentDao;
-		private ILogger<StatsServiceImpl> log;
+		private IEnumerable<IDisqualifier> disqualifiers;
 
-		public StatsServiceImpl(IReadService readService, JoserrasQuery joserrasQuery, ITournamentDao tournamentDao, ILogger<StatsServiceImpl> logger)
+		public StatsServiceImpl(IReadService readService, JoserrasQuery joserrasQuery, IEnumerable<IDisqualifier> disqualifiers)
 		{
 			this.joserrasQuery = joserrasQuery;
 			this.readService = readService;
-			this.tournamentDao = tournamentDao;
-			log = logger;
+			this.disqualifiers = disqualifiers;
 		}
 
 		public Estadisticas GetStats()
@@ -61,65 +57,20 @@ namespace TorneosWeb.service.impl
 			estadisticas.Knockouts = readService.GetAllKnockouts( liga );
 			estadisticas.Detalles = readService.GetAllDetalleJugador( liga );
 
-			RemoveInactivePlayers( liga.Torneos[0].FechaDate, estadisticas );
+			RemoveInactivePlayers( liga.Torneos[0].FechaDate, estadisticas, true );
 
 			return GetStats( estadisticas, QueryUtils.FormatTorneoIdIn( liga ) );
 		}
 
-		private void RemoveInactivePlayers(DateTime lastDate, Estadisticas estadisticas)
+		private void RemoveInactivePlayers(DateTime lastDate, Estadisticas estadisticas, bool isLiga=false)
 		{
-			// Selecciona los jugadores q han jugado menos del 10% de los juegos
-			int maxTorneos = tournamentDao.GetTotalTournaments();
-			List<Guid> jugadoresMenosDiezPorCiento =
-					estadisticas.Detalles.Where( d => d.Torneos < maxTorneos * 0.15  ).Select( d => d.Id ).ToList();
-
-			// Selecciona los jugadores q no han jugado en 2 meses
-			List<Guid> jugadoresInactividad = new List<Guid>();
-			foreach( DetalleJugador det in estadisticas.Detalles.ToList() )
+			if( !isLiga )
 			{
-				string qu = string.Format( Queries.FindLastPlayedTournament, det.Id );
-				joserrasQuery.ExecuteQuery( qu, reader =>
+				foreach(IDisqualifier disq in disqualifiers )
 				{
-					while( reader.Read() )
-					{
-						DateTime lastTourney = (DateTime)reader[ "fecha" ];
-						if( (lastDate - lastTourney).TotalDays > 60 )
-						{
-							jugadoresInactividad.Add( det.Id );
-						}
-					}
-				} );
+					disq.Disqualify( lastDate, estadisticas );
+				}
 			}
-
-			// Quita a los jugadores que han jugado menos del 10% de torneos y que además no han jugado en 2 meses
-			if( jugadoresMenosDiezPorCiento.Count > 0 && jugadoresInactividad.Count > 0 )
-			{
-				log.LogDebug( "{0} jugadores con menos del 15% de los {1} torneos jugados:", jugadoresMenosDiezPorCiento.Count, maxTorneos );
-				log.LogDebug( jugadoresMenosDiezPorCiento.Humanize() );
-				log.LogDebug( "{0} jugadores con más de 3 meses sin jugar:", jugadoresInactividad.Count );
-				log.LogDebug( jugadoresInactividad.Humanize() );
-				estadisticas.Detalles.RemoveAll( d => jugadoresMenosDiezPorCiento.Contains( d.Id ) && jugadoresInactividad.Contains( d.Id ) );
-			}
-
-			//Quita a los jugadores que no han jugado en 6 meses
-			jugadoresInactividad = new List<Guid>();
-			foreach (DetalleJugador det in estadisticas.Detalles.ToList())
-			{
-				string qu = string.Format( Queries.FindLastPlayedTournament, det.Id );
-				joserrasQuery.ExecuteQuery( qu, reader =>
-				{
-					while (reader.Read())
-					{
-						DateTime lastTourney = (DateTime)reader["fecha"];
-						if ((lastDate - lastTourney).TotalDays > 180)
-						{
-							jugadoresInactividad.Add( det.Id );
-						}
-					}
-				} );
-			}
-
-			estadisticas.Detalles.RemoveAll( d => jugadoresInactividad.Contains( d.Id ) );
 		}
 
 		private Estadisticas GetStats(Estadisticas estadisticas, string q)

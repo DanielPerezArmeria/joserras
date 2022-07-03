@@ -23,6 +23,7 @@ using TorneosWeb.service;
 using TorneosWeb.service.decorators;
 using TorneosWeb.service.impl;
 using TorneosWeb.util.automapper;
+using TorneosWeb.util.disqualifiers;
 using TorneosWeb.util.prize;
 using TorneosWeb.util.schedule;
 
@@ -108,6 +109,8 @@ namespace TorneosWeb
 			container.RegisterSingleton( typeof( IStandingsDao<> ), typeof( StandingsAzureDao<> ) );
 
 			container.Collection.Register<IPrizeFiller>( new[] { typeof( IPrizeFiller ).Assembly }, Lifestyle.Singleton );
+
+			container.Collection.Register<IDisqualifier>( new[] { typeof( IDisqualifier ).Assembly }, Lifestyle.Singleton );
 
 			container.RegisterSingleton(
 				() => new JoserrasQuery( container.GetInstance<IConfiguration>().GetConnectionString( Resources.joserrasDb ) )
