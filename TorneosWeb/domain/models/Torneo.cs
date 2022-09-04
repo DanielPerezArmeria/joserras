@@ -49,6 +49,12 @@ namespace TorneosWeb.domain.models
 		public int Entradas { get; set; }
 		public int Rebuys { get; set; }
 
+		[Display( Name = "Entradas" )]
+		public string EntradasTotales
+		{
+			get { return ( Entradas + Rebuys ).ToString(); }
+		}
+
 		public decimal BolsaNumber { get; set; }
 		[NoMap]
 		public string Bolsa
@@ -86,9 +92,6 @@ namespace TorneosWeb.domain.models
 
 		[NoMap]
 		public Liga Liga { get; set; }
-
-		[NoMap]
-		IList<Posicion> Posiciones { get; set; }
 
 		public string Premiacion { get; set; }
 

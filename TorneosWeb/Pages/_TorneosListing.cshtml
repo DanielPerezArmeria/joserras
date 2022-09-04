@@ -11,7 +11,7 @@
 				<th></th>
 				@if( "Liga".Equals( ViewData[ "Listado" ] ) )
 				{
-					<th></th>
+				<th></th>
 				}
 				<th>
 					@Html.DisplayNameFor( model => model[ 0 ].Fecha )
@@ -29,10 +29,10 @@
 					@Html.DisplayNameFor( model => model[ 0 ].Precio_Buyin )
 				</th>
 				<th class="blockFull">
-					@Html.DisplayNameFor( model => model[ 0 ].Entradas )
+					@Html.DisplayNameFor( model => model[ 0 ].EntradasTotales )
 				</th>
 				<th class="blockFull">
-					@Html.DisplayNameFor( model => model[ 0 ].Rebuys )
+					@Html.DisplayNameFor( model => model[ 0 ].Premiacion )
 				</th>
 			</tr>
 		</thead>
@@ -40,38 +40,38 @@
 		<tbody>
 			@foreach( var torneo in Model )
 			{
-				<tr>
-					<td>
-						@Html.ActionLink( "Resultados", "TorneoResults", "Home", new { torneoId = torneo.Id, listado = "Torneos" } )
-					</td>
-					@if( "Liga".Equals( ViewData[ "Listado" ] ) )
+			<tr>
+				<td>
+					@Html.ActionLink( "Resultados", "TorneoResults", "Home", new { torneoId = torneo.Id, listado = "Torneos" } )
+				</td>
+				@if( "Liga".Equals( ViewData[ "Listado" ] ) )
 					{
-					<td>
-						@Html.ActionLink( "Puntos", "TorneoResults", "Home", new { torneoId = torneo.Id, listado = "Liga" } )
-					</td>
+				<td>
+					@Html.ActionLink( "Puntos", "TorneoResults", "Home", new { torneoId = torneo.Id, listado = "Liga" } )
+				</td>
 					}
-					<td>
-						@Html.DisplayFor( modelItem => torneo.Fecha )
-					</td>
-					<td>
-						@Html.DisplayFor( modelItem => torneo.TipoString )
-					</td>
-					<td>
-						<a asp-page="./Jugador" asp-route-id="@torneo.GanadorId">@Html.DisplayFor( modelItem => torneo.Ganador )</a>
-					</td>
-					<td>
-						@Html.DisplayFor( modelItem => torneo.Bolsa )
-					</td>
-					<td class="blockFull">
-						@Html.DisplayFor( modelItem => torneo.Precio_Buyin )
-					</td>
-					<td class="blockFull">
-						@Html.DisplayFor( modelItem => torneo.Entradas )
-					</td>
-					<td class="blockFull">
-						@Html.DisplayFor( modelItem => torneo.Rebuys )
-					</td>
-				</tr>
+				<td>
+					@Html.DisplayFor( modelItem => torneo.Fecha )
+				</td>
+				<td>
+					@Html.DisplayFor( modelItem => torneo.TipoString )
+				</td>
+				<td>
+					<a asp-page="./Jugador" asp-route-id="@torneo.GanadorId">@Html.DisplayFor( modelItem => torneo.Ganador )</a>
+				</td>
+				<td>
+					@Html.DisplayFor( modelItem => torneo.Bolsa )
+				</td>
+				<td class="blockFull">
+					@Html.DisplayFor( modelItem => torneo.Precio_Buyin )
+				</td>
+				<td class="blockFull">
+					@Html.DisplayFor( modelItem => torneo.EntradasTotales )
+				</td>
+				<td class="blockFull">
+					@Html.DisplayFor( modelItem => torneo.Premiacion )
+				</td>
+			</tr>
 			}
 		</tbody>
 
