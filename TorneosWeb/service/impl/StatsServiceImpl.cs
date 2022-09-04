@@ -84,46 +84,39 @@ namespace TorneosWeb.service.impl
 			}
 
 			Stat joserramon = new Stat( "Joserramón", "Más Profit", "joseramon_t.png" );
-			joserramon.Participantes.Add( new StatProps( estadisticas.Detalles[ 0 ].Nombre, estadisticas.Detalles[ 0 ].Profit, estadisticas.Detalles[ 0 ].ProfitNumber > 0 ) );
+			joserramon.Participantes.AddRange( estadisticas.Detalles.Take( 3 ).Select( d => new StatProps( d.Nombre, d.Profit, d.ProfitNumber > 0 ) ) );
 
 			Stat pichon = new Stat( "Pichón", "Mayores pérdidas", "pichon_t.png" );
 			decimal mayor = estadisticas.Detalles.Last().ProfitNumber;
 			pichon.Participantes.AddRange( from d in estadisticas.Detalles where d.ProfitNumber == mayor select new StatProps( d.Nombre, d.Profit, d.ProfitNumber > 0 ) );
 
 			Stat brailovsky = new Stat( "Brailovsky", "Mayor ROI", "brailovsky_t.png" );
-			DetalleJugador dj = estadisticas.Detalles.OrderByDescending( p => p.ROINumber ).First();
-			brailovsky.Participantes.Add( new StatProps( dj.Nombre, dj.ROI, dj.ROINumber > 0 ) );
+			IEnumerable<DetalleJugador> dets = estadisticas.Detalles.OrderByDescending( p => p.ROINumber ).Take( 3 );
+			brailovsky.Participantes.AddRange( dets.Select( d => new StatProps( d.Nombre, d.ROI, d.ROINumber > 0 ) ) );
 
 			Stat orvañanos = new Stat( "Orvañanos", "Peor ROI", "orvañanos_t.png" );
-			dj = estadisticas.Detalles.OrderBy( p => p.ROINumber ).First();
+			DetalleJugador dj = estadisticas.Detalles.OrderBy( p => p.ROINumber ).First();
 			orvañanos.Participantes.Add( new StatProps( dj.Nombre, dj.ROI, dj.ROINumber > 0 ) );
 
 			Stat victorias = new Stat( "Medalla de Oro", "Más 1ros lugares", "medalla_t.png" );
-			IEnumerable<DetalleJugador> dets = estadisticas.Detalles.OrderByDescending( p => p.Victorias );
-			mayor = dets.First().Victorias;
-			victorias.Participantes.AddRange( from d in dets where d.Victorias == mayor select new StatProps( d.Nombre, d.Victorias.ToString() ) );
+			dets = estadisticas.Detalles.OrderByDescending( p => p.Victorias ).Take( 3 );
+			victorias.Participantes.AddRange( dets.Select( d => new StatProps( d.Nombre, d.Victorias.ToString() ) ) );
 
 			Stat podios = new Stat( "Podium Master", "Más podios", "podium_t.png" );
-			dets = estadisticas.Detalles.OrderByDescending( p => p.Podios );
-			mayor = dets.First().Podios;
-			podios.Participantes.AddRange( from d in dets where d.Podios == mayor select new StatProps( d.Nombre, d.Podios.ToString() ) );
+			dets = estadisticas.Detalles.OrderByDescending( p => p.Podios ).Take( 3 );
+			podios.Participantes.AddRange( dets.Select( d => new StatProps( d.Nombre, d.Podios.ToString() ) ) );
 
 			Stat juanga = new Stat( "Juanga", "Menos podios", "juan_ga.jpg" );
-			dets = estadisticas.Detalles.OrderBy( p => p.Podios );
-			mayor = dets.First().Podios;
-			juanga.Participantes.AddRange( from d in dets where d.Podios == mayor select new StatProps( d.Nombre, d.Podios.ToString() ) );
+			dets = estadisticas.Detalles.OrderBy( p => p.Podios ).Take( 3 );
+			juanga.Participantes.AddRange( dets.Select( d => new StatProps( d.Nombre, d.Podios.ToString() ) ) );
 
 			Stat ribeyes = new Stat( "Rey del Rib-eye", "Más rebuys", "ribeye_t.png" );
-			dets = estadisticas.Detalles.OrderByDescending( p => p.Rebuys );
-			mayor = dets.First().Rebuys;
-			ribeyes.Participantes.AddRange( from d in dets where d.Rebuys == mayor select new StatProps( d.Nombre, d.Rebuys.ToString() ) );
+			dets = estadisticas.Detalles.OrderByDescending( p => p.Rebuys ).Take( 3 );
+			ribeyes.Participantes.AddRange( dets.Select( d => new StatProps( d.Nombre, d.Rebuys.ToString() ) ) );
 
 			Stat kos = new Stat( "Tyson", "Más KO's", "tyson_t.png" );
-			dets = estadisticas.Detalles.OrderByDescending( p => p.KosNumber );
-			mayor = dets.First().KosNumber;
-			kos.Participantes.AddRange( from d in dets
-																	where d.KosNumber == mayor
-																	select new StatProps( d.Nombre, d.KosNumber.ToString( Constants.POINTS_FORMAT ) ) );
+			dets = estadisticas.Detalles.OrderByDescending( p => p.KosNumber ).Take( 3 );
+			kos.Participantes.AddRange( dets.Select( d => new StatProps( d.Nombre, d.KosNumber.ToString( Constants.POINTS_FORMAT ) ) ) );
 
 			Stat bundy = new Stat( "Al Bundy", "Más últimos lugares", "albundy_t.jpg" );
 			string query = string.Format( Queries.GetBundy, q );
