@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using TorneosWeb.domain.models;
 
 namespace TorneosWeb.service.decorators
 {
@@ -22,6 +23,11 @@ namespace TorneosWeb.service.decorators
 		public void AddPlayer(string nombre)
 		{
 			wrapped.AddPlayer( nombre );
+		}
+
+		public JoserrasActionResult DeleteTorneo(Guid torneoId)
+		{
+			return wrapped.DeleteTorneo( torneoId );
 		}
 
 		public Guid UploadTournament( TorneoDTO torneo, List<ResultadosDTO> resultados, List<KnockoutsDTO> kos)

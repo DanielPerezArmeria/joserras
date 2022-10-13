@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using TorneosWeb.domain.models;
 using TorneosWeb.Properties;
 using TorneosWeb.util;
 
@@ -36,7 +37,7 @@ namespace TorneosWeb.service.impl
 		{
 			if( torneo == null || resultados == null || resultados.Count == 0 )
 			{
-				string msg = string.Empty;
+				string msg;
 				if( torneo == null )
 				{
 					msg = "No hay archivo cuyo nombre contenga la palabra 'torneo'";
@@ -272,6 +273,48 @@ namespace TorneosWeb.service.impl
 				uow.Commit();
 				cacheService.Clear();
 			}
+		}
+
+		public JoserrasActionResult DeleteTorneo(Guid torneoId)
+		{
+			JoserrasActionResult result = new();
+
+			using( TorneoUnitOfWork uow = new( connString ) )
+			{
+				try
+				{
+					string query;
+					IDictionary<string, object> parameters = new Dictionary<string, object>
+					{
+						{ "@torneoId", torneoId }
+					};
+					
+					query = @"delete from torneos_liga where torneo_id = @torneoId";
+					uow.ExecuteNonQuery( query, parameters );
+
+					query = @"delete from knockouts where torneo_id = @torneoId";
+					uow.ExecuteNonQuery( query, parameters );
+
+					query = @"delete from resultados where torneo_id = @torneoId";
+					uow.ExecuteNonQuery( query, parameters );
+
+					query = @"delete from torneos where id = @torneoId";
+					uow.ExecuteNonQuery( query, parameters );
+
+					uow.Commit();
+					cacheService.Clear();
+					result.ActionSucceeded = true;
+					log.LogDebug( "El torneo con id '{0}' fue eliminado correctamente", torneoId );
+				}
+				catch(Exception e )
+				{
+					uow.Rollback();
+					log.LogWarning( e, e.Message );
+					result.Description = string.Format( "No se pudo eliminar el torneo con id: {0}", torneoId );
+				}
+			}
+			
+			return result;
 		}
 
 	}

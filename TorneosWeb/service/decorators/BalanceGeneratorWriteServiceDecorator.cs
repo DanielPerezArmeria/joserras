@@ -24,6 +24,11 @@ namespace TorneosWeb.service.decorators
 			wrapped.AddPlayer( nombre );
 		}
 
+		public JoserrasActionResult DeleteTorneo(Guid torneoId)
+		{
+			return wrapped.DeleteTorneo( torneoId );
+		}
+
 		public Guid UploadTournament(TorneoDTO torneo, List<ResultadosDTO> resultados, List<KnockoutsDTO> kos)
 		{
 			Guid torneoId = wrapped.UploadTournament( torneo, resultados, kos );
