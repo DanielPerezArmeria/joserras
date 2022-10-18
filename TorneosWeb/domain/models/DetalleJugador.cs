@@ -130,6 +130,10 @@ namespace TorneosWeb.domain.models
 			}
 		}
 
+		[NoMap]
+		[Display( Name = "ITM %" )]
+		public string Itm { get { return ( (float)Podios / (float)Torneos ).ToString( Constants.ROI_FORMAT ); } }
+
 		public int CompareTo(DetalleJugador other)
 		{
 			if( this.ProfitNumber > other.ProfitNumber )

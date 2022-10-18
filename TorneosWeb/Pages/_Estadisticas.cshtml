@@ -10,50 +10,56 @@
 		<thead>
 			<tr style="text-align:center">
 				<th>
-					@Html.DisplayNameFor( model => model.Detalles[ 0 ].Nombre )
+					@Html.DisplayNameFor( model => model.Detalles[0].Nombre )
 				</th>
 				<th>
-					@Html.DisplayNameFor( model => model.Detalles[ 0 ].Torneos )
+					@Html.DisplayNameFor( model => model.Detalles[0].Torneos )
 				</th>
-				@if( "Liga".Equals( ViewData[ "Listado" ] ) )
+				@if( "Liga".Equals( ViewData["Listado"] ) )
 				{
-					<th>
-						@Html.DisplayNameFor( model => model.Detalles[ 0 ].Profit )
-					</th>
+				<th>
+					@Html.DisplayNameFor( model => model.Detalles[0].Profit )
+				</th>
 				}
 				else
 				{
-					<th>
-						Profit Total
-					</th>
+				<th>
+					Profit Total
+				</th>
 				}
 
-				@if( !"Liga".Equals( ViewData[ "Listado" ] ) )
+				@if( !"Liga".Equals( ViewData["Listado"] ) )
 				{
-					<th style="font-size:small;text-decoration: overline dashed darkgray;color:darkgray">
-						@Html.DisplayNameFor( model => model.Detalles[ 0 ].ProfitTorneos )
-					</th>
-					<th style="font-size:small;text-decoration: overline dashed darkgray;color:darkgray">
-						Profit Ligas
+				<th style="font-size:small;text-decoration: overline dashed darkgray;color:darkgray">
+					@Html.DisplayNameFor( model => model.Detalles[0].ProfitTorneos )
+				</th>
+				<th style="font-size:small;text-decoration: overline dashed darkgray;color:darkgray">
+					Profit Ligas
+				</th>
+				}
+				<th>
+					@Html.DisplayNameFor( model => model.Detalles[0].ROI )
+				</th>
+				<th>
+					@Html.DisplayNameFor( model => model.Detalles[0].Rebuys )
+				</th>
+				<th>
+					@Html.DisplayNameFor( model => model.Detalles[0].Podios )
+				</th>
+				@if( !"Liga".Equals( ViewData["Listado"] ) )
+				{
+					<th>
+						@Html.DisplayNameFor( model => model.Detalles[0].Itm )
 					</th>
 				}
 				<th>
-					@Html.DisplayNameFor( model => model.Detalles[ 0 ].ROI )
+					@Html.DisplayNameFor( model => model.Detalles[0].Victorias )
 				</th>
 				<th>
-					@Html.DisplayNameFor( model => model.Detalles[ 0 ].Rebuys )
+					@Html.DisplayNameFor( model => model.Detalles[0].Burbujas )
 				</th>
 				<th>
-					@Html.DisplayNameFor( model => model.Detalles[ 0 ].Podios )
-				</th>
-				<th>
-					@Html.DisplayNameFor( model => model.Detalles[ 0 ].Victorias )
-				</th>
-				<th>
-					@Html.DisplayNameFor( model => model.Detalles[ 0 ].Burbujas )
-				</th>
-				<th>
-					@Html.DisplayNameFor( model => model.Detalles[ 0 ].Kos )
+					@Html.DisplayNameFor( model => model.Detalles[0].Kos )
 				</th>
 			</tr>
 		</thead>
@@ -70,14 +76,14 @@
 				<td style="text-align:right;color:@(detalle.ProfitNumber < 0 ? "red" : "black")">
 					@Html.DisplayFor( modelItem => detalle.Profit )
 				</td>
-				@if( !"Liga".Equals( ViewData[ "Listado" ] ) )
+				@if( !"Liga".Equals( ViewData["Listado"] ) )
 				{
-					<td style="font-size:small;text-align:right;color:@(detalle.ProfitTorneosNumber < 0 ? "red" : "black")">
-						@Html.DisplayFor( modelItem => detalle.ProfitTorneos )
-					</td>
-					<td style="font-size:small;text-align:right;color:@(detalle.ProfitLigasNumber < 0 ? "red" : "black")">
-						@Html.DisplayFor( modelItem => detalle.ProfitLigas )
-					</td>
+				<td style="font-size:small;text-align:right;color:@(detalle.ProfitTorneosNumber < 0 ? "red" : "black")">
+					@Html.DisplayFor( modelItem => detalle.ProfitTorneos )
+				</td>
+				<td style="font-size:small;text-align:right;color:@(detalle.ProfitLigasNumber < 0 ? "red" : "black")">
+					@Html.DisplayFor( modelItem => detalle.ProfitLigas )
+				</td>
 				}
 				<td style="text-align:right;min-width:55px;color:@(detalle.ROINumber < 0 ? "red" : "black")">
 					@Html.DisplayFor( modelItem => detalle.ROI )
@@ -88,6 +94,12 @@
 				<td style="text-align:center">
 					@Html.DisplayFor( modelItem => detalle.Podios )
 				</td>
+				@if( !"Liga".Equals( ViewData["Listado"] ) )
+				{
+					<td style="text-align:center;min-width:65px">
+						@Html.DisplayFor( modelItem => detalle.Itm )
+					</td>
+				}
 				<td style="text-align:center">
 					@Html.DisplayFor( modelItem => detalle.Victorias )
 				</td>
