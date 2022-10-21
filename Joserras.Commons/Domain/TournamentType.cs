@@ -12,7 +12,10 @@ namespace Joserras.Commons.Domain
 		ADDON = 4,
 
 		[Description("SIT & GO")]
-		SITGO = 5
+		SITGO = 5,
+
+		[Description( "SATÉLITE" )]
+		SATELITE = 6
 	}
 
 }
