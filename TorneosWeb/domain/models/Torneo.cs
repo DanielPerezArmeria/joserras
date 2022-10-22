@@ -93,7 +93,31 @@ namespace TorneosWeb.domain.models
 		[NoMap]
 		public Liga Liga { get; set; }
 
-		public string Premiacion { get; set; }
+		private string premiacion;
+		public string Premiacion
+		{
+			get
+			{
+				string[] cadena = premiacion.Split( "-" );
+				List<string> result = new();
+				foreach(string p in cadena )
+				{
+					try
+					{
+						float f = float.Parse( p );
+						result.Add( f.ToString( Constants.PRIZE_CURRENCY_FORMAT ) );
+					}
+					catch(Exception)
+					{
+						result.Add( p );
+					}
+				}
+
+				return string.Join( "-", result );
+			}
+
+			set { premiacion = value; }
+		}
 
 	}
 

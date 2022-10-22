@@ -3,6 +3,7 @@
 	public static class Constants
 	{
 		public const string CURRENCY_FORMAT = "$###,##0.0#";
+		public const string PRIZE_CURRENCY_FORMAT = "$###,##0.##";
 		public const string ROI_FORMAT = "%###,##0.0";
 		public const string POINTS_FORMAT = "###,##0.##";
 		public const string FECHA_LIGA_FORMAT = "MMMM yyyy";
