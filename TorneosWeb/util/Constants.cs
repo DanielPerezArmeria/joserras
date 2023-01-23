@@ -7,6 +7,8 @@
 		public const string ROI_FORMAT = "%###,##0.0";
 		public const string POINTS_FORMAT = "###,##0.##";
 		public const string FECHA_LIGA_FORMAT = "MMMM yyyy";
+		public const string LISTADO_TORNEOS = "Torneos";
+		public const string LISTADO_LIGA = "Liga";
 	}
 
 	public static class PrizeFill

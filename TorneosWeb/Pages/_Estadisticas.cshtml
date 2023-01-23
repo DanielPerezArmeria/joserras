@@ -15,27 +15,27 @@
 				<th>
 					@Html.DisplayNameFor( model => model.Detalles[0].Torneos )
 				</th>
-				@if( "Liga".Equals( ViewData["Listado"] ) )
+				@if( TorneosWeb.util.Constants.LISTADO_LIGA.Equals( ViewData["Listado"] ) )
 				{
-				<th>
-					@Html.DisplayNameFor( model => model.Detalles[0].Profit )
-				</th>
+					<th>
+						@Html.DisplayNameFor( model => model.Detalles[0].Profit )
+					</th>
 				}
 				else
 				{
-				<th>
-					Profit Total
-				</th>
+					<th>
+						Profit Total
+					</th>
 				}
 
 				@if( !"Liga".Equals( ViewData["Listado"] ) )
 				{
-				<th style="font-size:small;text-decoration: overline dashed darkgray;color:darkgray">
-					@Html.DisplayNameFor( model => model.Detalles[0].ProfitTorneos )
-				</th>
-				<th style="font-size:small;text-decoration: overline dashed darkgray;color:darkgray">
-					Profit Ligas
-				</th>
+					<th style="font-size:small;text-decoration: overline dashed darkgray;color:darkgray">
+						@Html.DisplayNameFor( model => model.Detalles[0].ProfitTorneos )
+					</th>
+					<th style="font-size:small;text-decoration: overline dashed darkgray;color:darkgray">
+						Profit Ligas
+					</th>
 				}
 				<th>
 					@Html.DisplayNameFor( model => model.Detalles[0].ROI )
@@ -58,9 +58,12 @@
 				<th>
 					@Html.DisplayNameFor( model => model.Detalles[0].Burbujas )
 				</th>
-				<th>
-					@Html.DisplayNameFor( model => model.Detalles[0].Kos )
-				</th>
+				@if( TorneosWeb.util.Constants.LISTADO_LIGA.Equals( ViewData["Listado"] ) )
+				{
+					<th>
+						@Html.DisplayNameFor( model => model.Detalles[0].Kos )
+					</th>
+				}
 			</tr>
 		</thead>
 		<tbody>
@@ -78,12 +81,12 @@
 				</td>
 				@if( !"Liga".Equals( ViewData["Listado"] ) )
 				{
-				<td style="font-size:small;text-align:right;color:@(detalle.ProfitTorneosNumber < 0 ? "red" : "black")">
-					@Html.DisplayFor( modelItem => detalle.ProfitTorneos )
-				</td>
-				<td style="font-size:small;text-align:right;color:@(detalle.ProfitLigasNumber < 0 ? "red" : "black")">
-					@Html.DisplayFor( modelItem => detalle.ProfitLigas )
-				</td>
+					<td style="font-size:small;text-align:right;color:@(detalle.ProfitTorneosNumber < 0 ? "red" : "black")">
+						@Html.DisplayFor( modelItem => detalle.ProfitTorneos )
+					</td>
+					<td style="font-size:small;text-align:right;color:@(detalle.ProfitLigasNumber < 0 ? "red" : "black")">
+						@Html.DisplayFor( modelItem => detalle.ProfitLigas )
+					</td>
 				}
 				<td style="text-align:right;min-width:55px;color:@(detalle.ROINumber < 0 ? "red" : "black")">
 					@Html.DisplayFor( modelItem => detalle.ROI )
@@ -106,9 +109,12 @@
 				<td style="text-align:center">
 					@Html.DisplayFor( modelItem => detalle.Burbujas )
 				</td>
-				<td style="text-align:center">
-					@Html.DisplayFor( modelItem => detalle.Kos )
-				</td>
+				@if( TorneosWeb.util.Constants.LISTADO_LIGA.Equals( ViewData["Listado"] ) )
+				{
+					<td style="text-align:center">
+						@Html.DisplayFor( modelItem => detalle.Kos )
+					</td>
+				}
 			</tr>
 			}
 		</tbody>
