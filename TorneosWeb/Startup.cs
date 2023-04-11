@@ -101,7 +101,7 @@ namespace TorneosWeb
 				"1fWhxbneW19urTN7RFMaTRtycIB32X6C4LPM9QGzDY-w", container.GetInstance<ILogger<GoogleSheetsProfitsExporter>>(),
 				container.GetInstance<IReadService>(), container.GetInstance<ILigaReader>() ) );
 
-			ignoreClasses.Add( Type.GetType( "TorneosWeb.service.IProfitsExporter" ) );
+			ignoreClasses.Add( typeof( IProfitsExporter ) );
 
 			RegisterNamespace( "TorneosWeb.service.impl", ignoreClasses );
 			RegisterNamespace( "TorneosWeb.dao.impl" );
@@ -152,7 +152,7 @@ namespace TorneosWeb
 
 		private IMapper GetMapper(Container container)
 		{
-			var mp = container.GetInstance<MapperProvider>();
+			MapperProvider mp = container.GetInstance<MapperProvider>();
 			return mp.GetMapper();
 		}
 
