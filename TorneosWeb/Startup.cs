@@ -14,14 +14,12 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using TorneosWeb.config;
 using TorneosWeb.dao;
 using TorneosWeb.dao.decorators;
 using TorneosWeb.dao.impl;
 using TorneosWeb.Properties;
 using TorneosWeb.service;
 using TorneosWeb.service.decorators;
-using TorneosWeb.service.impl;
 using TorneosWeb.util.automapper;
 using TorneosWeb.util.disqualifiers;
 using TorneosWeb.util.prize;
@@ -62,8 +60,6 @@ namespace TorneosWeb
 				 options.MinimumSameSitePolicy = SameSiteMode.None;
 			 } );
 
-			services.Configure<AzureTableConfig>( Configuration.GetSection( "AzureTableConfig" ) );
-
 			services.AddSimpleInjector( container, options =>
 			{
 				options.AddAspNetCore()
@@ -91,20 +87,14 @@ namespace TorneosWeb
 
 		private void InitializeContainer()
 		{
-			List<Type> ignoreClasses = new List<Type>();
+			List<Type> ignoreClasses = new();
 
 			container.RegisterSingleton<MapperProvider>();
 			container.RegisterSingleton( () => GetMapper( container ) );
 
-			container.RegisterSingleton<IProfitsExporter>( () =>
-				new GoogleSheetsProfitsExporter( contentRoot + @"/Files/Joserras Project-fd7d4368e5dd.json",
-				"1fWhxbneW19urTN7RFMaTRtycIB32X6C4LPM9QGzDY-w", container.GetInstance<ILogger<GoogleSheetsProfitsExporter>>(),
-				container.GetInstance<IReadService>(), container.GetInstance<ILigaReader>() ) );
-
-			ignoreClasses.Add( Type.GetType( "TorneosWeb.service.IProfitsExporter" ) );
-
-			RegisterNamespace( "TorneosWeb.service.impl", ignoreClasses );
+			RegisterNamespace( "TorneosWeb.service.impl" );
 			RegisterNamespace( "TorneosWeb.dao.impl" );
+			RegisterConfigSections();
 
 			container.RegisterSingleton( typeof( IStandingsDao<> ), typeof( StandingsAzureDao<> ) );
 
@@ -150,9 +140,25 @@ namespace TorneosWeb
 			RegisterNamespace( nameSpace, new List<Type>() );
 		}
 
+		private void RegisterConfigSections()
+		{
+			string configNamespace = "TorneosWeb.config";
+
+			IEnumerable<Type> registrations =
+				from type in Assembly.GetExecutingAssembly().GetExportedTypes()
+				where type.Namespace.StartsWith( configNamespace )
+				select type;
+
+			foreach(Type t in registrations )
+			{
+				container.RegisterSingleton( t, () => Configuration.GetSection( t.Name ).Get( t ) );
+			}
+
+		}
+
 		private IMapper GetMapper(Container container)
 		{
-			var mp = container.GetInstance<MapperProvider>();
+			MapperProvider mp = container.GetInstance<MapperProvider>();
 			return mp.GetMapper();
 		}
 

@@ -15,10 +15,8 @@ namespace TorneosWeb.service.impl
 {
 	public class GoogleSheetsProfitsExporter : IProfitsExporter
 	{
-		private const int DATES_FOR_REPORT = 8;
 		private readonly string SHEET = "Deudas";
 
-		private string CredentialFileName;
 		private readonly string SpreadsheetId;
 		private readonly SheetsService sheetsService;
 		private ILogger<GoogleSheetsProfitsExporter> log;
@@ -27,19 +25,19 @@ namespace TorneosWeb.service.impl
 
 		static string[] Scopes = { SheetsService.Scope.Spreadsheets };
 
-		public GoogleSheetsProfitsExporter(string credentialFileName, string spreadsheetId, ILogger<GoogleSheetsProfitsExporter> logger,
+		public GoogleSheetsProfitsExporter(ISecretsManager secretsManager, ILogger<GoogleSheetsProfitsExporter> logger,
 			IReadService readService, ILigaReader ligaReader)
 		{
-			CredentialFileName = credentialFileName;
-			SpreadsheetId = spreadsheetId;
+			SpreadsheetId = secretsManager.GetSecret( "spreadsheetId" );
 			log = logger;
 			this.readService = readService;
 			this.ligaReader = ligaReader;
 
 			try
 			{
+				string googleSheetCredentials = secretsManager.GetSecret( "googleSheetCredentials" );
 				GoogleCredential credential =
-					GoogleCredential.FromStream( new FileStream( CredentialFileName, FileMode.Open ) ).CreateScoped( Scopes );
+					GoogleCredential.FromStream( new MemoryStream( googleSheetCredentials.ToBytes() ) ).CreateScoped( Scopes );
 
 				sheetsService = new SheetsService( new BaseClientService.Initializer()
 				{
