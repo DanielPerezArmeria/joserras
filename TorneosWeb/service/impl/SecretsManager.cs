@@ -38,7 +38,7 @@ namespace TorneosWeb.service.impl
 					KeyVaultSecret keyVaultSecret = secretClient.GetSecret( secret );
 					string key = string.Format( "{0}:{1}", nameof( GetSecret ), secret );
 					cache.Add( key, keyVaultSecret.Value );
-					log.LogDebug( "Secret '{0}' added: '{1}'", secret, keyVaultSecret.Value );
+					log.LogDebug( "Secret '{0}' added", secret );
 				}
 				catch( Exception e )
 				{

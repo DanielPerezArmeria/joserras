@@ -14,14 +14,12 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using TorneosWeb.config;
 using TorneosWeb.dao;
 using TorneosWeb.dao.decorators;
 using TorneosWeb.dao.impl;
 using TorneosWeb.Properties;
 using TorneosWeb.service;
 using TorneosWeb.service.decorators;
-using TorneosWeb.service.impl;
 using TorneosWeb.util.automapper;
 using TorneosWeb.util.disqualifiers;
 using TorneosWeb.util.prize;
@@ -62,14 +60,6 @@ namespace TorneosWeb
 				 options.MinimumSameSitePolicy = SameSiteMode.None;
 			 } );
 
-			/*services.Configure<AzureTableConfig>( Configuration.GetSection( "AzureTableConfig" ) );
-			AzureTableConfig c = Configuration.GetSection( "AzureTableConfig" ).Get<AzureTableConfig>();
-			SecretsConfig sc = Configuration.GetSection( "SecretsConfig" ).Get<SecretsConfig>();
-
-			Type t = typeof( SecretsConfig );
-			string ss = t.Name;
-			object o = Configuration.GetSection( ss ).Get( t );*/
-
 			services.AddSimpleInjector( container, options =>
 			{
 				options.AddAspNetCore()
@@ -97,19 +87,12 @@ namespace TorneosWeb
 
 		private void InitializeContainer()
 		{
-			List<Type> ignoreClasses = new List<Type>();
+			List<Type> ignoreClasses = new();
 
 			container.RegisterSingleton<MapperProvider>();
 			container.RegisterSingleton( () => GetMapper( container ) );
 
-			container.RegisterSingleton<IProfitsExporter>( () =>
-				new GoogleSheetsProfitsExporter( contentRoot + @"/Files/Joserras Project-fd7d4368e5dd.json",
-				"1fWhxbneW19urTN7RFMaTRtycIB32X6C4LPM9QGzDY-w", container.GetInstance<ILogger<GoogleSheetsProfitsExporter>>(),
-				container.GetInstance<IReadService>(), container.GetInstance<ILigaReader>() ) );
-
-			ignoreClasses.Add( typeof( IProfitsExporter ) );
-
-			RegisterNamespace( "TorneosWeb.service.impl", ignoreClasses );
+			RegisterNamespace( "TorneosWeb.service.impl" );
 			RegisterNamespace( "TorneosWeb.dao.impl" );
 			RegisterConfigSections();
 
