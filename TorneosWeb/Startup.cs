@@ -62,7 +62,13 @@ namespace TorneosWeb
 				 options.MinimumSameSitePolicy = SameSiteMode.None;
 			 } );
 
-			services.Configure<AzureTableConfig>( Configuration.GetSection( "AzureTableConfig" ) );
+			/*services.Configure<AzureTableConfig>( Configuration.GetSection( "AzureTableConfig" ) );
+			AzureTableConfig c = Configuration.GetSection( "AzureTableConfig" ).Get<AzureTableConfig>();
+			SecretsConfig sc = Configuration.GetSection( "SecretsConfig" ).Get<SecretsConfig>();
+
+			Type t = typeof( SecretsConfig );
+			string ss = t.Name;
+			object o = Configuration.GetSection( ss ).Get( t );*/
 
 			services.AddSimpleInjector( container, options =>
 			{
@@ -105,6 +111,7 @@ namespace TorneosWeb
 
 			RegisterNamespace( "TorneosWeb.service.impl", ignoreClasses );
 			RegisterNamespace( "TorneosWeb.dao.impl" );
+			RegisterConfigSections();
 
 			container.RegisterSingleton( typeof( IStandingsDao<> ), typeof( StandingsAzureDao<> ) );
 
@@ -148,6 +155,22 @@ namespace TorneosWeb
 		private void RegisterNamespace(string nameSpace)
 		{
 			RegisterNamespace( nameSpace, new List<Type>() );
+		}
+
+		private void RegisterConfigSections()
+		{
+			string configNamespace = "TorneosWeb.config";
+
+			IEnumerable<Type> registrations =
+				from type in Assembly.GetExecutingAssembly().GetExportedTypes()
+				where type.Namespace.StartsWith( configNamespace )
+				select type;
+
+			foreach(Type t in registrations )
+			{
+				container.RegisterSingleton( t, () => Configuration.GetSection( t.Name ).Get( t ) );
+			}
+
 		}
 
 		private IMapper GetMapper(Container container)

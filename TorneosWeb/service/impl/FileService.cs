@@ -33,12 +33,12 @@ namespace TorneosWeb.service.impl
 			
 			List<T> items = null;
 
-			CsvConfiguration config = new CsvConfiguration( CultureInfo.CurrentCulture );
+			CsvConfiguration config = new( CultureInfo.CurrentCulture );
 			config.HeaderValidated = null;
 			config.MissingFieldFound = null;
-			using( StreamReader streamReader = new StreamReader( file.OpenReadStream() ) )
+			using( StreamReader streamReader = new( file.OpenReadStream() ) )
 			{
-				CsvReader csv = new CsvReader( streamReader, config );
+				CsvReader csv = new( streamReader, config );
 				csv.Context.RegisterClassMap<KnockoutsMap>();
 				csv.Context.RegisterClassMap<ResultadosMap>();
 				try
