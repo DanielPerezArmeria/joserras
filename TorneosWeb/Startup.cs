@@ -151,7 +151,7 @@ namespace TorneosWeb
 
 			foreach(Type t in registrations )
 			{
-				container.RegisterSingleton( t, () => Configuration.GetSection( t.Name ).Get( t ) );
+				container.RegisterInstance( t, Configuration.GetSection( t.Name ).Get( t ) );
 			}
 
 		}
