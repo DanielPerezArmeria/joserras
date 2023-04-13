@@ -51,13 +51,6 @@
 
 
   <ItemGroup>
-    <Content Update="Files\Joserras Project-fd7d4368e5dd.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
-
-  <ItemGroup>
     <EmbeddedResource Update="Properties\Queries.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Queries.Designer.cs</LastGenOutput>
