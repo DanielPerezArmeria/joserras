@@ -33,7 +33,7 @@ namespace TorneosWeb.util.prize.fillers
 		public string AssignPrize(TorneoDTO torneo, IEnumerable<ResultadosDTO> resultados, Bolsa bolsa, string premio)
 		{
 			decimal factor = decimal.Parse( premio.Replace( PrizeFill.PERCENT_CHAR, "" ) ) / 100;
-			decimal otorgado = bolsa.Total * factor;
+			decimal otorgado = bolsa.Premios * factor;
 			bolsa.Otorgar( otorgado );
 			return otorgado.ToString();
 		}

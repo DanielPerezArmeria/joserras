@@ -106,9 +106,12 @@ namespace TorneosWeb.service.impl
 			return premiacion;
 		}
 
-		public Bolsa GetBolsaTorneo(int entradas, int rebuys, int buyinPrice, int rebuyPrice)
+		public Bolsa GetBolsaTorneo(TorneoDTO torneo)
 		{
-			return new Bolsa( (entradas * buyinPrice) + (rebuys * rebuyPrice) );
+			decimal total = ( torneo.Entradas * torneo.PrecioBuyin ) + ( torneo.Rebuys * torneo.PrecioRebuy );
+			decimal bounties = ( torneo.Entradas + torneo.Rebuys ) * torneo.PrecioBounty;
+			decimal premios = total - bounties;
+			return new Bolsa( premios, bounties );
 		}
 
 		public IEnumerable<PrizeRange> GetPrizeRanges()

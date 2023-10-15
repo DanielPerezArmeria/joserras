@@ -16,9 +16,6 @@ namespace Joserras.Client.Torneo.Service.Validators
 				if(!resultados.Exists( r => ko.Jugador.Equals( r.Jugador ) ) ){
 					jugadores.Add( ko.Jugador );
 				}
-				if (!resultados.Exists( r => ko.Eliminado.Equals( r.Jugador ) ) ){
-					jugadores.Add( ko.Eliminado );
-				}
 			}
 
 			if(jugadores.Count > 0)

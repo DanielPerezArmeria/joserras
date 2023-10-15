@@ -10,7 +10,6 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
 
 namespace Joserras.Client.Torneo.Model
 {
@@ -246,6 +245,13 @@ namespace Joserras.Client.Torneo.Model
 		{
 			get { return isOver; }
 			set { SetProperty( ref isOver, value ); }
+		}
+
+		private int kos;
+		public int Kos
+		{
+			get { return kos; }
+			set { kos = value; }
 		}
 
 	}

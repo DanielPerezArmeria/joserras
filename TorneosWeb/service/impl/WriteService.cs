@@ -107,7 +107,7 @@ namespace TorneosWeb.service.impl
 
 			torneo.Entradas = resultados.Count;
 			torneo.Rebuys = resultados.Sum( d => d.Rebuys );
-			torneo.Bolsa = prizeService.GetBolsaTorneo( torneo.Entradas, torneo.Rebuys, torneo.PrecioBuyin, torneo.PrecioRebuy);
+			torneo.Bolsa = prizeService.GetBolsaTorneo( torneo);
 
 			torneo.Premiacion = prizeService.GetPremiacionString( torneo, resultados );
 
@@ -136,11 +136,11 @@ namespace TorneosWeb.service.impl
 				log.LogDebug( "Posición: {0} - Premio: {1}", res.Posicion, res.Premio );
 			}
 
-			if(resultados.Sum( r => decimal.Parse( r.Premio ) ) != torneo.Bolsa.Total)
+			if(resultados.Sum( r => decimal.Parse( r.Premio ) ) != torneo.Bolsa.Premios)
 			{
 				string msg = string.Format( "Los premios otorgados suman {0} pero la Bolsa es igual a {1}",
 					resultados.Sum( r => decimal.Parse( r.Premio ) ).ToString( Constants.CURRENCY_FORMAT ),
-					torneo.Bolsa.Total.ToString( Constants.CURRENCY_FORMAT ) );
+					torneo.Bolsa.Premios.ToString( Constants.CURRENCY_FORMAT ) );
 
 				throw new JoserrasException( msg );
 			}
@@ -184,14 +184,18 @@ namespace TorneosWeb.service.impl
 
 		private void InsertarKos(TorneoDTO torneo, List<ResultadosDTO> resultados, List<KnockoutsDTO> kos, TorneoUnitOfWork uow)
 		{
-			string query = @"insert into knockouts (torneo_id, jugador_id, eliminado_id, eliminaciones, mano_url) values(@torneoId, "
-				+ @"(select id from jugadores where nombre = @jugador), (select id from jugadores where nombre = @eliminado), @kos, @mano)";
+			string query;
 
-			foreach(KnockoutsDTO dto in kos )
+			if( !string.IsNullOrEmpty( kos.First().Eliminado ) )
 			{
-				try
+				query = @"insert into knockouts (torneo_id, jugador_id, eliminado_id, eliminaciones, mano_url) values(@torneoId, "
+						+ @"(select id from jugadores where nombre = @jugador), (select id from jugadores where nombre = @eliminado), @kos, @mano)";
+
+				foreach( KnockoutsDTO dto in kos )
 				{
-					IDictionary<string, object> parameters = new Dictionary<string, object>
+					try
+					{
+						IDictionary<string, object> parameters = new Dictionary<string, object>
 					{
 						{ "@torneoId", torneo.Id },
 						{ "@jugador", dto.Jugador },
@@ -200,15 +204,22 @@ namespace TorneosWeb.service.impl
 						{ "@mano", dto.Mano }
 					};
 
-					uow.ExecuteNonQuery( query, parameters );
-				}
-				catch( Exception e )
-				{
-					string msg = string.Format( "Error al insertar el KO de '{0}' a '{1}' en la tabla de Knockouts. No se agregó el torneo.", dto.Jugador, dto.Eliminado );
-					throw new JoserrasException( msg, e );
+						uow.ExecuteNonQuery( query, parameters );
+					}
+					catch( Exception e )
+					{
+						string msg = string.Format( "Error al insertar el KO de '{0}' a '{1}' en la tabla de Knockouts. No se agregó el torneo.", dto.Jugador, dto.Eliminado );
+						throw new JoserrasException( msg, e );
+					}
 				}
 			}
 
+			query = SetKos( torneo, resultados, kos, uow );
+		}
+
+		private static string SetKos(TorneoDTO torneo, List<ResultadosDTO> resultados, List<KnockoutsDTO> kos, TorneoUnitOfWork uow)
+		{
+			string query;
 			ResultadosDTO firstPlace = resultados.First( d => d.Posicion == 1 );
 
 			// Insertar kos y bounties
@@ -218,15 +229,15 @@ namespace TorneosWeb.service.impl
 			foreach( Tuple<string, decimal> t in tuples )
 			{
 				decimal bountyPrice = t.Item2 * torneo.PrecioBounty;
-				if(torneo.Tipo == TournamentType.BOUNTY && t.Item1 == firstPlace.Jugador )
+				if( torneo.Tipo == TournamentType.BOUNTY && t.Item1 == firstPlace.Jugador )
 				{
 					bountyPrice += torneo.PrecioBounty;
 				}
 				string q = string.Format( query, bountyPrice, t.Item2, torneo.Id, t.Item1 );
 				try
 				{
-					resultados.Where( r => r.Jugador == t.Item1 ).First().Kos = t.Item2;
-					uow.ExecuteNonQuery( query, bountyPrice, t.Item2, torneo.Id, t.Item1 );
+					resultados.First( r => r.Jugador == t.Item1 ).Kos = t.Item2;
+					_ = uow.ExecuteNonQuery( query, bountyPrice, t.Item2, torneo.Id, t.Item1 );
 				}
 				catch( Exception e )
 				{
@@ -234,6 +245,8 @@ namespace TorneosWeb.service.impl
 					throw new JoserrasException( msg, e );
 				}
 			}
+
+			return query;
 		}
 
 		private void AddPlayer(string nombre, TorneoUnitOfWork uow)

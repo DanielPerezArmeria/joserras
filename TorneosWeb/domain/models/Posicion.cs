@@ -48,7 +48,7 @@ namespace TorneosWeb.domain.models
 		{
 			get
 			{
-				return ProfitTorneoNumber - LigaCostos;
+				return ProfitTorneoNumber + PremioBountiesNumber - LigaCostos;
 			}
 		}
 

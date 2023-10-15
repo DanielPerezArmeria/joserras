@@ -88,6 +88,8 @@
 																IsReadOnly="{Binding Value, Source={StaticResource rebuyPeriodOverKey}}"/>
 				<DataGridTextColumn Header="Rebuys" Binding="{Binding Rebuys}"
 														IsReadOnly="{Binding Value, Source={StaticResource rebuyPeriodOverKey}}"/>
+				<DataGridTextColumn Header="KO's" Binding="{Binding Kos}"
+														IsReadOnly="{Binding Value, Source={StaticResource rebuyPeriodOverKey}}"/>
 				<DataGridCheckBoxColumn Header="Puntualidad" Binding="{Binding Puntualidad}"
 																IsReadOnly="{Binding Value, Source={StaticResource rebuyPeriodOverKey}}"/>
 				<DataGridTextColumn Header="Premio" Binding="{Binding Premio}"/>

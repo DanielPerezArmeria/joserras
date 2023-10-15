@@ -52,6 +52,14 @@ namespace Joserras.Client.Torneo.Model
 			set { SetProperty( ref precioBuyin, value ); }
 		}
 
+		private int precioBounty;
+		public int PrecioBounty
+		{
+			get { return precioBounty; }
+			set { SetProperty( ref precioBounty, value ); }
+		}
+
+
 		private string premiacion;
 		public string Premiacion
 		{

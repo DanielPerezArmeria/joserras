@@ -12,6 +12,7 @@
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition/>
 				<ColumnDefinition Width="70"/>
+				<ColumnDefinition Width="70"/>
 				<ColumnDefinition/>
 				<ColumnDefinition/>
 			</Grid.ColumnDefinitions>
@@ -26,11 +27,14 @@
 			<Label Grid.Column="1">BUYIN</Label>
 			<TextBox Text="{Binding PrecioBuyin}" Width="60" Height="auto" Grid.Row="1" Grid.Column="1"/>
 
-			<Label Grid.Column="2">TIPO</Label>
-			<ComboBox ItemsSource="{Binding TournamentTypes}" SelectedItem="{Binding Tipo}" Grid.Row="1" Grid.Column="2"/>
+			<Label Grid.Column="2">BOUNTY</Label>
+			<TextBox Text="{Binding PrecioBounty}" Width="60" Height="auto" Grid.Row="1" Grid.Column="2"/>
 
-			<Label Grid.Column="3">LIGA</Label>
-			<CheckBox IsChecked="{Binding Liga}" Grid.Row="1" Grid.Column="3" VerticalAlignment="Center" Margin="7,0,0,0"/>
+			<Label Grid.Column="3">TIPO</Label>
+			<ComboBox ItemsSource="{Binding TournamentTypes}" SelectedItem="{Binding Tipo}" Grid.Row="1" Grid.Column="3"/>
+
+			<Label Grid.Column="4">LIGA</Label>
+			<CheckBox IsChecked="{Binding Liga}" Grid.Row="1" Grid.Column="4" VerticalAlignment="Center" Margin="7,0,0,0"/>
 
 		</Grid>
 	</Border>

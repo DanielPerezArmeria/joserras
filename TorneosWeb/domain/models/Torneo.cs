@@ -25,14 +25,14 @@ namespace TorneosWeb.domain.models
 			get
 			{
 				int total = PrecioBuyinNumber - PremioBountyNumber;
-				string buyin = total.ToString( Constants.CURRENCY_FORMAT );
+				string buyin = total.ToString( Constants.BOLSA_FORMAT );
 				if( Tipo == TournamentType.BOUNTY )
 				{
-					buyin = buyin + " + " + PremioBountyNumber.ToString( Constants.CURRENCY_FORMAT ) + "(B)";
+					buyin = buyin + " + " + PremioBountyNumber.ToString( Constants.BOLSA_FORMAT ) + "(B)";
 				}
 				if( Liga != null )
 				{
-					buyin = buyin + " + " + Liga.Fee.ToString( Constants.CURRENCY_FORMAT ) + "(L)";
+					buyin = buyin + " + " + Liga.Fee.ToString( Constants.BOLSA_FORMAT ) + "(L)";
 				}
 				return buyin;
 			}
@@ -42,7 +42,7 @@ namespace TorneosWeb.domain.models
 
 		[Display( Name = "$ Re-buy" )]
 		[NoMap]
-		public string Precio_Rebuy { get { return PrecioRebuyNumber.ToString( Constants.CURRENCY_FORMAT ); } }
+		public string Precio_Rebuy { get { return PrecioRebuyNumber.ToString( Constants.BOLSA_FORMAT ); } }
 
 		public int PrecioRebuyNumber { get; set; }
 
@@ -59,7 +59,7 @@ namespace TorneosWeb.domain.models
 		[NoMap]
 		public string Bolsa
 		{
-			get { return BolsaNumber.ToString( Constants.CURRENCY_FORMAT ); }
+			get { return BolsaNumber.ToString( Constants.BOLSA_FORMAT ); }
 		}
 
 		public string Ganador
@@ -88,7 +88,7 @@ namespace TorneosWeb.domain.models
 
 		[NoMap]
 		[Display( Name = "Bounty" )]
-		public string PremioBounty { get { return PremioBountyNumber > 0 ? PremioBountyNumber.ToString( "$###,###" ) : "-"; } }
+		public string PremioBounty { get { return PremioBountyNumber > 0 ? PremioBountyNumber.ToString( Constants.BOLSA_FORMAT ) : "-"; } }
 
 		[NoMap]
 		public Liga Liga { get; set; }

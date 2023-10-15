@@ -22,7 +22,6 @@ namespace Joserras.Client.Torneo.Utils
 
 			mce.CreateMap<TorneoViewModel, TorneoDTO>()
 				.ForMember( d => d.Bolsa, opt => opt.Ignore() )
-				.ForMember( d => d.PrecioBounty, opt => opt.Ignore() )
 				.ForMember( d => d.Rebuys, opt => opt.Ignore() )
 				.ForMember( d => d.PrecioRebuy, opt => opt.Ignore() )
 				.ForMember( d => d.Entradas, opt => opt.Ignore() );
@@ -32,8 +31,7 @@ namespace Joserras.Client.Torneo.Utils
 				.ForMember( d => d.JugadorId, opt => opt.Ignore() )
 				.ForMember( d => d.Nuevo, opt => opt.Ignore() )
 				.ForMember( d => d.Podio, opt => opt.Ignore() )
-				.ForMember( d => d.Burbuja, opt => opt.Ignore() )
-				.ForMember( d => d.Kos, opt => opt.Ignore() );
+				.ForMember( d => d.Burbuja, opt => opt.Ignore() );
 
 			mce.CreateMap<KO, KnockoutsDTO>();
 

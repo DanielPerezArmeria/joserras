@@ -8,7 +8,7 @@ namespace TorneosWeb.service
 	{
 		IDictionary<int,string> GetPremios(TorneoDTO torneo, IEnumerable<ResultadosDTO> resultados);
 
-		Bolsa GetBolsaTorneo(int entradas, int rebuys, int buyinPrice, int rebuyPrice);
+		Bolsa GetBolsaTorneo(TorneoDTO torneo);
 
 		string GetPremiacionString(TorneoDTO torneo, IEnumerable<ResultadosDTO> resultados);
 
