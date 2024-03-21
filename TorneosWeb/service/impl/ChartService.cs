@@ -13,19 +13,20 @@ namespace TorneosWeb.service.impl
 		private IReadService readService;
 		private ILigaReader ligaReader;
 		private ILigaDao ligaDao;
+		private IJugadorService jugadorService;
 
-		public ChartService(IReadService readService, ILigaReader ligaReader, ILigaDao ligaDao)
+		public ChartService(IReadService readService, ILigaReader ligaReader, ILigaDao ligaDao, IJugadorService jugadorService)
 		{
 			this.readService = readService;
 			this.ligaReader = ligaReader;
 			this.ligaDao = ligaDao;
+			this.jugadorService = jugadorService;
 		}
 
 		public List<ChartDataPoint> GetPlayerProfitChartData(Guid playerId)
 		{
-			List<Torneo> torneos =
-				readService.GetAllTorneos().Where( t => t.Resultados.Posiciones.Any( p => p.JugadorId.Equals( playerId ) ) )
-				.OrderBy( t => t.Fecha ).ToList();
+			List<Posicion> posiciones = jugadorService.GetAllPosicionesByJugador( playerId );
+			List<Torneo> torneos = posiciones.Select( p => p.Torneo ).OrderBy( t => t.Fecha ).ToList();
 
 			List<ChartDataPoint> dataPoints = new();
 			Dictionary<DateTime, decimal> pointsDic = new();
@@ -33,7 +34,7 @@ namespace TorneosWeb.service.impl
 
 			foreach (Torneo torneo in torneos)
 			{
-				Posicion posicion = torneo.Resultados.Posiciones.Single( p => p.JugadorId == playerId );
+				Posicion posicion = posiciones.Single( p => p.TorneoId.Equals( torneo.Id ) );
 				if (!pointsDic.ContainsKey( torneo.FechaDate ))
 				{
 					pointsDic.Add( torneo.FechaDate, posicion.ProfitTotalNumber );

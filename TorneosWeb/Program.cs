@@ -10,10 +10,14 @@ namespace TorneosWeb
 	{
 		public static void Main(string[] args)
 		{
+			string outputFormat = "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] "
+				+ "({SourceContext}) {Message:lj}{NewLine}{Exception}";
 			Log.Logger = new LoggerConfiguration()
 				.MinimumLevel.Debug()
-				.WriteTo.Console()
-				.WriteTo.File( "joserras-.log", rollingInterval: RollingInterval.Month )
+				.Enrich.FromLogContext()
+				.WriteTo.Console(outputTemplate: outputFormat)
+				.WriteTo.File( "joserras-.log", rollingInterval: RollingInterval.Month,
+					outputTemplate: outputFormat )
 				.MinimumLevel.Override( "Microsoft.AspNetCore", LogEventLevel.Warning )
 				.CreateLogger();
 
@@ -21,7 +25,7 @@ namespace TorneosWeb
 		}
 
 		public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-				WebHost.CreateDefaultBuilder( args )
+			WebHost.CreateDefaultBuilder( args )
 						.ConfigureLogging( logging =>
 						{
 							logging.ClearProviders();

@@ -7,18 +7,18 @@ namespace TorneosWeb.Pages
 {
 	public class JugadoresModel : PageModel
 	{
-		private IReadService readService;
+		private IJugadorService service;
 
 		public List<Jugador> jugadores { get; set; }
 
-		public JugadoresModel(IReadService service)
+		public JugadoresModel(IJugadorService service)
 		{
-			readService = service;
+			this.service = service;
 		}
 
 		public void OnGet()
 		{
-			jugadores = readService.GetAllJugadores();
+			jugadores = service.GetAllJugadores();
 		}
 
 	}

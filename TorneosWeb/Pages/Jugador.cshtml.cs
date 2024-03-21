@@ -20,18 +20,23 @@ namespace TorneosWeb.Pages
 
 		private IReadService readService;
 		private IChartService chartService;
+		private IJugadorService jugadorService;
 
-		public JugadorModel(IReadService service, IChartService chartService)
+		public JugadorModel(IReadService service, IChartService chartService, IJugadorService jugadorService)
 		{
 			readService = service;
 			this.chartService = chartService;
+			this.jugadorService = jugadorService;
 		}
 
 		public void OnGet(Guid id)
 		{
 			DetalleJugador = readService.FindDetalleJugador( id );
-			List<Torneo> tournaments = readService.GetAllTorneos().Where( t => t.Resultados.Posiciones.Any( p => p.JugadorId.Equals( id ) ) ).ToList();
+			List<Posicion> posiciones = jugadorService.GetAllPosicionesByJugador( id );
+			List<Torneo> tournaments = readService.GetAllTorneos().Where( t => posiciones.Any( p => p.TorneoId.Equals( t.Id ) ) ).ToList();
 			Torneos = new List<JugadorTorneosViewModel>();
+			Podios = new Dictionary<int, int>();
+
 			foreach (Torneo t in tournaments)
 			{
 				JugadorTorneosViewModel m = new JugadorTorneosViewModel();
@@ -41,25 +46,23 @@ namespace TorneosWeb.Pages
 				m.Ganador = t.Ganador;
 				m.GanadorId = t.GanadorId;
 				m.Precio_Buyin = t.Precio_Buyin;
-				m.Lugar = t.Resultados.Posiciones.Single( p => p.JugadorId.Equals( id ) ).Lugar;
-				m.Profit = t.Resultados.Posiciones.Single( p => p.JugadorId.Equals( id ) ).ProfitTotal;
-				m.ProfitNumber = t.Resultados.Posiciones.Single( p => p.JugadorId.Equals( id ) ).ProfitTotalNumber;
 
-				Torneos.Add( m );
-			}
+				Posicion posicion = posiciones.Single( p => p.TorneoId.Equals( t.Id ) );
+				m.Lugar = posicion.Lugar;
+				m.Profit = posicion.ProfitTotal;
+				m.ProfitNumber = posicion.ProfitTotalNumber;
 
-			List<Torneo> torneosConPodio = tournaments.Where( t => t.Resultados.Posiciones.Any( p => p.JugadorId.Equals( id ) && p.Podio ) ).ToList();
-
-			Podios = new Dictionary<int, int>();
-			foreach(Torneo t in torneosConPodio )
-			{
-				Posicion pos = t.Resultados.Posiciones.Single( p => p.JugadorId.Equals( id ) );
-				if( !Podios.ContainsKey( pos.Lugar ) )
+				if( posicion.Podio )
 				{
-					Podios.Add( pos.Lugar, 0 );
+					if( !Podios.ContainsKey( posicion.Lugar ) )
+					{
+						Podios.Add( posicion.Lugar, 0 );
+					}
+
+					Podios[posicion.Lugar] += 1;
 				}
 
-				Podios[ pos.Lugar ] += 1;
+				Torneos.Add( m );
 			}
 
 			List<ChartDataPoint> points = chartService.GetPlayerProfitChartData( id );

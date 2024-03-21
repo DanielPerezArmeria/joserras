@@ -22,16 +22,18 @@ namespace TorneosWeb.service.impl
 		private ILogger<GoogleSheetsProfitsExporter> log;
 		private IReadService readService;
 		private ILigaReader ligaReader;
+		private IJugadorService jugadorService;
 
 		static string[] Scopes = { SheetsService.Scope.Spreadsheets };
 
 		public GoogleSheetsProfitsExporter(ISecretsManager secretsManager, ILogger<GoogleSheetsProfitsExporter> logger,
-			IReadService readService, ILigaReader ligaReader)
+			IReadService readService, ILigaReader ligaReader, IJugadorService jugadorService)
 		{
 			SpreadsheetId = secretsManager.GetSecret( "spreadsheetId" );
 			log = logger;
 			this.readService = readService;
 			this.ligaReader = ligaReader;
+			this.jugadorService = jugadorService;
 
 			try
 			{
@@ -202,7 +204,7 @@ namespace TorneosWeb.service.impl
 
 		private void CleanRows()
 		{
-			int rowsToClean = readService.GetAllJugadores().Count + 1;
+			int rowsToClean = jugadorService.GetAllJugadores().Count + 1;
 
 			string range = string.Format("{0}!D1:O{1}", SHEET, rowsToClean);
 			IList<object> cellValues;

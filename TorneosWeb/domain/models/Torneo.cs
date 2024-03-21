@@ -62,15 +62,9 @@ namespace TorneosWeb.domain.models
 			get { return BolsaNumber.ToString( Constants.BOLSA_FORMAT ); }
 		}
 
-		public string Ganador
-		{
-			get { return Resultados.Posiciones.First( p => p.Lugar == 1 ).Nombre; }
-		}
+		public string Ganador { get; set; }
 
-		public Guid GanadorId
-		{
-			get { return Resultados.Posiciones.First( p => p.Lugar == 1 ).JugadorId; }
-		}
+		public Guid GanadorId { get; set; }
 
 		public TournamentType Tipo { get; set; }
 		public string TipoString

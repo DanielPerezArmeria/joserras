@@ -10,8 +10,6 @@ namespace TorneosWeb.service
 		List<Torneo> GetAllTorneos();
 		Torneo FindTorneoByFecha(DateTime fecha);
 
-		List<Jugador> GetAllJugadores();
-
 		Resultados FindResultadosTorneo(Guid id);
 
 		DetalleJugador FindDetalleJugador(Guid id);

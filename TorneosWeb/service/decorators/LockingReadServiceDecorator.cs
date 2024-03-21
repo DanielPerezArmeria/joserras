@@ -71,14 +71,6 @@ namespace TorneosWeb.service.decorators
 			}
 		}
 
-		public List<Jugador> GetAllJugadores()
-		{
-			lock (locker)
-			{
-				return wrapped.GetAllJugadores();
-			}
-		}
-
 		public SortedList<string, Dictionary<string, Knockouts>> GetAllKnockouts()
 		{
 			lock (locker)

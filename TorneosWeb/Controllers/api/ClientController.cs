@@ -20,15 +20,17 @@ namespace TorneosWeb.Controllers.api
 		private IFileService tourneyReader;
 		private IWriteService writeService;
 		private IPrizeService prizeService;
+		private IJugadorService jugadorService;
 
 		public ClientController(IReadService readService, ILogger<ClientController> log, IFileService tourneyReader,
-				IWriteService service, IPrizeService prizeService)
+				IWriteService service, IPrizeService prizeService, IJugadorService jugadorService)
 		{
 			this.readService = readService;
 			this.log = log;
 			this.tourneyReader = tourneyReader;
 			writeService = service;
 			this.prizeService = prizeService;
+			this.jugadorService = jugadorService;
 		}
 
 		// GET: api/<ClientController>/Jugadores
@@ -36,7 +38,7 @@ namespace TorneosWeb.Controllers.api
 		public IEnumerable<Jugador> GetJugadores()
 		{
 			log.LogDebug( "Requesting Api: Jugadores" );
-			return readService.GetAllJugadores();
+			return jugadorService.GetAllJugadores();
 		}
 
 		// GET api/<ClientController>/PrizeRanges

@@ -21,18 +21,6 @@ namespace TorneosWeb.service.decorators
 			GetAllTorneos();
 		}
 
-		public List<Jugador> GetAllJugadores()
-		{
-			string key = nameof( GetAllJugadores );
-			if( !cacheService.ContainsKey( key ) )
-			{
-				log.LogDebug( "Key '{0}' was not found in cache. Calling service.", key );
-				cacheService.Add( key, wrapped.GetAllJugadores() );
-			}
-
-			return cacheService.Get<List<Jugador>>( key );
-		}
-
 		public SortedList<string, Dictionary<string, Knockouts>> GetAllKnockouts()
 		{
 			string key = nameof( GetAllKnockouts );

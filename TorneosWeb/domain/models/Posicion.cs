@@ -7,9 +7,13 @@ namespace TorneosWeb.domain.models
 {
 	public class Posicion : IComparable<Posicion>
 	{
+		public Guid TorneoId { get; set; }
 		public Guid JugadorId { get; set; }
 		public string Nombre { get; set; }
 		public int Lugar { get; set; }
+
+		[NoMap]
+		public Torneo Torneo { get; set; }
 
 		public decimal PremioNumber { get; set; }
 
@@ -57,9 +61,9 @@ namespace TorneosWeb.domain.models
 		{
 			get
 			{
-				if(Resultados.Torneo.Liga != null )
+				if(Torneo.Liga != null )
 				{
-					return (Rebuys + 1) * Resultados.Torneo.Liga.Fee;
+					return (Rebuys + 1) * Torneo.Liga.Fee;
 				}
 
 				return 0;
@@ -69,7 +73,7 @@ namespace TorneosWeb.domain.models
 		[NoMap]
 		public decimal TorneoCostos
 		{
-			get { return Resultados.Torneo.PrecioBuyinNumber + (Rebuys * Resultados.Torneo.PrecioRebuyNumber); }
+			get { return Torneo.PrecioBuyinNumber + (Rebuys * Torneo.PrecioRebuyNumber); }
 		}
 
 		[NoMap]

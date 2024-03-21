@@ -27,11 +27,6 @@ namespace TorneosWeb.service.impl
 			this.tournamentDao = tournamentDao;
 		}
 
-		public List<Jugador> GetAllJugadores()
-		{
-			return tournamentDao.GetAllJugadores();
-		}
-
 
 		#region GetAllKnockouts
 		public SortedList<string, Dictionary<string, Knockouts>> GetAllKnockouts()
@@ -87,7 +82,7 @@ namespace TorneosWeb.service.impl
 				torneos.Where( t => torneosInLiga.Contains( t.Id ) ).ToList().ForEach( t => t.Liga = ligas[ligaId] );
 			}
 
-			FillTorneos( torneos );
+			//FillTorneos( torneos );
 
 			return torneos;
 		}
@@ -124,6 +119,7 @@ namespace TorneosWeb.service.impl
 			foreach(Posicion pos in posiciones)
 			{
 				pos.Resultados = resultados;
+				pos.Torneo = torneo;
 				resultados.Jugadores.Add( pos.Nombre );
 			}
 

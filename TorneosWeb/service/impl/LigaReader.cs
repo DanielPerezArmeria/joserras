@@ -110,6 +110,7 @@ namespace TorneosWeb.service.impl
 			foreach(Torneo torneo in liga.Torneos )
 			{
 				Resultados results = readService.FindResultadosTorneo( torneo.Id );
+				torneo.Resultados = results;
 				foreach(Posicion pos in results.Posiciones )
 				{
 					Standing standing = null;
@@ -176,7 +177,7 @@ namespace TorneosWeb.service.impl
 		public List<Standing> GetStandings(Liga liga, Torneo torneo)
 		{
 			List<Standing> standings = new List<Standing>();
-			Resultados results = torneo.Resultados;
+			Resultados results = readService.FindResultadosTorneo( torneo.Id );
 			foreach( Posicion pos in results.Posiciones )
 			{
 				Standing standing = new Standing

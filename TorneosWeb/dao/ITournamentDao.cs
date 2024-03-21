@@ -12,6 +12,8 @@ namespace TorneosWeb.dao
 
 		List<Posicion> GetPosicionesByTorneo(Guid torneoId);
 
+		List<Posicion> GetAllPosicionesByJugador(Guid jugadorId);
+
 		List<Torneo> GetAllTorneos();
 
 		Torneo FindTorneoByFecha(DateTime fecha);

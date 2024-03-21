@@ -40,9 +40,31 @@ namespace TorneosWeb.dao.impl
 			return posiciones;
 		}
 
+		public List<Posicion> GetAllPosicionesByJugador(Guid jugadorId)
+		{
+			List<Posicion> posiciones = new List<Posicion>();
+
+			string query = @"select dt.*, j.nombre from resultados dt, jugadores j
+					where j.id = @jugadorId and dt.jugador_id = j.id";
+			Dictionary<string, object> parameters = new() { { "@jugadorId", jugadorId } };
+
+			joserrasQuery.ExecuteQuery( query, parameters, reader =>
+			{
+				while( reader.Read() )
+				{
+					Posicion posicion = mapper.Map<SqlDataReader, Posicion>( reader );
+					posiciones.Add( posicion );
+				}
+			} );
+
+			return posiciones;
+		}
+
 		public Torneo GetTorneo(Guid torneoId)
 		{
-			string query = @"select * from torneos where id = @torneoId";
+			string query = @"select t.*, j.id as ganadorId, j.nombre as ganador
+					from torneos t, resultados r, jugadores j
+					where t.id = @torneoId and t.id = r.torneo_id and r.posicion = 1 and r.jugador_id = j.id";
 			Dictionary<string, object> parameters = new() { { "@torneoId", torneoId } };
 
 			Torneo torneo = joserrasQuery.ExecuteQuery( query, parameters, reader =>
@@ -73,7 +95,10 @@ namespace TorneosWeb.dao.impl
 		public List<Torneo> GetAllTorneos()
 		{
 			List<Torneo> torneos = new List<Torneo>();
-			string query = "select * from torneos order by fecha desc";
+			string query = @"select t.*, j.id as ganadorId, j.nombre as ganador
+					from torneos t, resultados r, jugadores j
+					where t.id = r.torneo_id and r.posicion = 1 and r.jugador_id = j.id
+					order by fecha desc";
 			joserrasQuery.ExecuteQuery( query, reader =>
 			{
 				while (reader.Read())
@@ -88,7 +113,9 @@ namespace TorneosWeb.dao.impl
 
 		public Torneo FindTorneoByFecha(DateTime fecha)
 		{
-			string query = string.Format( @"select * from torneos where fecha = @fecha" );
+			string query = @"select t.*, j.id as ganadorId, j.nombre as ganador
+					from torneos t, resultados r, jugadores j
+					where t.fecha = @fecha and t.id = r.torneo_id and r.posicion = 1 and r.jugador_id = j.id";
 			Dictionary<string, object> parameters = new() { { "@fecha", fecha.ToString( "yyyy-MM-dd" ) } };
 
 			Torneo torneo = joserrasQuery.ExecuteQuery( query, parameters, reader =>
