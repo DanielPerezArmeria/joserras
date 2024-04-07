@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using TorneosWeb.domain;
 using TorneosWeb.domain.models;
 using TorneosWeb.service;
 
@@ -31,13 +29,33 @@ namespace TorneosWeb.Pages
 
 		public void OnGet(Guid id)
 		{
-			DetalleJugador = readService.FindDetalleJugador( id );
+			JugadorViewModel viewModel = GetJugadorViewModel( id );
+			DetalleJugador = viewModel.DetalleJugador;
+			Torneos = viewModel.Torneos;
+			Podios = viewModel.Podios;
+			DataPoints = chartService.GetPlayerProfitChartData( id );
+		}
+
+		private JugadorViewModel GetJugadorViewModel(Guid id)
+		{
+			JugadorViewModel model = new JugadorViewModel();
+
+			TempJugadorModel temp = GetTorneosViewModel( id );
+			model.DetalleJugador = readService.FindDetalleJugador( id );
+			model.Torneos = temp.Torneos;
+			model.Podios = temp.Podios;
+
+			return model;
+		}
+
+		private TempJugadorModel GetTorneosViewModel(Guid id)
+		{
 			List<Posicion> posiciones = jugadorService.GetAllPosicionesByJugador( id );
 			List<Torneo> tournaments = readService.GetAllTorneos().Where( t => posiciones.Any( p => p.TorneoId.Equals( t.Id ) ) ).ToList();
-			Torneos = new List<JugadorTorneosViewModel>();
-			Podios = new Dictionary<int, int>();
+			List<JugadorTorneosViewModel> Torneos = new List<JugadorTorneosViewModel>();
+			Dictionary<int, int> Podios = new Dictionary<int, int>();
 
-			foreach (Torneo t in tournaments)
+			foreach( Torneo t in tournaments )
 			{
 				JugadorTorneosViewModel m = new JugadorTorneosViewModel();
 				m.Id = t.Id;
@@ -65,8 +83,11 @@ namespace TorneosWeb.Pages
 				Torneos.Add( m );
 			}
 
-			List<ChartDataPoint> points = chartService.GetPlayerProfitChartData( id );
-			DataPoints = JsonConvert.SerializeObject( points );
+			TempJugadorModel model = new TempJugadorModel();
+			model.Torneos = Torneos;
+			model.Podios = Podios;
+
+			return model;
 		}
 
 
@@ -81,9 +102,16 @@ namespace TorneosWeb.Pages
 			[Display( Name = "Mi Lugar" )] public int Lugar { get; set; }
 			[Display( Name = "Mi Profit" )] public string Profit { get; set; }
 			public decimal ProfitNumber { get; set; }
+			public Dictionary<int, int> Podios;
 
 		}
-			
+
+		private class TempJugadorModel
+		{
+			public List<JugadorTorneosViewModel> Torneos;
+			public Dictionary<int, int> Podios;
+		}
+
 	}
 
 }

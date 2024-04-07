@@ -1,14 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
 
 namespace TorneosWeb.service.impl
 {
 	public class CacheService : ICacheService
 	{
-		private readonly Dictionary<string, object> map;
+		private readonly ConcurrentDictionary<string, object> map;
 
 		public CacheService()
 		{
-			map = new();
+			map = new ConcurrentDictionary<string, object>();
 		}
 
 		public void Clear()
@@ -18,7 +18,7 @@ namespace TorneosWeb.service.impl
 
 		public void Add(string key, object value)
 		{
-			map.Add( key, value );
+			map.TryAdd( key, value );
 		}
 
 		public T Get<T>(string key)

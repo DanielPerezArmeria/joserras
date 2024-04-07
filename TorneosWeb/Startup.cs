@@ -107,14 +107,12 @@ namespace TorneosWeb
 			);
 
 			container.RegisterDecorator<IReadService, CacheWrapperReadService>( Lifestyle.Singleton );
-			container.RegisterDecorator<IReadService, LockingReadServiceDecorator>( Lifestyle.Singleton );
 			container.RegisterDecorator<IStatsService, CacheWrapperStatsService>( Lifestyle.Singleton );
-			container.RegisterDecorator<IStatsService, LockingStatsServiceDecorator>( Lifestyle.Singleton );
 			container.RegisterDecorator<ILigaReader, CacheWrapperLigaReader>( Lifestyle.Singleton );
-			container.RegisterDecorator<ILigaReader, LockingLigaReaderDecorator>( Lifestyle.Singleton );
 			container.RegisterDecorator<IWriteService, WriteServiceLigaDecorator>( Lifestyle.Singleton );
 			container.RegisterDecorator<IWriteService, BalanceGeneratorWriteServiceDecorator>( Lifestyle.Singleton );
 			container.RegisterDecorator<IJugadorService, CacheWrappedJugadorService>( Lifestyle.Singleton );
+			container.RegisterDecorator<IChartService, CacheWrappedChartService>( Lifestyle.Singleton );
 			container.RegisterDecorator( typeof( IStandingsDao<> ), typeof( NullAzureDaoDecorator<> ), Lifestyle.Singleton );
 		}
 

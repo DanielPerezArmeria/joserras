@@ -6,7 +6,7 @@ using TorneosWeb.dao;
 
 namespace TorneosWeb.service.impl
 {
-	public class JugadorService :IJugadorService
+	public class JugadorService : IJugadorService
 	{
 		private ITournamentDao tournamentDao;
 		private IReadService readService;

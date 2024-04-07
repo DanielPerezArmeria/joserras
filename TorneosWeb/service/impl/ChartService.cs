@@ -5,25 +5,24 @@ using TorneosWeb.dao;
 using TorneosWeb.domain;
 using TorneosWeb.domain.models;
 using TorneosWeb.domain.models.ligas;
+using Newtonsoft.Json;
 
 namespace TorneosWeb.service.impl
 {
 	public class ChartService : IChartService
 	{
-		private IReadService readService;
 		private ILigaReader ligaReader;
 		private ILigaDao ligaDao;
 		private IJugadorService jugadorService;
 
-		public ChartService(IReadService readService, ILigaReader ligaReader, ILigaDao ligaDao, IJugadorService jugadorService)
+		public ChartService(ILigaReader ligaReader, ILigaDao ligaDao, IJugadorService jugadorService)
 		{
-			this.readService = readService;
 			this.ligaReader = ligaReader;
 			this.ligaDao = ligaDao;
 			this.jugadorService = jugadorService;
 		}
 
-		public List<ChartDataPoint> GetPlayerProfitChartData(Guid playerId)
+		public string GetPlayerProfitChartData(Guid playerId)
 		{
 			List<Posicion> posiciones = jugadorService.GetAllPosicionesByJugador( playerId );
 			List<Torneo> torneos = posiciones.Select( p => p.Torneo ).OrderBy( t => t.Fecha ).ToList();
@@ -72,7 +71,7 @@ namespace TorneosWeb.service.impl
 				profit = point.Profit;
 			}
 
-			return dataPoints;
+			return JsonConvert.SerializeObject( dataPoints );
 		}
 
 	}

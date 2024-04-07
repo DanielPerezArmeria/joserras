@@ -9,6 +9,7 @@ namespace TorneosWeb.service
     List<Posicion> GetAllPosicionesByJugador(Guid jugadorId);
 
     List<Jugador> GetAllJugadores();
+
   }
 
 }

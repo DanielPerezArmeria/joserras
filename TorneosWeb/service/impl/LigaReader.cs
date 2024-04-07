@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using TorneosWeb.dao;
 using TorneosWeb.domain.models;
 using TorneosWeb.domain.models.ligas;
@@ -64,11 +65,8 @@ namespace TorneosWeb.service.impl
 				}
 			} );
 
-			List<Liga> ligas = new List<Liga>();
-			foreach(string nombre in nombres )
-			{
-				ligas.Add( FindLigaByNombre( nombre ) );
-			}
+			List<Liga> ligas = new();
+			Parallel.ForEach( nombres, name => ligas.Add( FindLigaByNombre( name ) ) );
 
 			return ligas;
 		}
@@ -106,7 +104,8 @@ namespace TorneosWeb.service.impl
 				return new List<Standing>();
 			}
 
-			Dictionary<string, Standing> standings = new Dictionary<string, Standing>();
+			Dictionary<string, Standing> standings = new();
+			Dictionary<Torneo, Resultados> resultadosTorneos = new();
 			foreach(Torneo torneo in liga.Torneos )
 			{
 				Resultados results = readService.FindResultadosTorneo( torneo.Id );
