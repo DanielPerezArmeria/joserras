@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using TorneosWeb.domain.models;
 using TorneosWeb.domain.models.ligas;
@@ -10,13 +9,11 @@ namespace TorneosWeb.service.decorators
 	{
 		private ICacheService cacheService;
 		private ILigaReader wrapped;
-		private ILogger<CacheWrapperLigaReader> log;
 
-		public CacheWrapperLigaReader(ILigaReader reader, ICacheService cache, ILogger<CacheWrapperLigaReader> logger)
+		public CacheWrapperLigaReader(ILigaReader reader, ICacheService cache)
 		{
 			cacheService = cache;
 			wrapped = reader;
-			log = logger;
 		}
 
 		public Liga FindLigaByNombre(string nombre)
@@ -24,7 +21,6 @@ namespace TorneosWeb.service.decorators
 			string key = string.Format( "{0}:{1}", nameof( FindLigaByNombre ), nombre );
 			if(!cacheService.ContainsKey( key ) )
 			{
-				log.LogDebug( "Key '{0}' was not found in cache. Calling service.", key );
 				cacheService.Add( key, wrapped.FindLigaByNombre( nombre ) );
 			}
 
@@ -36,7 +32,6 @@ namespace TorneosWeb.service.decorators
 			string key = nameof( GetAllLigas );
 			if (!cacheService.ContainsKey( "GetAllLigas" ) )
 			{
-				log.LogDebug( "Key '{0}' was not found in cache. Calling service.", key );
 				cacheService.Add( key, wrapped.GetAllLigas() );
 			}
 
@@ -48,7 +43,6 @@ namespace TorneosWeb.service.decorators
 			string key = nameof( GetCurrentLiga );
 			if ( !cacheService.ContainsKey( "GetCurrentLiga" ) )
 			{
-				log.LogDebug( "Key '{0}' was not found in cache. Calling service.", key );
 				cacheService.Add( key, wrapped.GetCurrentLiga() );
 			}
 
@@ -60,7 +54,6 @@ namespace TorneosWeb.service.decorators
 			string key = string.Format( "{0}:{1}", nameof( GetStandings ), liga.Id );
 			if (!cacheService.ContainsKey( key ) )
 			{
-				log.LogDebug( "Key '{0}' was not found in cache. Calling service.", key );
 				cacheService.Add( key, wrapped.GetStandings( liga ) );
 			}
 
@@ -72,7 +65,6 @@ namespace TorneosWeb.service.decorators
 			string key = string.Format( "{0}:{1}:{2}", nameof( GetStandings ), liga.Id, torneo.Id );
 			if (!cacheService.ContainsKey( key ) )
 			{
-				log.LogDebug( "Key '{0}' was not found in cache. Calling service.", key );
 				cacheService.Add( key, wrapped.GetStandings( liga, torneo ) );
 			}
 
@@ -84,7 +76,6 @@ namespace TorneosWeb.service.decorators
 			string key = nameof( GetLigaByTorneoId ) + ":" + torneoId;
 			if( !cacheService.ContainsKey( key ) )
 			{
-				log.LogDebug( "Key '{0}' was not found in cache. Calling service.", key );
 				cacheService.Add( key, wrapped.GetLigaByTorneoId( torneoId ) );
 			}
 

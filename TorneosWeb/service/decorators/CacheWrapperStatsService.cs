@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using TorneosWeb.domain.models;
 using TorneosWeb.domain.models.ligas;
 
@@ -9,13 +8,11 @@ namespace TorneosWeb.service.decorators
 	{
 		private IStatsService wrapped;
 		private ICacheService cacheService;
-		private ILogger<CacheWrapperStatsService> log;
 
-		public CacheWrapperStatsService(IStatsService statsService, ICacheService cacheService, ILogger<CacheWrapperStatsService> logger)
+		public CacheWrapperStatsService(IStatsService statsService, ICacheService cacheService)
 		{
 			wrapped = statsService;
 			this.cacheService = cacheService;
-			this.log = logger;
 		}
 
 		public Estadisticas GetStats()

@@ -25,6 +25,8 @@ namespace TorneosWeb.service.impl
 			this.joserrasQuery = joserrasQuery;
 			this.ligaDao = ligaDao;
 			this.tournamentDao = tournamentDao;
+
+			GetAllTorneos();
 		}
 
 
@@ -73,7 +75,6 @@ namespace TorneosWeb.service.impl
 		{
 			List<Torneo> torneos = tournamentDao.GetAllTorneos();
 			IDictionary<Guid, List<Guid>> torneosLiga = ligaDao.GetTorneosInLigas();
-
 			Dictionary<Guid, Liga> ligas = new();
 			foreach(Guid ligaId in torneosLiga.Keys)
 			{
@@ -81,7 +82,7 @@ namespace TorneosWeb.service.impl
 				List<Guid> torneosInLiga = torneosLiga[ligaId];
 				torneos.Where( t => torneosInLiga.Contains( t.Id ) ).ToList().ForEach( t => t.Liga = ligas[ligaId] );
 			}
-
+			
 			//FillTorneos( torneos );
 
 			return torneos;
