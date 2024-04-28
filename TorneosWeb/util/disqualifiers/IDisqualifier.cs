@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using TorneosWeb.domain.models;
 
 namespace TorneosWeb.util.disqualifiers
 {
 	public interface IDisqualifier
 	{
-		void Disqualify(DateTime lastDate, Estadisticas estadisticas);
+		IList<Guid> Disqualify(DateTime lastDate, Estadisticas estadisticas);
 	}
 
 }

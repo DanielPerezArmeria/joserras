@@ -23,7 +23,7 @@ namespace TorneosWeb.util.disqualifiers
 			this.log = log;
 		}
 
-		public void Disqualify(DateTime lastDate, Estadisticas estadisticas)
+		public IList<Guid> Disqualify(DateTime lastDate, Estadisticas estadisticas)
 		{
 			// Selecciona los jugadores q han jugado entre el 11 y 20% de los juegos
 			int maxTorneos = tournamentDao.GetTotalTournaments();
@@ -55,8 +55,9 @@ namespace TorneosWeb.util.disqualifiers
 				log.LogDebug( jugadoresMenosQuincePorCiento.Humanize() );
 				log.LogDebug( "{0} jugadores con más de 2 meses sin jugar:", jugadoresInactividad.Count );
 				log.LogDebug( jugadoresInactividad.Humanize() );
-				estadisticas.Detalles.RemoveAll( d => jugadoresMenosQuincePorCiento.Contains( d.Id ) && jugadoresInactividad.Contains( d.Id ) );
 			}
+
+			return jugadoresMenosQuincePorCiento.Intersect( jugadoresInactividad ).ToList();
 		}
 
 	}

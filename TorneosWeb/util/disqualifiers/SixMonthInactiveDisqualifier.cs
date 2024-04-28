@@ -20,7 +20,7 @@ namespace TorneosWeb.util.disqualifiers
 			this.log = log;
 		}
 
-		public void Disqualify(DateTime lastDate, Estadisticas estadisticas)
+		public IList<Guid> Disqualify(DateTime lastDate, Estadisticas estadisticas)
 		{
 			List<Guid> jugadoresInactividad = new();
 
@@ -42,7 +42,8 @@ namespace TorneosWeb.util.disqualifiers
 
 			log.LogDebug( "{0} jugadores con más de 6 meses sin jugar:", jugadoresInactividad.Count );
 			log.LogDebug( jugadoresInactividad.Humanize() );
-			estadisticas.Detalles.RemoveAll( d => jugadoresInactividad.Contains( d.Id ) );
+
+			return jugadoresInactividad;
 		}
 
 	}

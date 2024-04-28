@@ -10,7 +10,7 @@ using TorneosWeb.Properties;
 
 namespace TorneosWeb.util.disqualifiers
 {
-	public class LessThanTenPctDisqualifier :IDisqualifier
+	public class LessThanTenPctDisqualifier : IDisqualifier
 	{
 		private JoserrasQuery joserrasQuery;
 		private ITournamentDao tournamentDao;
@@ -23,7 +23,7 @@ namespace TorneosWeb.util.disqualifiers
 			this.log = log;
 		}
 
-		public void Disqualify(DateTime lastDate, Estadisticas estadisticas)
+		public IList<Guid> Disqualify(DateTime lastDate, Estadisticas estadisticas)
 		{
 			// Selecciona los jugadores q han jugado menos del 10% de los torneos
 			int maxTorneos = tournamentDao.GetTotalTournaments();
@@ -55,8 +55,9 @@ namespace TorneosWeb.util.disqualifiers
 				log.LogDebug( jugadoresMenosDiezPorCiento.Humanize() );
 				log.LogDebug( "{0} jugadores con más de 1 mes sin jugar:", jugadoresInactividad.Count );
 				log.LogDebug( jugadoresInactividad.Humanize() );
-				estadisticas.Detalles.RemoveAll( d => jugadoresMenosDiezPorCiento.Contains( d.Id ) && jugadoresInactividad.Contains( d.Id ) );
 			}
+
+			return jugadoresMenosDiezPorCiento.Intersect( jugadoresInactividad ).ToList();
 		}
 
 	}

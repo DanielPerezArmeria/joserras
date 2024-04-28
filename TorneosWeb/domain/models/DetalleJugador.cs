@@ -6,7 +6,7 @@ using TorneosWeb.util.automapper;
 
 namespace TorneosWeb.domain.models
 {
-	public class DetalleJugador : IComparable<DetalleJugador>
+	public class DetalleJugador : IComparable<DetalleJugador>, IEquatable<DetalleJugador>
 	{
 		public Guid Id { get; set; }
 		public string Nombre { get; set; }
@@ -148,6 +148,11 @@ namespace TorneosWeb.domain.models
 			{
 				return 1;
 			}
+		}
+
+		public bool Equals(DetalleJugador other)
+		{
+			return Id.Equals( other.Id );
 		}
 
 	}
